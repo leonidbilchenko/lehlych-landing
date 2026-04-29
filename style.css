@@ -1,0 +1,524 @@
+/* ─── FONTS ─────────────────────────────────────────── */
+@font-face { font-family: 'Ambulatoria'; src: url('fonts/body_fonts/AmbulatoriaB-Black.otf'); font-weight: 900; }
+@font-face { font-family: 'Ambulatoria'; src: url('fonts/body_fonts/AmbulatoriaB-Heavy.otf'); font-weight: 800; }
+@font-face { font-family: 'Ambulatoria'; src: url('fonts/body_fonts/AmbulatoriaB-Bold.otf'); font-weight: 700; }
+@font-face { font-family: 'Ambulatoria'; src: url('fonts/body_fonts/AmbulatoriaB-SemiBold.otf'); font-weight: 600; }
+@font-face { font-family: 'Ambulatoria'; src: url('fonts/body_fonts/AmbulatoriaB-Medium.otf'); font-weight: 500; }
+@font-face { font-family: 'Ambulatoria'; src: url('fonts/body_fonts/AmbulatoriaB-Regular.otf'); font-weight: 400; }
+@font-face { font-family: 'Ambulatoria'; src: url('fonts/body_fonts/AmbulatoriaB-Light.otf'); font-weight: 300; }
+
+@font-face { font-family: 'BiroScript'; src: url('fonts/display_fonts/BiroScript-Bold.otf'); font-weight: 700; }
+@font-face { font-family: 'BiroScript'; src: url('fonts/display_fonts/BiroScript-Regular.otf'); font-weight: 400; }
+@font-face { font-family: 'BiroScript'; src: url('fonts/display_fonts/BiroScript-Sloppy.otf'); font-weight: 300; }
+
+/* ─── TOKENS ─────────────────────────────────────────── */
+:root {
+  --bg:        #0c0a07;
+  --bg-card:   #161109;
+  --bg-form:   #110e08;
+  --text:      #f0e8d8;
+  --muted:     #887a66;
+  --gold:      #c8a84b;
+  --gold-dim:  rgba(200,168,75,0.18);
+  --gold-line: rgba(200,168,75,0.28);
+  --radius:    4px;
+}
+
+/* ─── RESET ──────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Ambulatoria', Georgia, serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── STICKY HEADER ──────────────────────────────────── */
+.sticky-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 32px;
+  background: rgba(12,10,7,0.88);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--gold-dim);
+  transform: translateY(-100%);
+  transition: transform 0.35s ease;
+}
+.sticky-header.visible { transform: translateY(0); }
+
+.sticky-logo { height: 52px; }
+
+/* ─── HERO ───────────────────────────────────────────── */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute; inset: 0;
+  background: url('images/fone_images/background.jpeg') center center / cover no-repeat;
+  transform: scale(1.04);
+}
+
+.hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(10,8,4,0.68) 0%,
+    rgba(10,8,4,0.50) 35%,
+    rgba(10,8,4,0.82) 100%
+  );
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 24px 60px;
+}
+
+.hero-logo-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: clamp(40px, 8vh, 80px);
+  padding-bottom: clamp(32px, 5vh, 56px);
+}
+
+.hero-logo {
+  width: clamp(240px, 32vw, 420px);
+}
+
+.hero-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 18px;
+  max-width: 680px;
+}
+
+.hero-sub {
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.85;
+}
+
+.hero-title {
+  font-family: 'Ambulatoria', serif;
+  font-weight: 700;
+  font-size: clamp(20px, 3vw, 36px);
+  line-height: 1.25;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.hero-about {
+  font-size: clamp(13px, 1.4vw, 15px);
+  font-weight: 300;
+  line-height: 1.8;
+  color: rgba(240,232,216,0.72);
+  max-width: 580px;
+}
+
+.hero-cta {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 13px 34px;
+  border: 1px solid var(--gold-line);
+  color: var(--gold);
+  font-family: 'Ambulatoria', serif;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.25s, color 0.25s;
+}
+.hero-cta:hover { background: var(--gold); color: var(--bg); }
+
+/* ─── WINES ──────────────────────────────────────────── */
+.wines {
+  padding: 80px 24px 100px;
+}
+
+.wines-grid {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+
+.wine-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 12px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--gold-dim);
+  border-radius: var(--radius);
+  transition: border-color 0.3s, transform 0.3s;
+}
+.wine-card:hover {
+  border-color: var(--gold-line);
+  transform: translateY(-4px);
+}
+
+/* ─── BOTTLE ─────────────────────────────────────────── */
+.bottle-wrap {
+  position: relative;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.bottle-img {
+  width: 100%;
+  display: block;
+  filter: drop-shadow(0 20px 48px rgba(0,0,0,0.75));
+}
+
+.medal {
+  position: absolute;
+  top: 8%;
+  right: 2%;
+  width: 88px;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
+}
+
+/* ─── WINE INFO ──────────────────────────────────────── */
+.wine-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  text-align: center;
+}
+
+.wine-name {
+  font-family: 'BiroScript', serif;
+  font-weight: 400;
+  font-size: clamp(20px, 2.4vw, 27px);
+  line-height: 1.1;
+  color: var(--text);
+}
+
+.wine-vintage {
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.8;
+}
+
+.wine-desc {
+  font-size: 12.5px;
+  font-weight: 300;
+  line-height: 1.55;
+  color: rgba(240,232,216,0.7);
+  margin-top: 2px;
+}
+
+/* ─── QUANTITY ───────────────────────────────────────── */
+.qty-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.qty-label {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+}
+
+.qty-ctrl {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--gold-line);
+}
+
+.qty-btn {
+  background: none;
+  border: none;
+  color: var(--gold);
+  width: 32px;
+  height: 32px;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: inherit;
+}
+.qty-btn:hover { background: var(--gold-dim); }
+
+.qty-input {
+  background: none;
+  border: none;
+  border-left: 1px solid var(--gold-line);
+  border-right: 1px solid var(--gold-line);
+  color: var(--text);
+  font-family: 'Ambulatoria', serif;
+  font-weight: 500;
+  font-size: 15px;
+  text-align: center;
+  width: 42px;
+  height: 32px;
+  -moz-appearance: textfield;
+}
+.qty-input::-webkit-outer-spin-button,
+.qty-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+/* ─── SUMMARY BAR ────────────────────────────────────── */
+.summary-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 32px;
+  background: rgba(12,10,7,0.92);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--gold-dim);
+}
+
+.summary-text {
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(240,232,216,0.7);
+}
+
+.summary-cta {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.summary-cta:hover { opacity: 0.7; }
+
+/* ─── ORDER FORM ─────────────────────────────────────── */
+.order {
+  padding: 80px 24px 100px;
+  border-top: 1px solid var(--gold-dim);
+}
+
+.order-inner {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.order-title {
+  font-family: 'Ambulatoria', serif;
+  font-weight: 600;
+  font-size: clamp(26px, 3.5vw, 40px);
+  line-height: 1.15;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.order-note {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--muted);
+  margin-bottom: 40px;
+  line-height: 1.7;
+}
+
+.order-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+textarea {
+  background: var(--bg-form);
+  border: 1px solid var(--gold-dim);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: 'Ambulatoria', serif;
+  font-size: 15px;
+  font-weight: 400;
+  padding: 12px 16px;
+  transition: border-color 0.2s;
+  outline: none;
+  resize: vertical;
+}
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+textarea:focus { border-color: var(--gold); }
+input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 300; }
+
+.form-wines {
+  padding: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--gold-dim);
+  border-radius: var(--radius);
+}
+
+.form-wines-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.form-wines-row {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-wine-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.form-wine-item span {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text);
+}
+
+.submit-btn {
+  background: var(--gold);
+  border: none;
+  border-radius: var(--radius);
+  color: var(--bg);
+  font-family: 'Ambulatoria', serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 16px 32px;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+.submit-btn:hover  { opacity: 0.88; }
+.submit-btn:active { transform: scale(0.98); }
+.submit-btn:disabled { opacity: 0.5; cursor: default; }
+
+.form-status {
+  padding: 16px 20px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  line-height: 1.6;
+  text-align: center;
+}
+.form-status.success {
+  background: rgba(80,140,60,0.12);
+  border: 1px solid rgba(80,140,60,0.3);
+  color: #8bcf7a;
+}
+.form-status.error {
+  background: rgba(180,60,60,0.12);
+  border: 1px solid rgba(180,60,60,0.3);
+  color: #e08080;
+}
+
+/* ─── FOOTER ─────────────────────────────────────────── */
+.footer {
+  padding: 48px 24px;
+  border-top: 1px solid var(--gold-dim);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.footer-logo { width: 120px; opacity: 0.55; }
+
+.footer-socials {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.social-link {
+  color: var(--muted);
+  transition: color 0.2s;
+  display: flex;
+}
+.social-link:hover { color: var(--gold); }
+.social-link svg { width: 22px; height: 22px; }
+
+.footer-text {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--muted);
+}
+
+.footer-legal {
+  font-size: 11px;
+  font-weight: 300;
+  color: rgba(136,122,102,0.45);
+  letter-spacing: 0.06em;
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────── */
+@media (max-width: 900px) {
+  .wines-grid { grid-template-columns: 1fr; max-width: 480px; }
+  .form-row   { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 540px) {
+  .summary-bar { flex-direction: column; gap: 8px; text-align: center; }
+  .form-wine-item { flex-direction: column; align-items: flex-start; }
+  .hero-logo { width: clamp(200px, 70vw, 320px); }
+}

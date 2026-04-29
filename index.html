@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lehlych Winery — Передзамовлення 2025</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- STICKY HEADER (з'являється при скролі) -->
+  <header class="sticky-header" id="stickyHeader">
+    <img src="logo/Logo Lehlych White.svg" alt="Lehlych Winery" class="sticky-logo">
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-logo-wrap">
+        <img src="logo/Logo Lehlych White.svg" alt="Lehlych Winery" class="hero-logo" id="heroLogo">
+      </div>
+      <div class="hero-body">
+        <p class="hero-sub">Сімейна виноробня · Ржищів · Київщина</p>
+        <h1 class="hero-title">Передзамовлення<br>врожаю 2025</h1>
+        <p class="hero-about">
+          Lehlych Winery народилась як нова сторінка нашої родини — переселенців із Луганщини, що знайшли новий дім у Ржищеві на Київщині. Ця земля пам'ятає Трипільську культуру, а річка Леглич, що протікає в низині нашого виноградника, дала нам назву. Ми робимо вино як продовження великої і давньої культури — тихо, уважно, з любов'ю до місця.
+        </p>
+        <a href="#wines" class="hero-cta">Переглянути вина</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- WINES -->
+  <section class="wines" id="wines">
+    <div class="wines-grid">
+
+      <!-- CHARDONNAY -->
+      <article class="wine-card" data-wine="chardonnay">
+        <div class="bottle-wrap">
+          <img src="images/Bottles/Chardonnay.png" alt="Chardonnay" class="bottle-img">
+          <img src="images/medals/Gold medal.png" alt="Gold Medal" class="medal">
+        </div>
+        <div class="wine-info">
+          <h2 class="wine-name">Chardonnay</h2>
+          <p class="wine-vintage">2025 · Dry White Wine · 12% vol · 0.75 L</p>
+          <p class="wine-desc">Настрій серпневого вечора в Ржищеві, коли денне тепло ще тримається в розігрітих яблуках і сухих польових травах. З заходом сонця повітря наповнюється подихом вітру та свіжістю річки Леглич.</p>
+          <div class="qty-row">
+            <span class="qty-label">Пляшок</span>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty(this,-1)">−</button>
+              <input class="qty-input" type="number" value="0" min="0" max="99" data-wine="chardonnay">
+              <button class="qty-btn" onclick="changeQty(this,1)">+</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- SAUVIGNON BLANC -->
+      <article class="wine-card" data-wine="sauvignon">
+        <div class="bottle-wrap">
+          <img src="images/Bottles/Sauvignon_Blanc.png" alt="Sauvignon Blanc" class="bottle-img">
+          <img src="images/medals/Silver medal.png" alt="Silver Medal" class="medal">
+        </div>
+        <div class="wine-info">
+          <h2 class="wine-name">Sauvignon Blanc</h2>
+          <p class="wine-vintage">2025 · Dry White Wine · 12% vol · 0.75 L</p>
+          <p class="wine-desc">Тепле сонце, свіже повітря, аромати трав, польових квітів і жовтих фруктів. Настрій безтурботного літнього дня, який так хочеться розділити з близькими та забрати із собою у спогади.</p>
+          <div class="qty-row">
+            <span class="qty-label">Пляшок</span>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty(this,-1)">−</button>
+              <input class="qty-input" type="number" value="0" min="0" max="99" data-wine="sauvignon">
+              <button class="qty-btn" onclick="changeQty(this,1)">+</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ТРИПІЛЬСЬКЕ СОНЦЕ -->
+      <article class="wine-card" data-wine="trpilske">
+        <div class="bottle-wrap">
+          <img src="images/Bottles/Trypilske_Sonce.png" alt="Трипільське Сонце" class="bottle-img">
+        </div>
+        <div class="wine-info">
+          <h2 class="wine-name">Трипільське Сонце</h2>
+          <p class="wine-vintage">2025 · Unfiltered Orange Wine · 12% vol · 0.75 L</p>
+          <p class="wine-desc">Орандж-технологія, тривала мацерація, витримка на власному осаді. Народжене на ржищівській землі, що зберігає пам'ять про Трипільську культуру. Для повільного смакування, тиші й роздумів.</p>
+          <div class="qty-row">
+            <span class="qty-label">Пляшок</span>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty(this,-1)">−</button>
+              <input class="qty-input" type="number" value="0" min="0" max="99" data-wine="trpilske">
+              <button class="qty-btn" onclick="changeQty(this,1)">+</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- SUMMARY BAR -->
+  <div class="summary-bar" id="summaryBar">
+    <span class="summary-text" id="summaryText">Оберіть вина вище</span>
+    <a href="#order" class="summary-cta">Оформити →</a>
+  </div>
+
+  <!-- ORDER FORM -->
+  <section class="order" id="order">
+    <div class="order-inner">
+      <h2 class="order-title">Оформити передзамовлення</h2>
+      <p class="order-note">Ми зв'яжемось з вами одразу як відкриємо продаж. Слідкуйте за новинами в соцмережах, в пошті та на сайті.</p>
+
+      <form class="order-form" id="orderForm" novalidate>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fLastName">Прізвище *</label>
+            <input type="text" id="fLastName" name="lastName" placeholder="Шевченко" required>
+          </div>
+          <div class="form-group">
+            <label for="fFirstName">Ім'я *</label>
+            <input type="text" id="fFirstName" name="firstName" placeholder="Тарас" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fPhone">Контактний телефон *</label>
+            <input type="tel" id="fPhone" name="phone" placeholder="+380 XX XXX XX XX" required>
+          </div>
+          <div class="form-group">
+            <label for="fEmail">Email *</label>
+            <input type="email" id="fEmail" name="email" placeholder="email@example.com" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fCity">Місто / Селище *</label>
+            <input type="text" id="fCity" name="city" placeholder="Київ" required>
+          </div>
+          <div class="form-group">
+            <label for="fNovaPoshta">Відділення Нової Пошти *</label>
+            <input type="text" id="fNovaPoshta" name="novaPoshta" placeholder="№ відділення або адреса" required>
+          </div>
+        </div>
+
+        <div class="form-wines">
+          <p class="form-wines-label">Кількість пляшок</p>
+          <div class="form-wines-row">
+            <div class="form-wine-item">
+              <span>Chardonnay 2025</span>
+              <div class="qty-ctrl">
+                <button type="button" class="qty-btn" onclick="changeQty(this,-1)">−</button>
+                <input class="qty-input form-qty" type="number" value="0" min="0" max="99" data-wine="chardonnay" id="fQtyChardonnay">
+                <button type="button" class="qty-btn" onclick="changeQty(this,1)">+</button>
+              </div>
+            </div>
+            <div class="form-wine-item">
+              <span>Sauvignon Blanc 2025</span>
+              <div class="qty-ctrl">
+                <button type="button" class="qty-btn" onclick="changeQty(this,-1)">−</button>
+                <input class="qty-input form-qty" type="number" value="0" min="0" max="99" data-wine="sauvignon" id="fQtySauvignon">
+                <button type="button" class="qty-btn" onclick="changeQty(this,1)">+</button>
+              </div>
+            </div>
+            <div class="form-wine-item">
+              <span>Трипільське Сонце 2025</span>
+              <div class="qty-ctrl">
+                <button type="button" class="qty-btn" onclick="changeQty(this,-1)">−</button>
+                <input class="qty-input form-qty" type="number" value="0" min="0" max="99" data-wine="trpilske" id="fQtyTrpilske">
+                <button type="button" class="qty-btn" onclick="changeQty(this,1)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="fComment">Коментар (необов'язково)</label>
+          <textarea id="fComment" name="comment" rows="3" placeholder="Побажання або питання..."></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <span class="submit-label">Надіслати передзамовлення</span>
+          <span class="submit-spinner" hidden>Надсилаємо...</span>
+        </button>
+
+        <div class="form-status" id="formStatus" hidden></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <img src="logo/Logo Lehlych White.svg" alt="Lehlych Winery" class="footer-logo">
+    <div class="footer-socials">
+      <a href="https://www.facebook.com/profile.php?id=61572016280086" target="_blank" rel="noopener" class="social-link" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+      </a>
+      <a href="https://www.instagram.com/lehlychwinery/" target="_blank" rel="noopener" class="social-link" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      </a>
+      <a href="https://www.threads.com/@lehlychwinery" target="_blank" rel="noopener" class="social-link" aria-label="Threads">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.5 12.068c0-3.516.85-6.37 2.495-8.421C5.845 1.343 8.598.16 12.18.136h.014c2.746.018 5.113.908 6.845 2.576 1.507 1.448 2.387 3.44 2.617 5.92l.007.08h-2.884l-.006-.064c-.174-1.808-.808-3.254-1.887-4.298-1.246-1.205-2.999-1.817-5.207-1.82-2.602.019-4.583.837-5.886 2.43-1.246 1.524-1.878 3.756-1.878 6.638 0 2.882.632 5.114 1.878 6.638 1.303 1.593 3.284 2.41 5.886 2.43 2.07-.017 3.701-.554 4.847-1.597.898-.812 1.442-1.972 1.622-3.449H12.18v-2.748h7.306l-.014.156c-.23 2.587-1.168 4.653-2.79 6.143-1.536 1.41-3.596 2.133-6.122 2.146h-.374z"/></svg>
+      </a>
+    </div>
+    <p class="footer-text">Lehlych Winery · Ржищів, Київська область</p>
+    <p class="footer-legal">Продаж алкоголю особам до 18 років заборонений</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

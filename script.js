@@ -1,6 +1,6 @@
 // ─── Google Sheets / Apps Script endpoint ────────────────
 // Після налаштування Apps Script вставте URL сюди:
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwBbOR2lmywPl08mcwYhW49uy97Rp3CgwLDjkQeLse0SXj3_ycvwbhWisuVwiE_lR7bzw/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzTydQKROG5MPgDy5PvY02K8F5vSQs2sGWdI2UaxRcTunfTXFbd6-vb2CmJ9obMSWI1Qw/exec';
 
 // ─── Sticky header ────────────────────────────────────────
 const heroLogo    = document.getElementById('heroLogo');
@@ -44,11 +44,12 @@ function getQty(wine) {
 }
 
 function updateSummary() {
-  const chard = getQty('chardonnay');
-  const sauv  = getQty('sauvignon');
-  const trip  = getQty('trpilske');
-  const total = chard + sauv + trip;
-  const text  = document.getElementById('summaryText');
+  const chard   = getQty('chardonnay');
+  const sauv    = getQty('sauvignon');
+  const trip    = getQty('trpilske');
+  const rozh    = getQty('rozhevyi');
+  const total   = chard + sauv + trip + rozh;
+  const text    = document.getElementById('summaryText');
 
   if (!total) { text.textContent = 'Оберіть вина вище'; return; }
 
@@ -56,6 +57,7 @@ function updateSummary() {
   if (chard) parts.push(`Chardonnay ×${chard}`);
   if (sauv)  parts.push(`Sauvignon Blanc ×${sauv}`);
   if (trip)  parts.push(`Трипільське Сонце ×${trip}`);
+  if (rozh)  parts.push(`Рожевий Обрій ×${rozh}`);
   text.textContent = parts.join(' · ') + ` — ${total} пляш${plural(total)}`;
 }
 
@@ -80,12 +82,13 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
   const chard = parseInt(document.getElementById('fQtyChardonnay').value || 0);
   const sauv  = parseInt(document.getElementById('fQtySauvignon').value || 0);
   const trip  = parseInt(document.getElementById('fQtyTrpilske').value || 0);
+  const rozh  = parseInt(document.getElementById('fQtyRozhevyi').value || 0);
 
   if (!lastName || !firstName || !phone || !email || !city || !novaPoshta) {
     showStatus('Будь ласка, заповніть усі обов\'язкові поля.', 'error');
     return;
   }
-  if (chard + sauv + trip === 0) {
+  if (chard + sauv + trip + rozh === 0) {
     showStatus('Оберіть хоча б одну пляшку вина.', 'error');
     return;
   }
@@ -97,7 +100,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 
   const payload = {
     lastName, firstName, phone, email, city, novaPoshta, comment,
-    chardonnay: chard, sauvignon: sauv, trpilske: trip
+    chardonnay: chard, sauvignon: sauv, trpilske: trip, rozhevyi: rozh
   };
 
   try {

@@ -3,7 +3,7 @@
 //  Вставити в: Extensions → Apps Script → Code.gs
 // ═══════════════════════════════════════════════════════════
 
-const WINERY_EMAIL = 'lehlych@gmail.com'; // ← ваша пошта (звідси йтиме лист)
+const WINERY_EMAIL = 'lehlychwinery@gmail.com'; // ← ваша пошта (звідси йтиме лист)
 
 function doPost(e) {
   try {
@@ -14,7 +14,7 @@ function doPost(e) {
     const lastRow = sheet.getLastRow();
     const orderNum = lastRow > 1 ? lastRow : 1; // рядок 1 — заголовки
 
-    const total = (data.chardonnay || 0) + (data.sauvignon || 0) + (data.trpilske || 0);
+    const total = (data.chardonnay || 0) + (data.sauvignon || 0) + (data.trpilske || 0) + (data.rozhevyi || 0);
 
     // Записуємо рядок у таблицю
     sheet.appendRow([
@@ -29,6 +29,7 @@ function doPost(e) {
       data.chardonnay || 0,                  // Chardonnay
       data.sauvignon  || 0,                  // Sauvignon Blanc
       data.trpilske   || 0,                  // Трипільське Сонце
+      data.rozhevyi   || 0,                  // Рожевий Обрій
       total,                                 // Всього пляшок
       data.comment   || '',                  // Коментар
     ]);
@@ -53,9 +54,10 @@ function sendThankYouEmail(data, orderNum, total) {
   const name = `${data.firstName} ${data.lastName}`;
 
   const wineLines = [];
-  if (data.chardonnay > 0) wineLines.push(`— Chardonnay 2025: ${data.chardonnay} пляш${plural(data.chardonnay)}`);
-  if (data.sauvignon  > 0) wineLines.push(`— Sauvignon Blanc 2025: ${data.sauvignon} пляш${plural(data.sauvignon)}`);
-  if (data.trpilske   > 0) wineLines.push(`— Трипільське Сонце 2025: ${data.trpilske} пляш${plural(data.trpilske)}`);
+  if (data.chardonnay > 0) wineLines.push(`— Chardonnay: ${data.chardonnay} пляш${plural(data.chardonnay)}`);
+  if (data.sauvignon  > 0) wineLines.push(`— Sauvignon Blanc: ${data.sauvignon} пляш${plural(data.sauvignon)}`);
+  if (data.trpilske   > 0) wineLines.push(`— Трипільське Сонце: ${data.trpilske} пляш${plural(data.trpilske)}`);
+  if (data.rozhevyi   > 0) wineLines.push(`— Рожевий Обрій: ${data.rozhevyi} пляш${plural(data.rozhevyi)}`);
 
   const subject = `Lehlych Winery — Передзамовлення №${orderNum} прийнято`;
 

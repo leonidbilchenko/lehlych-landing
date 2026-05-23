@@ -44,7 +44,8 @@
         </div>
         <div class="wine-info">
           <h2 class="wine-name">Chardonnay</h2>
-          <p class="wine-vintage">2025 · Dry White Wine · 12% vol · 0.75 L</p>
+          <p class="wine-vintage">Dry White Wine · 12% vol · 0.75 L</p>
+          <p class="wine-price">849 грн</p>
           <p class="wine-desc">Настрій серпневого вечора в Ржищеві, коли денне тепло ще тримається в розігрітих яблуках і сухих польових травах. З заходом сонця повітря наповнюється подихом вітру та свіжістю річки Леглич.</p>
           <div class="qty-row">
             <span class="qty-label">Пляшок</span>
@@ -65,7 +66,8 @@
         </div>
         <div class="wine-info">
           <h2 class="wine-name">Sauvignon Blanc</h2>
-          <p class="wine-vintage">2025 · Dry White Wine · 12% vol · 0.75 L</p>
+          <p class="wine-vintage">Dry White Wine · 12% vol · 0.75 L</p>
+          <p class="wine-price">649 грн</p>
           <p class="wine-desc">Тепле сонце, свіже повітря, аромати трав, польових квітів і жовтих фруктів. Настрій безтурботного літнього дня, який так хочеться розділити з близькими та забрати із собою у спогади.</p>
           <div class="qty-row">
             <span class="qty-label">Пляшок</span>
@@ -85,13 +87,35 @@
         </div>
         <div class="wine-info">
           <h2 class="wine-name">Трипільське Сонце</h2>
-          <p class="wine-vintage">2025 · Orange Wine · 12% vol · 0.75 L</p>
+          <p class="wine-vintage">Orange Wine · 12% vol · 0.75 L</p>
+          <p class="wine-price">729 грн</p>
           <p class="wine-desc">Орандж-технологія, тривала мацерація, витримка на власному осаді. Народжене на ржищівській землі, що зберігає пам'ять про Трипільську культуру. Для повільного смакування, тиші й роздумів.</p>
           <div class="qty-row">
             <span class="qty-label">Пляшок</span>
             <div class="qty-ctrl">
               <button class="qty-btn" onclick="changeQty(this,-1)">−</button>
               <input class="qty-input" type="number" value="0" min="0" max="99" data-wine="trpilske">
+              <button class="qty-btn" onclick="changeQty(this,1)">+</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- РОЖЕВИЙ ОБРІЙ -->
+      <article class="wine-card" data-wine="rozhevyi">
+        <div class="bottle-wrap">
+          <img src="images/Bottles/Rozhevyi_Obrii.png" alt="Рожевий Обрій" class="bottle-img">
+        </div>
+        <div class="wine-info">
+          <h2 class="wine-name">Рожевий Обрій</h2>
+          <p class="wine-vintage">Dry Rosé Wine · 0.75 L</p>
+          <p class="wine-price">689 грн</p>
+          <p class="wine-desc">Літні сутінки, коли обрій забарвлюється в рожеві відтінки, а вечір починається з легкості та близькості. Аромат дикого червневого поля, відтінки лісової суниці та польових квітів. Для тих, хто цінує тепло, свободу й радість бути разом.</p>
+          <div class="qty-row">
+            <span class="qty-label">Пляшок</span>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty(this,-1)">−</button>
+              <input class="qty-input" type="number" value="0" min="0" max="99" data-wine="rozhevyi">
               <button class="qty-btn" onclick="changeQty(this,1)">+</button>
             </div>
           </div>
@@ -152,7 +176,7 @@
           <p class="form-wines-label">Кількість пляшок</p>
           <div class="form-wines-row">
             <div class="form-wine-item">
-              <span>Chardonnay 2025</span>
+              <span>Chardonnay <span class="form-wine-price">849 грн</span></span>
               <div class="qty-ctrl">
                 <button type="button" class="qty-btn" onclick="changeQty(this,-1)">−</button>
                 <input class="qty-input form-qty" type="number" value="0" min="0" max="99" data-wine="chardonnay" id="fQtyChardonnay">
@@ -160,7 +184,7 @@
               </div>
             </div>
             <div class="form-wine-item">
-              <span>Sauvignon Blanc 2025</span>
+              <span>Sauvignon Blanc <span class="form-wine-price">649 грн</span></span>
               <div class="qty-ctrl">
                 <button type="button" class="qty-btn" onclick="changeQty(this,-1)">−</button>
                 <input class="qty-input form-qty" type="number" value="0" min="0" max="99" data-wine="sauvignon" id="fQtySauvignon">
@@ -168,10 +192,18 @@
               </div>
             </div>
             <div class="form-wine-item">
-              <span>Трипільське Сонце 2025</span>
+              <span>Трипільське Сонце <span class="form-wine-price">729 грн</span></span>
               <div class="qty-ctrl">
                 <button type="button" class="qty-btn" onclick="changeQty(this,-1)">−</button>
                 <input class="qty-input form-qty" type="number" value="0" min="0" max="99" data-wine="trpilske" id="fQtyTrpilske">
+                <button type="button" class="qty-btn" onclick="changeQty(this,1)">+</button>
+              </div>
+            </div>
+            <div class="form-wine-item">
+              <span>Рожевий Обрій <span class="form-wine-price">689 грн</span></span>
+              <div class="qty-ctrl">
+                <button type="button" class="qty-btn" onclick="changeQty(this,-1)">−</button>
+                <input class="qty-input form-qty" type="number" value="0" min="0" max="99" data-wine="rozhevyi" id="fQtyRozhevyi">
                 <button type="button" class="qty-btn" onclick="changeQty(this,1)">+</button>
               </div>
             </div>

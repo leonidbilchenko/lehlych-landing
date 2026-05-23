@@ -164,11 +164,11 @@ body {
 }
 
 .wines-grid {
-  max-width: 1100px;
+  max-width: 1400px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
 }
 
 .wine-card {
@@ -232,6 +232,21 @@ body {
   text-transform: uppercase;
   color: var(--gold);
   opacity: 0.8;
+}
+
+.wine-price {
+  font-family: 'Ambulatoria', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+
+.form-wine-price {
+  font-weight: 600;
+  color: var(--muted);
+  font-size: 13px;
+  margin-left: 6px;
 }
 
 .wine-desc {
@@ -516,6 +531,10 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
 }
 
 /* ─── RESPONSIVE ─────────────────────────────────────── */
+@media (max-width: 1200px) {
+  .wines-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
 @media (max-width: 900px) {
   .wines-grid { grid-template-columns: 1fr; max-width: 480px; }
   .form-row   { grid-template-columns: 1fr; }

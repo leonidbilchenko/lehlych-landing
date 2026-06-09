@@ -117,9 +117,19 @@ def main():
         slug = field(pr, "Slug") or slugify(name)
         rrp = field(pr, "RRP")
         sale_price = field(pr, "Акційна ціна")
-        on_sale = field(pr, "Акція")
         stock = field(pr, "Статус на сайті")
         badges = field(pr, "Bage") or []
+
+        # ── Акція вмикається ЛИШЕ якщо виконані всі 3 умови ──
+        #   1) чекбокс «Акція»  2) заповнена «Акційна ціна»  3) тег «Акція» в Bage
+        sale_active = (
+            bool(field(pr, "Акція"))
+            and sale_price is not None
+            and "Акція" in badges
+        )
+        # якщо акція неповна — прибираємо тег «Акція» з бейджів (щоб не світився червоний)
+        if not sale_active:
+            badges = [b for b in badges if b != "Акція"]
 
         photos_white = field(pr, "Photo_white") or []
         photos_transp = field(pr, "Photo_transparrent") or []
@@ -154,8 +164,8 @@ def main():
             "aroma": field(pr, "Ароматичний профіль"),
             "description": field(pr, "Опис"),
             "price": rrp,
-            "salePrice": sale_price if on_sale else None,
-            "onSale": bool(on_sale) and sale_price is not None,
+            "salePrice": sale_price if sale_active else None,
+            "onSale": sale_active,
             "inStock": stock == "Є в наявності",
             "stockLabel": stock,
             "badges": badges,

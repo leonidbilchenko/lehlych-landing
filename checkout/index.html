@@ -89,7 +89,13 @@
           <span>Разом до сплати</span>
           <span id="checkoutTotal">0 грн</span>
         </div>
-        <button type="button" class="pay-btn" id="payBtn" onclick="submitOrder()">
+        <div class="checkout-agree">
+          <label class="agree-item">
+            <input type="checkbox" id="agreeTerms">
+            <span>Я приймаю умови <a href="https://app.notion.com/p/bilchenko-bm/378dec54c7e6802cab1cdd8984c52977?v=378dec54c7e680abac16000c9011eef5&source=copy_link" target="_blank" rel="noopener">публічної оферти</a> та <a href="https://app.notion.com/p/bilchenko-bm/378dec54c7e680b29832fe6d92147636?v=378dec54c7e680abac16000c9011eef5&source=copy_link" target="_blank" rel="noopener">політики конфіденційності</a>.</span>
+          </label>
+        </div>
+        <button type="button" class="pay-btn" id="payBtn" onclick="submitOrder()" disabled>
           <span class="pay-label">Перейти до оплати</span>
           <span class="pay-spinner" hidden>Зачекайте…</span>
         </button>

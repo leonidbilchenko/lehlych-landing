@@ -3,17 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lehlych Winery — Передзамовлення</title>
-  <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="style.css">
+  <title>Трипільське Сонце — Lehlych Winery</title>
+  <meta name="description" content="Це бурштинове вино народжене на ржищівській землі, яка зберігає пам’ять про Трипільську культуру — одну з найдавніших на українських теренах. Його характер розк">
+  <meta property="og:title" content="Трипільське Сонце — Lehlych Winery">
+  <meta property="og:description" content="Це бурштинове вино народжене на ржищівській землі, яка зберігає пам’ять про Трипільську культуру — одну з найдавніших на українських теренах. Його характер розк">
+  <meta property="og:image" content="https://lehlych.com/images/products/trypilske-sonce-2025/transparent.png">
+  <meta property="og:type" content="product">
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
   <!-- AGE GATE -->
   <div class="age-gate" id="ageGate">
     <div class="age-gate-box">
-      <img src="logo/Logo Lehlych@4x.png" alt="Lehlych Winery" class="age-gate-logo">
+      <img src="../logo/Logo Lehlych@4x.png" alt="Lehlych Winery" class="age-gate-logo">
       <h2 class="age-gate-title">УВАГА!</h2>
       <p class="age-gate-text">Сайт містить інформацію, не рекомендовану для осіб молодше 18 років.</p>
       <p class="age-gate-question">Чи досягли ви повноліття?</p>
@@ -25,41 +30,61 @@
     </div>
   </div>
 
-  <!-- STICKY HEADER (з'являється при скролі) -->
-  <header class="sticky-header" id="stickyHeader">
-    <a href="#hero" class="sticky-logo-link"><img src="logo/Logo Lehlych@4x.png" alt="Lehlych Winery" class="sticky-logo"></a>
+  <!-- HEADER -->
+  <header class="shop-header">
+    <a href="../" class="shop-header-logo"><img src="../logo/Logo Lehlych@4x.png" alt="Lehlych Winery"></a>
     <button class="cart-btn" onclick="openCart()" aria-label="Кошик">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2.5l2.2 12.2a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.2L21 7H6"/></svg>
       <span class="cart-count" id="cartCount">0</span>
     </button>
   </header>
 
-  <!-- HERO -->
-  <section class="hero" id="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <div class="hero-logo-wrap">
-        <img src="logo/Logo Lehlych White.svg" alt="Lehlych Winery" class="hero-logo" id="heroLogo">
-      </div>
-      <div class="hero-body">
-        <p class="hero-about">
-          Lehlych Winery народилась після релокації нашої родини з Луганщини до Ржищева на Київщині. Ця земля пам'ятає Трипільську культуру, а річка Леглич, що протікає в низині нашого виноградника, дала нам назву. Ми робимо вино як продовження великої і давньої культури — тихо, уважно, з любов'ю до місця.
-        </p>
-        <a href="#wines" class="hero-cta">Переглянути вина</a>
-      </div>
-    </div>
-  </section>
+  <!-- PRODUCT -->
+  <main class="product">
+    <a href="../#wines" class="product-back">← До каталогу</a>
+    <div class="product-grid">
 
-  <!-- CATALOG -->
-  <section class="wines" id="wines">
-    <div class="wines-head">
-      <h2 class="wines-title">Наші вина</h2>
+      <div class="product-gallery">
+        <div class="product-photo-wrap">
+          <div class="badges"><span class="badge badge-best">Bestseller</span><span class="badge badge-limited">Limited</span></div>
+          <img src="/images/products/trypilske-sonce-2025/transparent.png" alt="Трипільське Сонце" class="product-photo">
+        </div>
+      </div>
+
+      <div class="product-info">
+        <h1 class="product-name">Трипільське Сонце</h1>
+        <p class="product-subtitle">Сухе бурштинове вино · 2025</p>
+
+        <p class="product-price">729 грн</p>
+
+        <p class="product-stock in">Є в наявності</p>
+
+        <div class="product-buy"><div class="qty-ctrl"><button class="qty-btn" onclick="pqty(-1)">−</button><input class="qty-input" id="pQty" type="number" value="1" min="1" max="99"><button class="qty-btn" onclick="pqty(1)">+</button></div><button class="add-cart-btn" onclick="addToCart('trypilske-sonce-2025', document.getElementById('pQty').value)">Додати в кошик</button></div>
+
+        <div class="product-tabs">
+          <div class="tabs-nav">
+            <button class="tab-btn active" onclick="showTab(this,'tab-desc')">Опис</button>
+            <button class="tab-btn" onclick="showTab(this,'tab-specs')">Подробиці</button>
+          </div>
+          <div class="tab-panel active" id="tab-desc">
+            <p class="tab-desc-text">Це бурштинове вино народжене на ржищівській землі, яка зберігає пам’ять про Трипільську культуру — одну з найдавніших на українських теренах. Його характер розкривається глибиною, виразністю та природною структурністю, а поєднання сортів Совіньйон Блан і Шардоне надає вину багатого, складного й самобутнього звучання. Воно створене для повільного смакування, тиші й роздумів — для миті, коли минувшина стає особливо близькою</p>
+            <div class="product-aroma"><span class="product-aroma-label">Ароматичний профіль</span><p class="product-aroma-text">Сухофрукти, горіх, абрикосова кісточка, мінерали, вологий камінь</p></div>
+          </div>
+          <div class="tab-panel" id="tab-specs">
+            <div class="product-specs">
+              <div class="spec"><span class="spec-k">Сорт винограду</span><span class="spec-v">50% Шардоне + 50% Совіньйон Блан</span></div><div class="spec"><span class="spec-k">Колір</span><span class="spec-v">Світло-бурштиновий</span></div><div class="spec"><span class="spec-k">Вміст спирту</span><span class="spec-v">12% об.</span></div><div class="spec"><span class="spec-k">Місткість</span><span class="spec-v">0,75 л.</span></div><div class="spec"><span class="spec-k">Температура подачі</span><span class="spec-v">+12…+16°С</span></div><div class="spec"><span class="spec-k">Походження винограду</span><span class="spec-v">Бесарабія (Одещина)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="wines-grid" id="catalogGrid">
-      <!-- CATALOG:START -->
+  </main>
+
+    <section class="related">
+    <h2 class="related-title">З цим часто купують</h2>
+    <div class="related-row">
       <article class="wine-card">
-        <a href="chardonnay-2025/" class="wine-card-link">
+        <a href="/chardonnay-2025/" class="wine-card-link">
           <div class="bottle-wrap">
             <div class="badges"><span class="badge badge-somm">Вибір сомель&#x27;є</span><span class="badge badge-sale">Акція</span></div>
             <img src="/images/products/chardonnay-2025/transparent.png" alt="Chardonnay" class="bottle-img">
@@ -73,7 +98,7 @@
         <div class="wine-card-actions"><button class="buy-btn" onclick="addToCart('chardonnay-2025')">Купити</button></div>
       </article>
       <article class="wine-card">
-        <a href="sauvignon-blanc-2025/" class="wine-card-link">
+        <a href="/sauvignon-blanc-2025/" class="wine-card-link">
           <div class="bottle-wrap">
             <div class="badges"><span class="badge badge-somm">Вибір сомель&#x27;є</span></div>
             <img src="/images/products/sauvignon-blanc-2025/transparent.png" alt="Sauvignon Blanc" class="bottle-img">
@@ -87,21 +112,7 @@
         <div class="wine-card-actions"><button class="buy-btn" onclick="addToCart('sauvignon-blanc-2025')">Купити</button></div>
       </article>
       <article class="wine-card">
-        <a href="trypilske-sonce-2025/" class="wine-card-link">
-          <div class="bottle-wrap">
-            <div class="badges"><span class="badge badge-best">Bestseller</span><span class="badge badge-limited">Limited</span></div>
-            <img src="/images/products/trypilske-sonce-2025/transparent.png" alt="Трипільське Сонце" class="bottle-img">
-          </div>
-          <div class="wine-info">
-            <h3 class="wine-name">Трипільське Сонце</h3>
-            <p class="wine-vintage">Сухе бурштинове вино · 0,75 л.</p>
-            <p class="wine-price">729 грн</p>
-          </div>
-        </a>
-        <div class="wine-card-actions"><button class="buy-btn" onclick="addToCart('trypilske-sonce-2025')">Купити</button></div>
-      </article>
-      <article class="wine-card">
-        <a href="rozhevyi-obrii-2025/" class="wine-card-link">
+        <a href="/rozhevyi-obrii-2025/" class="wine-card-link">
           <div class="bottle-wrap">
             <div class="badges"><span class="badge badge-best">Bestseller</span><span class="badge badge-limited">Limited</span></div>
             <img src="/images/products/rozhevyi-obrii-2025/transparent.png" alt="Рожевий Обрій" class="bottle-img">
@@ -114,7 +125,6 @@
         </a>
         <div class="wine-card-actions"><button class="buy-btn" onclick="addToCart('rozhevyi-obrii-2025')">Купити</button></div>
       </article>
-      <!-- CATALOG:END -->
     </div>
   </section>
 
@@ -128,17 +138,17 @@
     <div class="cart-items" id="cartItems"></div>
     <div class="cart-foot">
       <div class="cart-total"><span>Разом</span><span id="cartTotal">0 грн</span></div>
-      <a href="checkout/" class="cart-checkout" id="cartCheckout">Оформити замовлення</a>
+      <a href="../checkout/" class="cart-checkout" id="cartCheckout">Оформити замовлення</a>
     </div>
   </aside>
 
-  <!-- FOOTER:START -->
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-inner">
 
       <!-- Ліва колонка -->
       <div class="footer-brand">
-        <img src="logo/Logo Lehlych White.svg" alt="Lehlych Winery" class="footer-logo">
+        <img src="../logo/Logo Lehlych White.svg" alt="Lehlych Winery" class="footer-logo">
         <div class="footer-contacts">
           <p>Київська обл., м. Ржищів</p>
           <p><a href="tel:+380507745381">+38 (050) 774-53-81</a></p>
@@ -206,9 +216,8 @@
       </div>
     </div>
   </footer>
-  <!-- FOOTER:END -->
 
-  <script src="products.js"></script>
-  <script src="script.js"></script>
+  <script src="../products.js"></script>
+  <script src="../script.js"></script>
 </body>
 </html>

@@ -1,138 +1,233 @@
 // ═══════════════════════════════════════════════════════════
-//  LEHLYCH WINERY — Google Apps Script
-//  Вставити в: Extensions → Apps Script → Code.gs
+//  LEHLYCH WINERY — Бекенд (Google Apps Script)
+//  Нова Пошта (проксі) · Замовлення → Google Таблиця (первинно)
+//  + Notion (CRM) · LiqPay · Листи
+//
+//  Конфіг — у Script Properties (Project Settings → Script properties).
+//  НІЯКИХ ключів у коді!
+//    ORDERS_SHEET_ID   — ID Google Таблиці (журнал замовлень)
+//    NOTION_TOKEN      — токен інтеграції Notion (ntn_...)
+//    NOTION_ORDERS_DB  — ID бази «Замовлення» в Notion
+//    LIQPAY_PUBLIC     — публічний ключ LiqPay
+//    LIQPAY_PRIVATE    — приватний ключ LiqPay
+//    NP_KEY            — API-ключ Нової Пошти
+//    SITE_URL          — https://lehlych.com
+//    WINERY_EMAIL      — lehlychwinery@gmail.com
+//    SANDBOX           — "1" для тесту LiqPay, інакше порожньо
 // ═══════════════════════════════════════════════════════════
 
-const WINERY_EMAIL = 'lehlychwinery@gmail.com'; // ← ваша пошта (звідси йтиме лист)
+function P(key) { return PropertiesService.getScriptProperties().getProperty(key) || ''; }
+function jsonOut(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}
 
-function doPost(e) {
+// ─────────────────────────────────────────────────────────
+//  GET — проксі Нової Пошти (автопідказки міст/відділень)
+// ─────────────────────────────────────────────────────────
+function doGet(e) {
   try {
-    const data  = JSON.parse(e.postData.contents);
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-
-    // Порядковий номер = кількість рядків даних + 1
-    const lastRow = sheet.getLastRow();
-    const orderNum = lastRow > 1 ? lastRow : 1; // рядок 1 — заголовки
-
-    const total = (data.chardonnay || 0) + (data.sauvignon || 0) + (data.trpilske || 0) + (data.rozhevyi || 0);
-
-    // Записуємо рядок у таблицю
-    sheet.appendRow([
-      orderNum,                              // № замовлення
-      new Date(),                            // Дата
-      data.lastName  || '',                  // Прізвище
-      data.firstName || '',                  // Ім'я
-      data.phone     || '',                  // Телефон
-      data.email     || '',                  // Email
-      data.city      || '',                  // Місто
-      data.novaPoshta || '',                 // Відділення НП
-      data.chardonnay || 0,                  // Chardonnay
-      data.sauvignon  || 0,                  // Sauvignon Blanc
-      data.trpilske   || 0,                  // Трипільське Сонце
-      data.rozhevyi   || 0,                  // Рожевий Обрій
-      total,                                 // Всього пляшок
-      data.comment   || '',                  // Коментар
-    ]);
-
-    // Лист подяки покупцю
-    if (data.email) {
-      sendThankYouEmail(data, orderNum, total);
-    }
-
-    return ContentService
-      .createTextOutput(JSON.stringify({ status: 'ok', order: orderNum }))
-      .setMimeType(ContentService.MimeType.JSON);
-
+    const action = e.parameter.action || '';
+    if (action === 'npCities')     return jsonOut({ items: npCities(e.parameter.q) });
+    if (action === 'npWarehouses') return jsonOut({ items: npWarehouses(e.parameter.cityRef, e.parameter.q) });
+    return jsonOut({ status: 'error', message: 'unknown action' });
   } catch (err) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ status: 'error', message: err.message }))
-      .setMimeType(ContentService.MimeType.JSON);
+    return jsonOut({ status: 'error', message: String(err) });
   }
 }
 
-function sendThankYouEmail(data, orderNum, total) {
-  const name = `${data.firstName} ${data.lastName}`;
-
-  const wineLines = [];
-  if (data.chardonnay > 0) wineLines.push(`— Chardonnay: ${data.chardonnay} пляш${plural(data.chardonnay)}`);
-  if (data.sauvignon  > 0) wineLines.push(`— Sauvignon Blanc: ${data.sauvignon} пляш${plural(data.sauvignon)}`);
-  if (data.trpilske   > 0) wineLines.push(`— Трипільське Сонце: ${data.trpilske} пляш${plural(data.trpilske)}`);
-  if (data.rozhevyi   > 0) wineLines.push(`— Рожевий Обрій: ${data.rozhevyi} пляш${plural(data.rozhevyi)}`);
-
-  const subject = `Lehlych Winery — Передзамовлення №${orderNum} прийнято`;
-
-  const body = `Вітаємо, ${data.firstName}!
-
-Дякуємо, що цікавитесь вином Lehlych Winery — це для нас дуже важливо і надихає.
-
-Ваше передзамовлення №${orderNum} прийнято:
-${wineLines.join('\n')}
-Разом: ${total} пляш${plural(total)}
-
-Ми впевнені, що вино вас не розчарує — воно зроблене з любов'ю до місця, до моменту і до людей, які цінують справжнє.
-
-Щойно ми відкриємо продаж, ви отримаєте листа з детальними інструкціями та варіантами оплати. Після отримання оплати — відправимо ваше замовлення одразу.
-
-Якщо ви хочете внести зміни в замовлення, напишіть нам на ${WINERY_EMAIL} або в директ у соцмережах:
-Instagram: https://www.instagram.com/lehlychwinery/
-Facebook: https://www.facebook.com/profile.php?id=61572016280086
-
-Ще раз дякуємо за довіру — бережіть себе, і до зустрічі за келихом!
-
-З теплом,
-Команда Lehlych Winery
-Ржищів · Київщина`;
-
-  MailApp.sendEmail({
-    to:      data.email,
-    replyTo: WINERY_EMAIL,
-    subject: subject,
-    body:    body,
+function npCall(model, method, props) {
+  const res = UrlFetchApp.fetch('https://api.novaposhta.ua/v2.0/json/', {
+    method: 'post', contentType: 'application/json',
+    payload: JSON.stringify({ apiKey: P('NP_KEY'), modelName: model, calledMethod: method, methodProperties: props }),
+    muteHttpExceptions: true,
   });
-
-  // Копія вам
-  MailApp.sendEmail({
-    to:      WINERY_EMAIL,
-    subject: `[Нове замовлення №${orderNum}] ${name} — ${total} пляш${plural(total)}`,
-    body:    `Нове передзамовлення:\n\n${name}\n${data.phone}\n${data.email}\n${data.city}, НП: ${data.novaPoshta}\n\n${wineLines.join('\n')}\n\nКоментар: ${data.comment || '—'}`,
-  });
+  return JSON.parse(res.getContentText()).data || [];
+}
+function npCities(q) {
+  if (!q || q.length < 2) return [];
+  return npCall('Address', 'getCities', { FindByString: q, Limit: '15' })
+    .map(c => ({ ref: c.Ref, name: c.Description, area: c.AreaDescription || '' }));
+}
+function npWarehouses(cityRef, q) {
+  if (!cityRef) return [];
+  return npCall('Address', 'getWarehouses', { CityRef: cityRef, FindByString: q || '', Limit: '30' })
+    .map(w => ({ ref: w.Ref, name: w.Description }));
 }
 
-function plural(n) {
-  if (n % 10 === 1 && n % 100 !== 11) return 'ка';
-  if ([2,3,4].includes(n % 10) && ![12,13,14].includes(n % 100)) return 'ки';
-  return 'ок';
+// ─────────────────────────────────────────────────────────
+//  POST — створення замовлення АБО колбек LiqPay
+// ─────────────────────────────────────────────────────────
+function doPost(e) {
+  try {
+    if (e.parameter && e.parameter.data && e.parameter.signature) {
+      return liqpayCallback(e.parameter.data, e.parameter.signature); // колбек LiqPay (form-data)
+    }
+    const order = JSON.parse(e.postData.contents);
+    if (order.action === 'createOrder') return createOrder(order);
+    return jsonOut({ status: 'error', message: 'unknown action' });
+  } catch (err) {
+    return jsonOut({ status: 'error', message: String(err) });
+  }
 }
 
-// ═══════════════════════════════════════════════════════════
-//  ЯК НАЛАШТУВАТИ — покроково
-// ═══════════════════════════════════════════════════════════
-//
-//  1. Відкрийте Google Sheets → створіть новий файл
-//
-//  2. Рядок 1 — заголовки (вставте вручну або скопіюйте):
-//     № | Дата | Прізвище | Ім'я | Телефон | Email |
-//     Місто | Відділення НП | Chardonnay | Sauvignon Blanc |
-//     Трипільське Сонце | Всього пляшок | Коментар
-//
-//  3. Extensions → Apps Script
-//     Видаліть весь вміст файлу Code.gs
-//     Вставте цей код (без рядків з коментарем "ЯК НАЛАШТУВАТИ")
-//     Змініть WINERY_EMAIL на вашу пошту
-//
-//  4. Збережіть (Ctrl+S)
-//
-//  5. Deploy → New deployment
-//     Type: Web app
-//     Execute as: Me
-//     Who has access: Anyone
-//     → Deploy
-//     Скопіюйте Web app URL
-//
-//  6. У файлі script.js замініть:
-//     const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
-//     на:
-//     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/ВАШ_ID/exec';
-//
-//  Готово! Форма записуватиме в таблицю і відправлятиме листи.
-// ═══════════════════════════════════════════════════════════
+// ── Створення замовлення ──
+function createOrder(o) {
+  const orderNum = 'LW' + Utilities.formatDate(new Date(), 'Europe/Kiev', 'yyMMdd-HHmmss');
+  const itemsStr = o.items.map(i => i.name + ' ×' + i.qty).join(', ');
+
+  // 1) ПЕРВИННО — Google Таблиця
+  sheetAppend(orderNum, o, itemsStr);
+
+  // 2) Notion (best-effort: якщо впаде — замовлення вже в Таблиці)
+  try { notionCreatePage(orderNum, o, itemsStr); } catch (err) { /* ігноруємо */ }
+
+  // 3) LiqPay — дані + підпис
+  const params = {
+    public_key: P('LIQPAY_PUBLIC'),
+    version: 3, action: 'pay',
+    amount: o.total, currency: 'UAH',
+    description: 'Lehlych Winery — замовлення №' + orderNum,
+    order_id: orderNum, language: 'uk',
+    result_url: P('SITE_URL') + '/thank-you/?order=' + orderNum,
+    server_url: ScriptApp.getService().getUrl(),
+  };
+  if (P('SANDBOX') === '1') params.sandbox = '1';
+
+  const data = Utilities.base64Encode(JSON.stringify(params));
+  return jsonOut({ status: 'ok', order: orderNum, data: data, signature: liqpaySign(data) });
+}
+
+function liqpaySign(data) {
+  const priv = P('LIQPAY_PRIVATE');
+  return Utilities.base64Encode(
+    Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_1, priv + data + priv, Utilities.Charset.UTF_8)
+  );
+}
+
+// ── Колбек LiqPay (підтвердження оплати) ──
+function liqpayCallback(data, signature) {
+  if (liqpaySign(data) !== signature) return jsonOut({ status: 'error', message: 'bad signature' });
+
+  const payment = JSON.parse(Utilities.newBlob(Utilities.base64Decode(data)).getDataAsString());
+  const orderNum = payment.order_id;
+  const paid = (payment.status === 'success' || payment.status === 'sandbox');
+
+  if (paid) {
+    const found = sheetFind(orderNum);
+    if (found) {
+      sheetSetPaid(found.index);
+      sendEmails(found.row, orderNum);
+    }
+    // Notion (best-effort)
+    try {
+      const page = notionFindOrder(orderNum);
+      if (page) notionUpdate(page.id, {
+        'Оплата': { select: { name: 'Оплачено' } },
+        'Статус': { select: { name: 'Оплачено' } },
+      });
+    } catch (err) { /* ігноруємо */ }
+  }
+  return jsonOut({ status: 'ok' });
+}
+
+// ─────────────────────────────────────────────────────────
+//  Google Таблиця (первинний журнал)
+//  Колонки A..M:
+//  № | Дата | Прізвище | Ім'я | Телефон | Email | Місто |
+//  Відділення | Товари | Сума | Статус | Оплата | Коментар
+// ─────────────────────────────────────────────────────────
+function sheet() {
+  return SpreadsheetApp.openById(P('ORDERS_SHEET_ID')).getSheets()[0];
+}
+function sheetAppend(orderNum, o, itemsStr) {
+  sheet().appendRow([
+    orderNum, new Date(), o.lastName || '', o.firstName || '', o.phone || '',
+    o.email || '', o.cityName || '', o.warehouseName || '', itemsStr, o.total,
+    'Нове', 'Очікує', o.comment || '',
+  ]);
+}
+function sheetFind(orderNum) {
+  const data = sheet().getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (String(data[i][0]) === orderNum) return { index: i + 1, row: data[i] };
+  }
+  return null;
+}
+function sheetSetPaid(rowIndex) {
+  const sh = sheet();
+  sh.getRange(rowIndex, 11).setValue('Оплачено'); // Статус
+  sh.getRange(rowIndex, 12).setValue('Оплачено'); // Оплата
+}
+
+// ─────────────────────────────────────────────────────────
+//  Notion (CRM)
+// ─────────────────────────────────────────────────────────
+function notionFetch(path, method, payload) {
+  const res = UrlFetchApp.fetch('https://api.notion.com/v1' + path, {
+    method: method, contentType: 'application/json',
+    headers: { Authorization: 'Bearer ' + P('NOTION_TOKEN'), 'Notion-Version': '2022-06-28' },
+    payload: payload ? JSON.stringify(payload) : null, muteHttpExceptions: true,
+  });
+  return JSON.parse(res.getContentText());
+}
+function rt(s) { return { rich_text: [{ text: { content: String(s || '') } }] }; }
+
+function notionCreatePage(orderNum, o, itemsStr) {
+  notionFetch('/pages', 'post', {
+    parent: { database_id: P('NOTION_ORDERS_DB') },
+    properties: {
+      '№ замовлення': { title: [{ text: { content: orderNum } }] },
+      'Дата': { date: { start: new Date().toISOString() } },
+      'Прізвище': rt(o.lastName),
+      'Ім\'я': rt(o.firstName),
+      'Телефон': { phone_number: String(o.phone || '') },
+      'Email': { email: o.email || null },
+      'Місто': rt(o.cityName),
+      'Відділення': rt(o.warehouseName),
+      'Товари': rt(itemsStr),
+      'Сума': { number: o.total },
+      'Статус': { select: { name: 'Нове' } },
+      'Оплата': { select: { name: 'Очікує' } },
+      'Коментар': rt(o.comment),
+    },
+  });
+}
+function notionFindOrder(orderNum) {
+  const res = notionFetch('/databases/' + P('NOTION_ORDERS_DB') + '/query', 'post', {
+    filter: { property: '№ замовлення', title: { equals: orderNum } },
+  });
+  return (res.results && res.results[0]) || null;
+}
+function notionUpdate(pageId, properties) {
+  notionFetch('/pages/' + pageId, 'patch', { properties: properties });
+}
+
+// ─────────────────────────────────────────────────────────
+//  Листи (дані беремо з рядка Таблиці)
+//  row: [0]№ [2]Прізвище [3]Ім'я [4]Телефон [5]Email
+//       [6]Місто [7]Відділення [8]Товари [9]Сума [12]Коментар
+// ─────────────────────────────────────────────────────────
+function sendEmails(row, orderNum) {
+  const winery = P('WINERY_EMAIL');
+  const firstName = row[3], lastName = row[2], phone = row[4], email = row[5];
+  const city = row[6], wh = row[7], items = row[8], total = row[9], comment = row[12];
+
+  if (email) {
+    MailApp.sendEmail({
+      to: email, replyTo: winery,
+      subject: 'Lehlych Winery — замовлення №' + orderNum + ' оплачено',
+      body: 'Вітаємо, ' + firstName + '!\n\n' +
+        'Дякуємо за замовлення — оплату отримано.\n\n' +
+        'Замовлення №' + orderNum + ':\n' + items + '\nРазом: ' + total + ' грн\n\n' +
+        'Доставка: ' + city + ', ' + wh + ' (Нова Пошта).\n\n' +
+        'Щойно зберемо й відправимо — надішлемо ТТН.\n\n' +
+        'З теплом,\nКоманда Lehlych Winery',
+    });
+  }
+  MailApp.sendEmail({
+    to: winery,
+    subject: '[Оплачено №' + orderNum + '] ' + firstName + ' ' + lastName + ' — ' + total + ' грн',
+    body: firstName + ' ' + lastName + '\n' + phone + '\n' + email + '\n' + city + ', ' + wh +
+      '\n\n' + items + '\nРазом: ' + total + ' грн\n\nКоментар: ' + (comment || '—'),
+  });
+}

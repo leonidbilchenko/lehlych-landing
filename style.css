@@ -38,6 +38,105 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* ─── AGE GATE ───────────────────────────────────────── */
+.age-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(10,8,4,0.72);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.age-gate.hidden { display: none; }
+
+.age-gate-box {
+  background: var(--bg);
+  border: 1px solid var(--gold-line);
+  border-radius: 6px;
+  max-width: 480px;
+  width: 100%;
+  padding: 48px 40px 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.age-gate-logo {
+  width: 160px;
+  margin-bottom: 8px;
+}
+
+.age-gate-title {
+  font-family: 'Ambulatoria', serif;
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 0.12em;
+  color: var(--text);
+}
+
+.age-gate-text {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.age-gate-question {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.age-gate-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.age-gate-no {
+  background: none;
+  border: 1px solid var(--gold-line);
+  border-radius: var(--radius);
+  color: var(--gold);
+  font-family: 'Ambulatoria', serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.age-gate-no:hover { background: var(--gold-dim); }
+
+.age-gate-yes {
+  background: var(--gold);
+  border: none;
+  border-radius: var(--radius);
+  color: var(--bg);
+  font-family: 'Ambulatoria', serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 14px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.age-gate-yes:hover { opacity: 0.88; }
+
+.age-gate-cookie {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 /* ─── STICKY HEADER ──────────────────────────────────── */
 .sticky-header {
   position: fixed;
@@ -101,7 +200,7 @@ body {
 }
 
 .hero-logo {
-  width: clamp(240px, 32vw, 420px);
+  width: clamp(320px, 46vw, 640px);
 }
 
 .hero-body {
@@ -218,10 +317,11 @@ body {
 }
 
 .wine-name {
-  font-family: 'BiroScript', serif;
-  font-weight: 400;
-  font-size: clamp(20px, 2.4vw, 27px);
-  line-height: 1.1;
+  font-family: 'Ambulatoria', serif;
+  font-weight: 600;
+  font-size: clamp(18px, 2vw, 22px);
+  line-height: 1.2;
+  letter-spacing: 0.01em;
   color: var(--text);
 }
 
@@ -490,44 +590,223 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
 
 /* ─── FOOTER ─────────────────────────────────────────── */
 .footer {
-  padding: 48px 24px;
-  border-top: 1px solid var(--gold-dim);
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
+  background: #1a1a1a;
+  color: rgba(255,255,255,0.55);
+  padding: 64px 24px 0;
 }
 
-.footer-logo { width: 160px; opacity: 0.85; }
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr;
+  gap: 48px;
+  padding-bottom: 48px;
+}
+
+/* Ліва колонка */
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.footer-logo { width: 140px; }
+
+.footer-contacts {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.footer-contacts p {
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+.footer-contacts a {
+  color: rgba(255,255,255,0.55);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-contacts a:hover { color: #e8c87a; }
 
 .footer-socials {
   display: flex;
-  gap: 24px;
+  gap: 16px;
   align-items: center;
 }
 
 .social-link {
-  color: var(--text);
-  opacity: 0.5;
-  transition: opacity 0.2s, color 0.2s;
+  color: rgba(255,255,255,0.4);
+  transition: color 0.2s;
   display: flex;
 }
-.social-link:hover { opacity: 1; color: var(--gold); }
-.social-link svg { width: 24px; height: 24px; }
+.social-link:hover { color: #e8c87a; }
+.social-link svg { width: 22px; height: 22px; }
 
-.footer-text {
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--text);
-  opacity: 0.7;
+/* Навігаційні колонки */
+.footer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-.footer-legal {
+.footer-nav-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.9);
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+
+.footer-nav ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-nav ul li a,
+.footer-nav ul li span {
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  transition: color 0.2s;
+  cursor: default;
+}
+
+.footer-nav ul li a {
+  cursor: pointer;
+}
+.footer-nav ul li a:hover { color: #e8c87a; }
+
+/* Розділи в розробці */
+.footer-nav ul li .soon {
+  cursor: pointer;
+  position: relative;
+}
+.footer-nav ul li .soon:hover { color: rgba(255,255,255,0.7); }
+.footer-nav ul li .soon::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 0;
+  top: 100%;
+  margin-top: 6px;
+  white-space: nowrap;
+  background: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.85);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  padding: 4px 9px;
+  border-radius: 4px;
+  opacity: 0;
+  transform: translateY(-3px);
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.footer-nav ul li .soon:hover::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Нижній рядок */
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 20px 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.footer-bottom p {
+  font-size: 11px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.3);
+  line-height: 1.5;
+}
+
+/* Footer bar (самий низ) */
+.footer-bar {
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 16px 0 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.footer-copy {
   font-size: 12px;
   font-weight: 300;
-  color: var(--muted);
+  color: rgba(255,255,255,0.3);
+  white-space: nowrap;
+}
+
+.footer-payments {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pay-badge {
+  display: flex;
+  align-items: center;
+  opacity: 0.65;
+}
+
+.pay-text {
+  color: rgba(255,255,255,0.85);
+}
+
+.footer-18 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: 600;
   letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.3);
+}
+
+.badge-18 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.3);
+  font-size: 10px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+  .footer-inner {
+    grid-template-columns: 1fr 1fr;
+  }
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .footer-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
 }
 
 /* ─── RESPONSIVE ─────────────────────────────────────── */
@@ -543,5 +822,734 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
 @media (max-width: 540px) {
   .summary-bar { flex-direction: column; gap: 8px; text-align: center; }
   .form-wine-item { flex-direction: column; align-items: flex-start; }
-  .hero-logo { width: clamp(200px, 70vw, 320px); }
+  .hero-logo { width: clamp(260px, 82vw, 380px); }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   МАГАЗИН — каталог, бейджі, кошик, сторінка товару
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── Sticky header з кошиком ─── */
+.sticky-header { justify-content: center; position: fixed; }
+.sticky-logo-link { display: flex; }
+.cart-btn {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+.cart-btn:hover { color: var(--gold); }
+.cart-btn svg { width: 26px; height: 26px; }
+.cart-count {
+  position: absolute;
+  top: -6px; right: -8px;
+  min-width: 18px; height: 18px;
+  padding: 0 4px;
+  background: var(--gold);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.cart-count.has { opacity: 1; }
+
+/* ─── Заголовок каталогу ─── */
+.wines-head { text-align: center; margin-bottom: 48px; }
+.wines-title {
+  font-family: 'Ambulatoria', serif;
+  font-weight: 700;
+  font-size: clamp(26px, 4vw, 38px);
+  letter-spacing: 0.02em;
+  color: var(--text);
+  line-height: 1.1;
+}
+.wines-sub {
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-top: 8px;
+}
+
+/* ─── Картка каталогу ─── */
+.wine-card-link { text-decoration: none; color: inherit; display: block; width: 100%; }
+.wine-card-actions { width: 100%; margin-top: 4px; }
+
+.bottle-wrap { position: relative; }
+
+.badges {
+  position: absolute;
+  top: 6px; left: 6px;
+  display: flex; flex-direction: column;
+  gap: 5px; z-index: 2;
+}
+.badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 3px;
+  color: #fff;
+  white-space: nowrap;
+}
+.badge-best    { background: #4f8a3f; }  /* зелений */
+.badge-limited { background: #c4682a; }  /* помаранчевий */
+.badge-somm    { background: #4f86b0; }  /* блакитний */
+.badge-new     { background: #9a6f28; }  /* золотий */
+.badge-sale    { background: #c0392b; }  /* червоний — Акція */
+.badge-def     { background: #555; }
+
+.price-old {
+  text-decoration: line-through;
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 0.85em;
+  margin-right: 8px;
+}
+.price-now { color: var(--gold); }
+
+.buy-btn {
+  width: 100%;
+  background: var(--gold);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Ambulatoria', serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 12px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.buy-btn:hover { opacity: 0.88; }
+.buy-btn.out {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--gold-dim);
+  cursor: default;
+}
+
+/* ─── Хедер на сторінці товару ─── */
+.shop-header {
+  position: sticky;
+  top: 0; z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 32px;
+  background: rgba(255,247,242,0.95);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--gold-dim);
+}
+.shop-header-logo { display: flex; }
+.shop-header-logo img { height: 70px; }
+.shop-header .cart-btn { position: relative; right: auto; top: auto; transform: none; }
+
+/* ─── Сторінка товару ─── */
+.product { max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; }
+.product-back {
+  display: inline-block;
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;
+  margin-bottom: 24px;
+  transition: color 0.2s;
+}
+.product-back:hover { color: var(--gold); }
+
+.product-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: start;
+}
+.product-photo-wrap {
+  position: relative;
+  background: var(--bg-card);
+  border-radius: 6px;
+  padding: 32px;
+  display: flex;
+  justify-content: center;
+}
+.product-photo {
+  width: 100%;
+  max-width: 360px;
+  filter: drop-shadow(0 20px 48px rgba(0,0,0,0.25));
+}
+
+.product-name {
+  font-family: 'Ambulatoria', serif;
+  font-weight: 700;
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  color: var(--text);
+}
+.product-subtitle {
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-top: 8px;
+}
+.product-price {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 24px 0 8px;
+}
+.product-stock { font-size: 14px; font-weight: 600; margin-bottom: 24px; }
+.product-stock.in  { color: #5a8a4a; }
+.product-stock.out { color: #b05050; }
+
+.product-buy { display: flex; gap: 12px; align-items: stretch; }
+.add-cart-btn {
+  flex: 1;
+  background: var(--gold);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Ambulatoria', serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 14px 24px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.add-cart-btn:hover { opacity: 0.88; }
+.add-cart-btn.out { background: transparent; color: var(--muted); border: 1px solid var(--gold-dim); cursor: default; }
+
+.product-specs {
+  margin-top: 32px;
+  border-top: 1px solid var(--gold-dim);
+}
+.spec {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--gold-dim);
+  font-size: 14px;
+}
+.spec-k { color: var(--muted); }
+.spec-v { color: var(--text); font-weight: 500; text-align: right; }
+
+.product-details {
+  max-width: 760px;
+  margin: 56px auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.product-detail-title {
+  font-family: 'Ambulatoria', serif;
+  font-weight: 700;
+  font-size: 19px;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.product-detail-block p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: rgba(30,21,8,0.78);
+}
+
+/* ─── Кошик (drawer) ─── */
+.cart-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10,8,4,0.5);
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.3s;
+  z-index: 998;
+}
+.cart-overlay.show { opacity: 1; visibility: visible; }
+
+.cart-drawer {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: 380px; max-width: 90vw;
+  background: var(--bg);
+  z-index: 999;
+  transform: translateX(100%);
+  transition: transform 0.32s ease;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -8px 0 40px rgba(0,0,0,0.18);
+}
+.cart-drawer.open { transform: translateX(0); }
+
+.cart-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--gold-dim);
+  font-family: 'Ambulatoria', serif;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+.cart-close {
+  background: none; border: none;
+  font-size: 18px; cursor: pointer;
+  color: var(--muted);
+}
+.cart-close:hover { color: var(--text); }
+
+.cart-items { flex: 1; overflow-y: auto; padding: 16px 24px; }
+.cart-empty { color: var(--muted); text-align: center; padding: 40px 0; font-size: 14px; }
+
+.cart-item {
+  display: flex; gap: 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--gold-dim);
+}
+.cart-item-img {
+  width: 56px; height: 70px;
+  object-fit: contain;
+  background: var(--bg-card);
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.cart-item-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.cart-item-price { font-size: 13px; color: var(--gold); margin: 2px 0 8px; }
+.cart-item-ctrl { display: flex; align-items: center; gap: 8px; }
+.cart-item-ctrl button {
+  width: 26px; height: 26px;
+  border: 1px solid var(--gold-line);
+  background: none;
+  cursor: pointer;
+  color: var(--gold);
+  border-radius: 3px;
+}
+.cart-item-ctrl span { font-size: 14px; min-width: 18px; text-align: center; }
+.cart-item-del {
+  margin-left: auto;
+  border: none !important;
+  width: auto !important;
+  font-size: 12px !important;
+  color: var(--muted) !important;
+  text-decoration: underline;
+}
+
+.cart-foot { padding: 20px 24px; border-top: 1px solid var(--gold-dim); }
+.cart-total {
+  display: flex; justify-content: space-between;
+  font-size: 16px; font-weight: 700;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+.cart-checkout {
+  display: block;
+  text-align: center;
+  background: var(--gold);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 14px;
+  padding: 15px;
+  border-radius: var(--radius);
+  transition: opacity 0.2s;
+}
+.cart-checkout:hover { opacity: 0.88; }
+.cart-checkout.disabled { opacity: 0.4; pointer-events: none; }
+
+/* ─── Адаптив ─── */
+@media (max-width: 760px) {
+  .product-grid { grid-template-columns: 1fr; gap: 28px; }
+  .product-photo { max-width: 260px; }
+}
+
+/* ─── "З цим часто купують" ─── */
+.related {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 8px 24px 90px;
+}
+.related-title {
+  font-family: 'Ambulatoria', serif;
+  font-weight: 700;
+  font-size: clamp(22px, 3vw, 30px);
+  letter-spacing: 0.02em;
+  color: var(--text);
+  margin-bottom: 28px;
+}
+.related-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+@media (max-width: 760px) {
+  .related-row {
+    display: flex;
+    overflow-x: auto;
+    gap: 16px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px;
+  }
+  .related-row .wine-card {
+    flex: 0 0 72%;
+    scroll-snap-align: start;
+  }
+}
+
+/* ─── Ароматичний профіль (акцентний блок) ─── */
+.product-aroma {
+  background: var(--bg-card);
+  border-left: 3px solid var(--gold);
+  border-radius: 4px;
+  padding: 20px 24px;
+}
+.product-aroma-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.product-aroma-text {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text);
+  font-style: italic;
+}
+
+/* ─── Вкладки на сторінці товару ─── */
+.product-tabs {
+  width: 100%;
+  margin-top: 32px;
+}
+.tabs-nav {
+  display: flex;
+  gap: 36px;
+  border-bottom: 1px solid var(--gold-dim);
+}
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 0 0 14px;
+  font-family: 'Ambulatoria', serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--text); }
+.tab-btn.active::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 2px;
+  background: var(--gold);
+}
+
+.tab-panel { display: none; padding-top: 28px; }
+.tab-panel.active { display: block; }
+
+.tab-desc-text {
+  font-size: 15px;
+  line-height: 1.85;
+  color: rgba(30,21,8,0.82);
+  margin-bottom: 24px;
+}
+
+@media (max-width: 540px) {
+  .tabs-nav { gap: 20px; }
+  .tab-btn { font-size: 12px; }
+}
+
+.tab-panel .product-specs { margin-top: 0; border-top: none; }
+
+/* ═══════════════════════════════════════════════════════════
+   CHECKOUT
+   ═══════════════════════════════════════════════════════════ */
+.checkout { max-width: 1000px; margin: 0 auto; padding: 24px 24px 90px; }
+.checkout-title {
+  font-family: 'Ambulatoria', serif;
+  font-weight: 700;
+  font-size: clamp(26px, 4vw, 38px);
+  letter-spacing: 0.02em;
+  color: var(--text);
+  margin: 16px 0 36px;
+}
+.checkout-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+.checkout-section-title {
+  font-family: 'Ambulatoria', serif;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  margin: 28px 0 16px;
+}
+.checkout-form .checkout-section-title:first-child { margin-top: 0; }
+
+/* НП автопідказки */
+.np-field { position: relative; }
+.np-list {
+  list-style: none;
+  position: absolute;
+  top: 100%; left: 0; right: 0;
+  z-index: 50;
+  background: var(--bg);
+  border: 1px solid var(--gold-line);
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+  max-height: 260px;
+  overflow-y: auto;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.1);
+}
+.np-list:empty { display: none; }
+.np-list li {
+  padding: 11px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--gold-dim);
+}
+.np-list li:hover { background: var(--bg-card); }
+.np-list li span { color: var(--muted); font-size: 12px; }
+
+/* Підсумок */
+.checkout-summary {
+  background: var(--bg-card);
+  border: 1px solid var(--gold-dim);
+  border-radius: 6px;
+  padding: 24px;
+  position: sticky;
+  top: 90px;
+}
+.checkout-items { display: flex; flex-direction: column; gap: 14px; margin-bottom: 18px; }
+.checkout-item { display: flex; gap: 12px; align-items: center; }
+.checkout-item-img {
+  width: 44px; height: 56px; object-fit: contain;
+  background: var(--bg); border-radius: 4px; flex-shrink: 0;
+}
+.checkout-item-body { flex: 1; }
+.checkout-item-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.checkout-item-meta { font-size: 12px; color: var(--muted); }
+.checkout-item-sum { font-size: 14px; font-weight: 700; color: var(--text); white-space: nowrap; }
+
+.checkout-total {
+  display: flex; justify-content: space-between;
+  padding: 16px 0;
+  border-top: 1px solid var(--gold-line);
+  font-size: 17px; font-weight: 700; color: var(--text);
+}
+.pay-btn {
+  width: 100%;
+  background: var(--gold);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Ambulatoria', serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 16px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.pay-btn:hover { opacity: 0.9; }
+.pay-btn:disabled { opacity: 0.5; cursor: default; }
+.checkout-note { font-size: 12px; color: var(--muted); line-height: 1.5; margin-top: 14px; }
+
+/* Thank you */
+.thankyou {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 80px 24px 120px;
+  text-align: center;
+}
+.thankyou-icon {
+  width: 64px; height: 64px;
+  margin: 0 auto 24px;
+  color: var(--gold);
+}
+.thankyou h1 {
+  font-family: 'Ambulatoria', serif;
+  font-weight: 700;
+  font-size: clamp(26px, 4vw, 36px);
+  color: var(--text);
+  margin-bottom: 16px;
+}
+.thankyou p { font-size: 15px; line-height: 1.8; color: var(--muted); margin-bottom: 12px; }
+.thankyou .hero-cta { color: var(--gold); border-color: var(--gold-line); margin-top: 24px; }
+.thankyou .hero-cta:hover { background: var(--gold); color: #fff; }
+
+@media (max-width: 760px) {
+  .checkout-grid { grid-template-columns: 1fr; gap: 28px; }
+  .checkout-summary { position: static; }
+}
+
+/* ═══════════════ CHECKOUT ═══════════════ */
+.checkout { max-width: 1000px; margin: 0 auto; padding: 32px 24px 80px; }
+.checkout-title {
+  font-family: 'Ambulatoria', serif;
+  font-weight: 700;
+  font-size: clamp(26px, 4vw, 38px);
+  letter-spacing: 0.02em;
+  margin: 12px 0 36px;
+}
+.checkout-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+.checkout-sec {
+  font-family: 'Ambulatoria', serif;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-bottom: 18px;
+}
+.checkout-form .checkout-sec:not(:first-child) { margin-top: 32px; }
+
+/* Підсумок */
+.checkout-summary {
+  background: var(--bg-card);
+  border: 1px solid var(--gold-dim);
+  border-radius: 6px;
+  padding: 28px 24px;
+  position: sticky;
+  top: 90px;
+}
+.summary-items { display: flex; flex-direction: column; gap: 14px; margin-bottom: 18px; }
+.summary-item { display: flex; align-items: center; gap: 12px; }
+.summary-item img {
+  width: 44px; height: 56px; object-fit: contain;
+  background: var(--bg); border-radius: 4px; flex-shrink: 0;
+}
+.summary-item-body { display: flex; flex-direction: column; flex: 1; }
+.summary-item-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.summary-item-qty { font-size: 12px; color: var(--muted); }
+.summary-item-sum { font-size: 14px; font-weight: 700; color: var(--text); white-space: nowrap; }
+.summary-empty { color: var(--muted); font-size: 14px; }
+.summary-empty a { color: var(--gold); }
+
+.summary-total {
+  display: flex; justify-content: space-between;
+  font-size: 18px; font-weight: 700; color: var(--text);
+  padding-top: 18px; margin-bottom: 20px;
+  border-top: 1px solid var(--gold-line);
+}
+.pay-btn {
+  width: 100%;
+  background: var(--gold);
+  color: #fff; border: none; border-radius: var(--radius);
+  font-family: 'Ambulatoria', serif;
+  font-size: 15px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 16px; cursor: pointer; transition: opacity 0.2s;
+}
+.pay-btn:hover { opacity: 0.88; }
+.pay-btn:disabled { opacity: 0.45; cursor: default; }
+.checkout-note { font-size: 12px; color: var(--muted); line-height: 1.5; margin-top: 14px; }
+.checkout-status { margin-top: 14px; padding: 12px 14px; border-radius: var(--radius); font-size: 13px; text-align: center; }
+.checkout-status.error { background: rgba(180,60,60,0.1); border: 1px solid rgba(180,60,60,0.3); color: #b05050; }
+
+.checkout-footer {
+  text-align: center; padding: 28px 24px;
+  border-top: 1px solid var(--gold-dim);
+  font-size: 12px; color: var(--muted);
+}
+
+@media (max-width: 760px) {
+  .checkout-grid { grid-template-columns: 1fr; gap: 28px; }
+  .checkout-summary { position: static; }
+}
+
+/* ═══════════════ THANK YOU ═══════════════ */
+.thankyou { min-height: 70vh; display: flex; align-items: center; justify-content: center; padding: 40px 24px; }
+.thankyou-box { max-width: 480px; text-align: center; }
+.thankyou-icon {
+  width: 64px; height: 64px; margin: 0 auto 24px;
+  border-radius: 50%; background: #5a8a4a; color: #fff;
+  font-size: 32px; display: flex; align-items: center; justify-content: center;
+}
+.thankyou-title {
+  font-family: 'Ambulatoria', serif; font-weight: 700;
+  font-size: clamp(26px, 4vw, 36px); margin-bottom: 12px;
+}
+.thankyou-order { font-size: 14px; color: var(--gold); font-weight: 600; margin-bottom: 16px; }
+.thankyou-text { font-size: 15px; line-height: 1.7; color: rgba(30,21,8,0.78); margin-bottom: 28px; }
+.thankyou-btn {
+  display: inline-block; background: var(--gold); color: #fff;
+  text-decoration: none; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; font-size: 14px; padding: 14px 32px; border-radius: var(--radius);
+}
+.thankyou-btn:hover { opacity: 0.88; }
+
+/* ─── Згоди на checkout ─── */
+.checkout-agree {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.agree-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12.5px;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  line-height: 1.5;
+  color: var(--muted);
+  cursor: pointer;
+}
+.agree-item span { font-weight: 400; }
+.agree-item input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  accent-color: var(--gold);
+  cursor: pointer;
+}
+.agree-item a { color: var(--gold); text-decoration: underline; }
+
+.checkout-status.info {
+  background: var(--gold-dim);
+  border: 1px solid var(--gold-line);
+  color: var(--text);
 }

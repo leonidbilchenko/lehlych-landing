@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Оформлення замовлення — Lehlych Winery</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <!-- AGE GATE -->
+  <div class="age-gate" id="ageGate">
+    <div class="age-gate-box">
+      <img src="../logo/Logo Lehlych@4x.png" alt="Lehlych Winery" class="age-gate-logo">
+      <h2 class="age-gate-title">УВАГА!</h2>
+      <p class="age-gate-text">Сайт містить інформацію, не рекомендовану для осіб молодше 18 років.</p>
+      <p class="age-gate-question">Чи досягли ви повноліття?</p>
+      <div class="age-gate-btns">
+        <button class="age-gate-no" onclick="ageNo()">НІ</button>
+        <button class="age-gate-yes" onclick="ageYes()">ТАК</button>
+      </div>
+      <p class="age-gate-cookie">Натискаючи "Так", ви також погоджуєтесь на використання сайтом файлів cookie.</p>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="shop-header">
+    <a href="../" class="shop-header-logo"><img src="../logo/Logo Lehlych@4x.png" alt="Lehlych Winery"></a>
+  </header>
+
+  <!-- CHECKOUT -->
+  <main class="checkout">
+    <a href="../#wines" class="product-back">← Продовжити покупки</a>
+    <h1 class="checkout-title">Оформлення замовлення</h1>
+
+    <div class="checkout-grid">
+
+      <!-- Форма -->
+      <form class="checkout-form" id="checkoutForm" novalidate>
+        <h2 class="checkout-section-title">Контактні дані</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fLastName">Прізвище *</label>
+            <input type="text" id="fLastName" placeholder="Шевченко" required>
+          </div>
+          <div class="form-group">
+            <label for="fFirstName">Ім'я *</label>
+            <input type="text" id="fFirstName" placeholder="Тарас" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fPhone">Телефон *</label>
+            <input type="tel" id="fPhone" placeholder="+380 XX XXX XX XX" required>
+          </div>
+          <div class="form-group">
+            <label for="fEmail">Email *</label>
+            <input type="email" id="fEmail" placeholder="email@example.com" required>
+          </div>
+        </div>
+
+        <h2 class="checkout-section-title">Доставка · Нова Пошта</h2>
+        <div class="form-group np-field">
+          <label for="fCity">Місто / населений пункт *</label>
+          <input type="text" id="fCity" placeholder="Почніть вводити місто…" autocomplete="off" required>
+          <input type="hidden" id="fCityRef">
+          <ul class="np-list" id="cityList"></ul>
+        </div>
+        <div class="form-group np-field">
+          <label for="fWarehouse">Відділення / поштомат *</label>
+          <input type="text" id="fWarehouse" placeholder="Спершу оберіть місто" autocomplete="off" required disabled>
+          <input type="hidden" id="fWarehouseRef">
+          <ul class="np-list" id="warehouseList"></ul>
+        </div>
+
+        <h2 class="checkout-section-title">Коментар</h2>
+        <div class="form-group">
+          <textarea id="fComment" rows="3" placeholder="Побажання до замовлення (необов'язково)"></textarea>
+        </div>
+      </form>
+
+      <!-- Підсумок -->
+      <aside class="checkout-summary">
+        <h2 class="checkout-section-title">Ваше замовлення</h2>
+        <div class="checkout-items" id="checkoutItems"></div>
+        <div class="checkout-total">
+          <span>Разом до сплати</span>
+          <span id="checkoutTotal">0 грн</span>
+        </div>
+        <button type="button" class="pay-btn" id="payBtn" onclick="submitOrder()">
+          <span class="pay-label">Перейти до оплати</span>
+          <span class="pay-spinner" hidden>Зачекайте…</span>
+        </button>
+        <p class="checkout-note">Оплата картками, Apple Pay та Google Pay через LiqPay. Після оплати ми надішлемо підтвердження на пошту.</p>
+        <div class="form-status" id="checkoutStatus" hidden></div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  {{FOOTER}}
+
+  <script src="../products.js"></script>
+  <script src="../script.js"></script>
+  <script src="../checkout.js"></script>
+</body>
+</html>

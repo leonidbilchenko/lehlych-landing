@@ -1,141 +1,183 @@
-// ─── Google Sheets / Apps Script endpoint ────────────────
-// Після налаштування Apps Script вставте URL сюди:
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzTydQKROG5MPgDy5PvY02K8F5vSQs2sGWdI2UaxRcTunfTXFbd6-vb2CmJ9obMSWI1Qw/exec';
+// ─── Трекінг (запускається лише після згоди) ──────────────
+const FB_PIXEL_ID = '1290089053109937';
+const GA_ID = 'G-2MG7SKFQFF';
+let trackingLoaded = false;
 
-// ─── Sticky header ────────────────────────────────────────
-const heroLogo    = document.getElementById('heroLogo');
-const stickyHeader = document.getElementById('stickyHeader');
+function loadTracking() {
+  if (trackingLoaded) return;
+  trackingLoaded = true;
 
-const observer = new IntersectionObserver(
-  ([entry]) => {
-    stickyHeader.classList.toggle('visible', !entry.isIntersecting);
-  },
-  { threshold: 0.1 }
-);
-observer.observe(heroLogo);
+  // Meta Pixel
+  !function (f, b, e, v, n, t, s) {
+    if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments) };
+    if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = [];
+    t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t, s);
+  }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', FB_PIXEL_ID);
+  fbq('track', 'PageView');
 
-// ─── Quantity controls ────────────────────────────────────
-function changeQty(btn, delta) {
-  const input = btn.parentElement.querySelector('.qty-input');
-  const next  = Math.max(0, Math.min(99, parseInt(input.value || 0) + delta));
-  input.value = next;
-  syncWine(input.dataset.wine, next);
-  updateSummary();
+  // Google tag (GA4)
+  const g = document.createElement('script');
+  g.async = true;
+  g.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+  document.head.appendChild(g);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () { dataLayer.push(arguments); };
+  gtag('js', new Date());
+  gtag('config', GA_ID);
 }
 
-function syncWine(wine, val) {
-  document.querySelectorAll(`.qty-input[data-wine="${wine}"]`).forEach(el => {
-    el.value = val;
-  });
-}
-
-document.querySelectorAll('.qty-input').forEach(input => {
-  input.addEventListener('change', () => {
-    const val = Math.max(0, Math.min(99, parseInt(input.value || 0)));
-    input.value = val;
-    syncWine(input.dataset.wine, val);
-    updateSummary();
-  });
-});
-
-// ─── Summary bar ──────────────────────────────────────────
-function getQty(wine) {
-  return parseInt(document.querySelector(`.qty-input[data-wine="${wine}"]`)?.value || 0);
-}
-
-function updateSummary() {
-  const chard   = getQty('chardonnay');
-  const sauv    = getQty('sauvignon');
-  const trip    = getQty('trpilske');
-  const rozh    = getQty('rozhevyi');
-  const total   = chard + sauv + trip + rozh;
-  const text    = document.getElementById('summaryText');
-
-  if (!total) { text.textContent = 'Оберіть вина вище'; return; }
-
-  const parts = [];
-  if (chard) parts.push(`Chardonnay ×${chard}`);
-  if (sauv)  parts.push(`Sauvignon Blanc ×${sauv}`);
-  if (trip)  parts.push(`Трипільське Сонце ×${trip}`);
-  if (rozh)  parts.push(`Рожевий Обрій ×${rozh}`);
-  text.textContent = parts.join(' · ') + ` — ${total} пляш${plural(total)}`;
-}
-
-function plural(n) {
-  if (n % 10 === 1 && n % 100 !== 11) return 'ка';
-  if ([2,3,4].includes(n % 10) && ![12,13,14].includes(n % 100)) return 'ки';
-  return 'ок';
-}
-
-// ─── Form submit ──────────────────────────────────────────
-document.getElementById('orderForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  const lastName   = document.getElementById('fLastName').value.trim();
-  const firstName  = document.getElementById('fFirstName').value.trim();
-  const phone      = document.getElementById('fPhone').value.trim();
-  const email      = document.getElementById('fEmail').value.trim();
-  const city       = document.getElementById('fCity').value.trim();
-  const novaPoshta = document.getElementById('fNovaPoshta').value.trim();
-  const comment    = document.getElementById('fComment').value.trim();
-
-  const chard = parseInt(document.getElementById('fQtyChardonnay').value || 0);
-  const sauv  = parseInt(document.getElementById('fQtySauvignon').value || 0);
-  const trip  = parseInt(document.getElementById('fQtyTrpilske').value || 0);
-  const rozh  = parseInt(document.getElementById('fQtyRozhevyi').value || 0);
-
-  if (!lastName || !firstName || !phone || !email || !city || !novaPoshta) {
-    showStatus('Будь ласка, заповніть усі обов\'язкові поля.', 'error');
-    return;
+// ─── Age gate ────────────────────────────────────────────
+(function () {
+  const gate = document.getElementById('ageGate');
+  if (localStorage.getItem('lehlych_age_ok') === '1') {
+    if (gate) gate.classList.add('hidden');
+    if (localStorage.getItem('lehlych_cookie_ok') === '1') loadTracking();
   }
-  if (chard + sauv + trip + rozh === 0) {
-    showStatus('Оберіть хоча б одну пляшку вина.', 'error');
-    return;
-  }
+})();
 
-  const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  btn.querySelector('.submit-label').hidden = true;
-  btn.querySelector('.submit-spinner').hidden = false;
-
-  const payload = {
-    lastName, firstName, phone, email, city, novaPoshta, comment,
-    chardonnay: chard, sauvignon: sauv, trpilske: trip, rozhevyi: rozh
-  };
-
-  try {
-    if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
-      await new Promise(r => setTimeout(r, 900));
-      onSuccess(firstName);
-    } else {
-      const res  = await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
-      const json = await res.json();
-      if (json.status === 'ok') onSuccess(firstName);
-      else throw new Error();
-    }
-  } catch {
-    showStatus('Сталася помилка. Спробуйте ще раз або напишіть нам у соцмережах.', 'error');
-  } finally {
-    btn.disabled = false;
-    btn.querySelector('.submit-label').hidden = false;
-    btn.querySelector('.submit-spinner').hidden = true;
-  }
-});
-
-function onSuccess(firstName) {
-  showStatus(
-    `Дякуємо, ${firstName}! Ваше передзамовлення прийнято. Лист-підтвердження вже летить на вашу пошту.`,
-    'success'
-  );
-  document.getElementById('orderForm').reset();
-  document.querySelectorAll('.qty-input').forEach(el => el.value = 0);
-  updateSummary();
+function ageYes() {
+  localStorage.setItem('lehlych_age_ok', '1');
+  localStorage.setItem('lehlych_cookie_ok', '1');
+  document.getElementById('ageGate').classList.add('hidden');
+  loadTracking();
+}
+function ageNo() {
+  window.location.href = 'https://www.google.com';
 }
 
-function showStatus(msg, type) {
-  const el = document.getElementById('formStatus');
-  el.textContent = msg;
-  el.className   = `form-status ${type}`;
-  el.hidden      = false;
-  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+// ─── Sticky header (лише там, де є герой) ─────────────────
+(function () {
+  const heroLogo = document.getElementById('heroLogo');
+  const stickyHeader = document.getElementById('stickyHeader');
+  if (heroLogo && stickyHeader) {
+    const observer = new IntersectionObserver(
+      ([entry]) => stickyHeader.classList.toggle('visible', !entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    observer.observe(heroLogo);
+  }
+})();
+
+// ─── Кошик ────────────────────────────────────────────────
+const CART_KEY = 'lehlych_cart';
+
+function getCart() {
+  try { return JSON.parse(localStorage.getItem(CART_KEY)) || {}; }
+  catch { return {}; }
 }
+function saveCart(cart) {
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  updateCartCount();
+  renderCart();
+}
+function product(slug) {
+  return (window.PRODUCTS || []).find(p => p.slug === slug);
+}
+
+function addToCart(slug, qty) {
+  qty = parseInt(qty || 1);
+  if (qty < 1) qty = 1;
+  const cart = getCart();
+  cart[slug] = (cart[slug] || 0) + qty;
+  saveCart(cart);
+  openCart();
+}
+function setCartQty(slug, qty) {
+  const cart = getCart();
+  qty = parseInt(qty);
+  if (!qty || qty < 1) delete cart[slug];
+  else cart[slug] = Math.min(99, qty);
+  saveCart(cart);
+}
+function removeFromCart(slug) {
+  const cart = getCart();
+  delete cart[slug];
+  saveCart(cart);
+}
+
+function cartTotal() {
+  const cart = getCart();
+  return Object.entries(cart).reduce((sum, [slug, q]) => {
+    const p = product(slug);
+    return sum + (p ? p.price * q : 0);
+  }, 0);
+}
+function cartCount() {
+  return Object.values(getCart()).reduce((a, b) => a + b, 0);
+}
+
+function updateCartCount() {
+  const el = document.getElementById('cartCount');
+  if (!el) return;
+  const n = cartCount();
+  el.textContent = n;
+  el.classList.toggle('has', n > 0);
+}
+
+function renderCart() {
+  const box = document.getElementById('cartItems');
+  if (!box) return;
+  const cart = getCart();
+  const slugs = Object.keys(cart);
+
+  if (!slugs.length) {
+    box.innerHTML = '<p class="cart-empty">Кошик порожній</p>';
+  } else {
+    box.innerHTML = slugs.map(slug => {
+      const p = product(slug);
+      if (!p) return '';
+      const q = cart[slug];
+      return `<div class="cart-item">
+        <img src="${p.photo}" alt="${p.name}" class="cart-item-img">
+        <div class="cart-item-body">
+          <p class="cart-item-name">${p.name}</p>
+          <p class="cart-item-price">${p.price} грн</p>
+          <div class="cart-item-ctrl">
+            <button onclick="setCartQty('${slug}', ${q - 1})">−</button>
+            <span>${q}</span>
+            <button onclick="setCartQty('${slug}', ${q + 1})">+</button>
+            <button class="cart-item-del" onclick="removeFromCart('${slug}')">Видалити</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  const totalEl = document.getElementById('cartTotal');
+  if (totalEl) totalEl.textContent = cartTotal() + ' грн';
+
+  const checkout = document.getElementById('cartCheckout');
+  if (checkout) checkout.classList.toggle('disabled', !slugs.length);
+}
+
+function openCart() {
+  document.getElementById('cartDrawer')?.classList.add('open');
+  document.getElementById('cartOverlay')?.classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeCart() {
+  document.getElementById('cartDrawer')?.classList.remove('open');
+  document.getElementById('cartOverlay')?.classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+// ─── Вкладки на сторінці товару ───────────────────────────
+function showTab(btn, panelId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(panelId)?.classList.add('active');
+}
+
+// ─── Кількість на сторінці товару ─────────────────────────
+function pqty(delta) {
+  const input = document.getElementById('pQty');
+  if (!input) return;
+  input.value = Math.max(1, Math.min(99, (parseInt(input.value) || 1) + delta));
+}
+
+// init
+updateCartCount();
+renderCart();

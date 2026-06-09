@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Дякуємо за замовлення — Lehlych Winery</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <header class="shop-header">
+    <a href="../" class="shop-header-logo"><img src="../logo/Logo Lehlych@4x.png" alt="Lehlych Winery"></a>
+  </header>
+
+  <main class="thankyou">
+    <svg class="thankyou-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="12" cy="12" r="10"/><path d="M8 12.5l2.5 2.5L16 9"/>
+    </svg>
+    <h1>Дякуємо за замовлення!</h1>
+    <p id="thankyouOrder"></p>
+    <p>Ми надіслали підтвердження на вашу пошту. Щойно оплата підтвердиться — почнемо збирати ваше замовлення й передамо Новою Поштою.</p>
+    <p>Якщо виникнуть питання — пишіть нам на <a href="mailto:lehlychwinery@gmail.com">lehlychwinery@gmail.com</a> або в директ.</p>
+    <a href="../" class="hero-cta">На головну</a>
+  </main>
+
+  <!-- FOOTER -->
+  {{FOOTER}}
+
+  <script>
+    // показати номер замовлення з URL (?order=123)
+    const o = new URLSearchParams(location.search).get('order');
+    if (o) document.getElementById('thankyouOrder').textContent = 'Номер вашого замовлення: №' + o;
+    // очистити кошик про всяк випадок
+    try { localStorage.removeItem('lehlych_cart'); } catch (e) {}
+  </script>
+</body>
+</html>

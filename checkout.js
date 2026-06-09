@@ -2,7 +2,7 @@
 const CHECKOUT_URL = 'https://script.google.com/macros/s/AKfycbwMR4ohnguTxkzUdoqDDERrM3caroSHZ99Ry8LUYguqVOboGpXp4GV60x2NLxzqQrtNVQ/exec';
 
 // Тестовий режим: true — оплата вимкнена. false — оплата через LiqPay.
-const TEST_MODE = false;
+const TEST_MODE = true;
 
 function $(id) { return document.getElementById(id); }
 function val(id) { return ($(id)?.value || '').trim(); }

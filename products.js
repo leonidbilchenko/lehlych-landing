@@ -2,7 +2,7 @@ window.PRODUCTS = [
   {
     "slug": "chardonnay-2025",
     "name": "Chardonnay",
-    "price": 700,
+    "price": 849,
     "photo": "/images/products/chardonnay-2025/transparent.png",
     "inStock": true
   },

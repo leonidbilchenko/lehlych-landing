@@ -226,15 +226,73 @@ function sendEmails(row, orderNum) {
   const city = row[6], wh = row[7], items = row[8], total = row[9], comment = row[12];
 
   if (email) {
+    const plain =
+      'Вітаємо, ' + firstName + '!\n\n' +
+      'Дякуємо за ваше замовлення — оплату успішно отримано.\n\n' +
+      'Замовлення №' + orderNum + '\n' + items + '\nРазом: ' + total + ' грн\n\n' +
+      'Доставка: ' + city + ', ' + wh + ' (Нова Пошта).\n\n' +
+      'Ми відправляємо замовлення з понеділка по пʼятницю. ' +
+      'Щойно передамо посилку — ви отримаєте сповіщення про відправку в застосунку Нової Пошти.\n\n' +
+      'Якщо виникнуть питання — просто відповідайте на цей лист.\n\n' +
+      'З теплом,\nКоманда Lehlych Winery 🍷';
+
+    const html =
+      '<div style="margin:0;padding:0;background:#f4f1ec;">' +
+      '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f1ec;padding:32px 16px;">' +
+      '<tr><td align="center">' +
+      '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:14px;overflow:hidden;font-family:Georgia,\'Times New Roman\',serif;color:#2b2b2b;">' +
+
+      // Шапка
+      '<tr><td style="background:#1f0f0c;padding:16px 24px;text-align:center;">' +
+      '<img src="https://lehlych.com/logo/Logo%20Lehlych%20White@4x.png" alt="Lehlych Winery" width="380" style="display:inline-block;width:100%;max-width:380px;height:auto;border:0;">' +
+      '</td></tr>' +
+
+      // Тіло
+      '<tr><td style="padding:36px 32px 12px;">' +
+      '<h1 style="margin:0 0 8px;font-size:24px;font-weight:400;color:#2b2b2b;">Дякуємо за замовлення!</h1>' +
+      '<p style="margin:0 0 20px;font-size:16px;line-height:1.6;color:#555;">Вітаємо, ' + firstName + '! Оплату успішно отримано — ваше вино вже чекає на відправку.</p>' +
+
+      // Деталі замовлення
+      '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#faf8f4;border-radius:10px;padding:0;margin:0 0 24px;">' +
+      '<tr><td style="padding:20px 22px;">' +
+      '<p style="margin:0 0 10px;font-size:13px;letter-spacing:1px;color:#9a8f7a;text-transform:uppercase;">Замовлення №' + orderNum + '</p>' +
+      '<p style="margin:0 0 14px;font-size:16px;line-height:1.6;color:#2b2b2b;">' + items + '</p>' +
+      '<p style="margin:0;font-size:18px;color:#2b2b2b;"><strong>Разом: ' + total + ' грн</strong></p>' +
+      '</td></tr></table>' +
+
+      // Доставка
+      '<p style="margin:0 0 6px;font-size:13px;letter-spacing:1px;color:#9a8f7a;text-transform:uppercase;">Доставка</p>' +
+      '<p style="margin:0 0 24px;font-size:16px;line-height:1.6;color:#2b2b2b;">' + city + ', ' + wh + '<br><span style="color:#888;">Нова Пошта</span></p>' +
+
+      // Інфо про відправку
+      '<div style="border-left:3px solid #9a8f7a;padding:4px 0 4px 16px;margin:0 0 28px;">' +
+      '<p style="margin:0;font-size:15px;line-height:1.65;color:#555;">Ми відправляємо замовлення <strong>з понеділка по пʼятницю</strong>. Щойно передамо посилку — ви отримаєте <strong>сповіщення про відправку в застосунку Нової Пошти</strong>.</p>' +
+      '</div>' +
+
+      '<p style="margin:0 0 4px;font-size:15px;line-height:1.6;color:#555;">Якщо виникнуть питання — просто відповідайте на цей лист.</p>' +
+      '</td></tr>' +
+
+      // Підпис
+      '<tr><td style="padding:8px 32px 36px;">' +
+      '<p style="margin:0;font-size:16px;color:#2b2b2b;">З теплом,<br>Команда Lehlych Winery 🍷</p>' +
+      '</td></tr>' +
+
+      // Футер
+      '<tr><td style="background:#1f0f0c;padding:20px 32px;text-align:center;">' +
+      '<p style="margin:0 0 6px;font-size:12px;color:#9a8f7a;">lehlych.com · lehlychwinery@gmail.com</p>' +
+      '<p style="margin:0;font-size:11px;color:#6f6a5f;">18+ Надмірне споживання алкоголю шкідливе для вашого здоровʼя</p>' +
+      '</td></tr>' +
+
+      '</table>' +
+      '</td></tr></table>' +
+      '</div>';
+
     MailApp.sendEmail({
       to: email, replyTo: winery,
       subject: 'Lehlych Winery — замовлення №' + orderNum + ' оплачено',
-      body: 'Вітаємо, ' + firstName + '!\n\n' +
-        'Дякуємо за замовлення — оплату отримано.\n\n' +
-        'Замовлення №' + orderNum + ':\n' + items + '\nРазом: ' + total + ' грн\n\n' +
-        'Доставка: ' + city + ', ' + wh + ' (Нова Пошта).\n\n' +
-        'Щойно зберемо й відправимо — надішлемо ТТН.\n\n' +
-        'З теплом,\nКоманда Lehlych Winery',
+      body: plain,
+      htmlBody: html,
+      name: 'Lehlych Winery',
     });
   }
   MailApp.sendEmail({

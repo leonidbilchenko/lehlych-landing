@@ -198,6 +198,7 @@ def main():
         "slug": p["slug"], "name": p["name"],
         "price": p["salePrice"] if (p.get("onSale") and p.get("salePrice")) else p["price"],
         "photo": "/" + p["photo"], "inStock": p["inStock"],
+        "liqpayId": p.get("liqpayId"),
     } for p in PRODUCTS]
     (ROOT / "products.js").write_text("window.PRODUCTS = " + json.dumps(data, ensure_ascii=False, indent=2) + ";\n")
     print(f"→ products.js: {len(data)} товарів")

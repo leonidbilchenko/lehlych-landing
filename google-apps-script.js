@@ -93,6 +93,19 @@ function createOrder(o) {
   };
   if (P('SANDBOX') === '1') params.sandbox = '1';
 
+  // Фіскалізація ПРРО — дані товарів для чека
+  params.rro_info = {
+    items: o.items.map(function (it) {
+      return {
+        amount: it.qty,
+        price: it.price,
+        cost: it.qty * it.price,
+        id: it.liqpayId,
+      };
+    }),
+    delivery_emails: [o.email, P('WINERY_EMAIL')].filter(Boolean),
+  };
+
   const data = Utilities.base64Encode(JSON.stringify(params));
   return jsonOut({ status: 'ok', order: orderNum, data: data, signature: liqpaySign(data) });
 }

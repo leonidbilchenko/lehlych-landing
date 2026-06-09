@@ -2,7 +2,7 @@
 const CHECKOUT_URL = 'https://script.google.com/macros/s/AKfycbwMR4ohnguTxkzUdoqDDERrM3caroSHZ99Ry8LUYguqVOboGpXp4GV60x2NLxzqQrtNVQ/exec';
 
 // Тестовий режим: true — оплата вимкнена. false — оплата через LiqPay.
-const TEST_MODE = true;
+const TEST_MODE = false;
 
 function $(id) { return document.getElementById(id); }
 function val(id) { return ($(id)?.value || '').trim(); }
@@ -38,7 +38,7 @@ function renderSummary() {
 }
 function orderItems() {
   const c = getCart();
-  return Object.keys(c).map(s => { const p = product(s); return { slug: s, name: p.name, qty: c[s], price: p.price }; });
+  return Object.keys(c).map(s => { const p = product(s); return { slug: s, name: p.name, qty: c[s], price: p.price, liqpayId: p.liqpayId }; });
 }
 function orderTotal() {
   const c = getCart();

@@ -170,6 +170,7 @@ def main():
             "stockLabel": stock,
             "badges": badges,
             "sku": field(pr, "sku-art"),
+            "liqpayId": field(pr, "LiqPay ID"),
             "barcode": field(pr, "Barcode"),
             "photo": local["transparent"] or local["white"],
             "photoWhite": local["white"],

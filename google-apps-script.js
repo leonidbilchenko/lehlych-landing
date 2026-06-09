@@ -106,7 +106,7 @@ function createOrder(o) {
     delivery_emails: [o.email, P('WINERY_EMAIL')].filter(Boolean),
   };
 
-  const data = Utilities.base64Encode(JSON.stringify(params));
+  const data = Utilities.base64Encode(JSON.stringify(params), Utilities.Charset.UTF_8);
   return jsonOut({ status: 'ok', order: orderNum, data: data, signature: liqpaySign(data) });
 }
 

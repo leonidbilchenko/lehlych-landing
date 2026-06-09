@@ -28,7 +28,15 @@ function renderSummary() {
       <img src="${p.photo}" alt="${p.name}">
       <div class="summary-item-body">
         <span class="summary-item-name">${p.name}</span>
-        <span class="summary-item-qty">${p.price} грн × ${q}</span>
+        <span class="summary-item-price">${p.price} грн</span>
+        <div class="summary-qty">
+          <button type="button" onclick="ckQty('${slug}', ${q - 1})" aria-label="Менше">−</button>
+          <span>${q}</span>
+          <button type="button" onclick="ckQty('${slug}', ${q + 1})" aria-label="Більше">+</button>
+          <button type="button" class="summary-remove" onclick="ckRemove('${slug}')" aria-label="Видалити" title="Видалити">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+          </button>
+        </div>
       </div>
       <span class="summary-item-sum">${sum} грн</span>
     </div>`;
@@ -36,6 +44,10 @@ function renderSummary() {
   $('checkoutTotal').textContent = total + ' грн';
   updatePayButton();
 }
+
+// Зміна кількості / видалення прямо в підсумку
+function ckQty(slug, qty) { setCartQty(slug, qty); renderSummary(); }
+function ckRemove(slug) { removeFromCart(slug); renderSummary(); }
 function orderItems() {
   const c = getCart();
   return Object.keys(c).map(s => { const p = product(s); return { slug: s, name: p.name, qty: c[s], price: p.price, liqpayId: p.liqpayId }; });
@@ -135,6 +147,9 @@ async function submitOrder() {
   if (!order.lastName || !order.firstName || !order.phone || !order.email || !order.cityName || !order.warehouseName) {
     cstatus('Будь ласка, заповніть усі обовʼязкові поля.', 'error'); return;
   }
+  if (order.phone.replace(/\D/g, '').length !== 12) {
+    cstatus('Введіть коректний номер телефону (9 цифр після +380).', 'error'); return;
+  }
   if (!order.items.length) { cstatus('Кошик порожній.', 'error'); return; }
   const agree = $('agreeTerms');
   if (agree && !agree.checked) { cstatus('Підтвердіть згоду з офертою та політикою.', 'error'); return; }
@@ -155,6 +170,26 @@ async function submitOrder() {
     btn.querySelector('.pay-label').hidden = false;
     btn.querySelector('.pay-spinner').hidden = true;
   }
+}
+
+// ─── Телефон: фіксований +380, далі лише 9 цифр ───────────
+const fPhone = $('fPhone');
+if (fPhone) {
+  const normPhone = () => {
+    let d = fPhone.value.replace(/\D/g, '');     // лишаємо цифри
+    if (d.startsWith('380')) d = d.slice(3);      // прибираємо код, якщо ввели
+    d = d.slice(0, 9);                            // максимум 9 цифр
+    fPhone.value = '+380' + d;
+  };
+  fPhone.addEventListener('input', normPhone);
+  fPhone.addEventListener('focus', () => { if (!fPhone.value) fPhone.value = '+380'; });
+  // не дати стерти префікс клавішами
+  fPhone.addEventListener('keydown', e => {
+    if ((e.key === 'Backspace' || e.key === 'Delete') &&
+        fPhone.selectionStart <= 4 && fPhone.selectionEnd <= 4) {
+      e.preventDefault();
+    }
+  });
 }
 
 // init

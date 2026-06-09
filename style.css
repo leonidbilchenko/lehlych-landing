@@ -1143,11 +1143,15 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
 .cart-item-del {
   margin-left: auto;
   border: none !important;
-  width: auto !important;
-  font-size: 12px !important;
+  background: transparent !important;
+  width: 30px !important;
+  height: 30px !important;
+  padding: 0 !important;
   color: var(--muted) !important;
-  text-decoration: underline;
+  display: flex; align-items: center; justify-content: center;
 }
+.cart-item-del svg { width: 18px; height: 18px; }
+.cart-item-del:hover { color: #c0392b !important; }
 
 .cart-foot { padding: 20px 24px; border-top: 1px solid var(--gold-dim); }
 .cart-total {
@@ -1237,6 +1241,27 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
 }
 
 /* ─── Вкладки на сторінці товару ─── */
+/* Блоки «Доставка / Оплата» на сторінці товару */
+.product-perks { margin-top: 26px; }
+.perk {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 18px 0;
+  border-top: 1px solid var(--gold-dim);
+}
+.perk:last-child { border-bottom: 1px solid var(--gold-dim); }
+.perk-icon {
+  flex-shrink: 0;
+  width: 46px; height: 46px; border-radius: 50%;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.perk-icon img { width: 24px; height: 24px; }
+.perk-icon svg { width: 22px; height: 22px; }
+.perk-body { flex: 1; }
+.perk-title { font-family: 'Ambulatoria', serif; font-weight: 700; font-size: 17px; color: var(--text); margin: 0 0 4px; }
+.perk-text { font-size: 14px; line-height: 1.55; color: var(--muted); margin: 0; }
+
 .product-tabs {
   width: 100%;
   margin-top: 32px;
@@ -1460,10 +1485,32 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
 }
 .summary-item-body { display: flex; flex-direction: column; flex: 1; }
 .summary-item-name { font-size: 14px; font-weight: 600; color: var(--text); }
-.summary-item-qty { font-size: 12px; color: var(--muted); }
+.summary-item-price { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
 .summary-item-sum { font-size: 14px; font-weight: 700; color: var(--text); white-space: nowrap; }
 .summary-empty { color: var(--muted); font-size: 14px; }
 .summary-empty a { color: var(--gold); }
+
+/* Контроли кількості в підсумку */
+.summary-qty { display: flex; align-items: center; gap: 8px; }
+.summary-qty button {
+  width: 24px; height: 24px; border: 1px solid var(--gold-line);
+  background: var(--bg); color: var(--text); border-radius: 5px;
+  font-size: 15px; line-height: 1; cursor: pointer; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, border-color .15s;
+}
+.summary-qty button:hover { border-color: var(--gold); }
+.summary-qty span { font-size: 14px; min-width: 18px; text-align: center; }
+.summary-qty .summary-remove {
+  margin-left: 4px; border: none; background: transparent; color: var(--muted);
+  width: 28px; height: 28px;
+}
+.summary-qty .summary-remove svg { width: 17px; height: 17px; }
+.summary-qty .summary-remove:hover { color: #c0392b; background: transparent; }
+
+/* Логотип Нової Пошти в заголовку */
+.np-title { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+.np-logo { height: 18px; width: auto; flex-shrink: 0; display: inline-block; vertical-align: middle; }
 
 .summary-total {
   display: flex; justify-content: space-between;

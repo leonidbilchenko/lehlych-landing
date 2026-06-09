@@ -1,0 +1,45 @@
+name: Синхронізація асортименту з Notion
+
+on:
+  schedule:
+    - cron: '0 * * * *'        # щогодини
+  workflow_dispatch:            # кнопка "Run workflow" — оновити вручну
+
+permissions:
+  contents: write
+
+# щоб одночасно не запускалось кілька разів
+concurrency:
+  group: notion-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Завантажити репозиторій
+        uses: actions/checkout@v4
+
+      - name: Налаштувати Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Забрати дані з Notion і перебудувати
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+        run: |
+          python3 scripts/sync-notion.py
+          python3 scripts/build-site.py
+
+      - name: Закомітити зміни (якщо є)
+        run: |
+          git config user.name "Lehlych Bot"
+          git config user.email "lehlychwinery@gmail.com"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "Змін немає — пропускаємо."
+          else
+            git commit -m "Авто-синхронізація асортименту з Notion"
+            git push
+          fi

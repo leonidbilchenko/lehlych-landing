@@ -116,7 +116,7 @@ def gallery_html(p):
         nav, thumbs = "", ""
 
     return (f'<div class="product-gallery" id="productGallery" data-idx="0">\n'
-            f'        <div class="gallery-main product-photo-wrap">\n'
+            f'        <div class="gallery-main">\n'
             f'          {badges}\n'
             f'          <img src="{main_src}" alt="{esc(p["name"])}" class="product-photo" id="galleryMainImg">\n'
             f'          {nav}\n'

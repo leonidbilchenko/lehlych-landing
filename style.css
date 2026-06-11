@@ -993,8 +993,16 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
 
 /* Галерея / карусель фото */
 .product-gallery { display: flex; flex-direction: column; gap: 14px; }
-.gallery-main { position: relative; }
-.gallery-main .product-photo { transition: opacity .15s; }
+.gallery-main {
+  position: relative;
+  border-radius: 8px; overflow: hidden;
+  background: var(--bg-card);
+}
+.product-gallery .product-photo {
+  width: 100%; max-width: 100%;
+  display: block; filter: none;
+  transition: opacity .15s;
+}
 .gallery-nav {
   position: absolute; top: 50%; transform: translateY(-50%);
   width: 40px; height: 40px; border-radius: 50%; border: none;

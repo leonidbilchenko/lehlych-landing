@@ -171,6 +171,25 @@ function showTab(btn, panelId) {
   document.getElementById(panelId)?.classList.add('active');
 }
 
+// ─── Галерея фото на сторінці товару ──────────────────────
+function gallerySet(i) {
+  const g = document.getElementById('productGallery');
+  if (!g) return;
+  const thumbs = g.querySelectorAll('.gallery-thumb');
+  if (!thumbs.length) return;
+  i = (i + thumbs.length) % thumbs.length;
+  thumbs.forEach((t, idx) => t.classList.toggle('active', idx === i));
+  const main = document.getElementById('galleryMainImg');
+  const src = thumbs[i].querySelector('img').getAttribute('src');
+  if (main && src) main.src = src;
+  g.dataset.idx = i;
+}
+function galleryNav(d) {
+  const g = document.getElementById('productGallery');
+  if (!g) return;
+  gallerySet((parseInt(g.dataset.idx || '0', 10)) + d);
+}
+
 // ─── Кількість на сторінці товару ─────────────────────────
 function pqty(delta) {
   const input = document.getElementById('pQty');

@@ -7,6 +7,8 @@ const TEST_MODE = false;
 function $(id) { return document.getElementById(id); }
 function val(id) { return ($(id)?.value || '').trim(); }
 function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+// екранування для безпечної вставки в HTML-атрибути й текст (назви містять лапки!)
+function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
 // ─── Підсумок замовлення ──────────────────────────────────
 function renderSummary() {
@@ -88,7 +90,7 @@ if (fCity) {
     if (q.length < 2) { cityList.innerHTML = ''; return; }
     const items = await npFetch('action=npCities&q=' + encodeURIComponent(q));
     cityList.innerHTML = items.map(c =>
-      `<li data-ref="${c.ref}" data-name="${c.name}${c.area ? ' (' + c.area + ')' : ''}" onclick="pickCity(this)">${c.name}${c.area ? ' · ' + c.area : ''}</li>`
+      `<li data-ref="${esc(c.ref)}" data-name="${esc(c.name + (c.area ? ' (' + c.area + ')' : ''))}" onclick="pickCity(this)">${esc(c.name)}${c.area ? ' · ' + esc(c.area) : ''}</li>`
     ).join('');
   }, 300));
 }
@@ -105,9 +107,12 @@ if (fWarehouse) {
     const ref = $('fCityRef').value;
     const q = fWarehouse.value.trim();
     if (!ref || q.length < 1) { warehouseList.innerHTML = ''; return; }
-    const items = await npFetch('action=npWarehouses&cityRef=' + encodeURIComponent(ref) + '&q=' + encodeURIComponent(q));
+    // якщо це «Поштомат/Відділення + номер» — шукаємо лише за номером
+    const m = q.match(/^(?:поштомат|відділення|нова\s*пошта|нп)?\s*[№#nN]?\s*(\d+)\s*$/i);
+    const apiQ = m ? m[1] : q;
+    const items = await npFetch('action=npWarehouses&cityRef=' + encodeURIComponent(ref) + '&q=' + encodeURIComponent(apiQ));
     warehouseList.innerHTML = items.map(w =>
-      `<li data-ref="${w.ref}" data-name="${w.name}" onclick="pickWarehouse(this)">${w.name}</li>`
+      `<li data-ref="${esc(w.ref)}" data-name="${esc(w.name)}" onclick="pickWarehouse(this)">${esc(w.name)}</li>`
     ).join('');
   }, 300));
 }

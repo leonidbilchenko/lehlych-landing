@@ -27,7 +27,10 @@
     "barcode": 4820304180019,
     "photo": "images/products/chardonnay-2025/transparent.png",
     "photoWhite": "images/products/chardonnay-2025/white.png",
-    "photoTransparent": "images/products/chardonnay-2025/transparent.png"
+    "photoTransparent": "images/products/chardonnay-2025/transparent.png",
+    "aiPhotos": [
+      "images/products/chardonnay-2025/ai-1.jpeg"
+    ]
   },
   {
     "name": "Sauvignon Blanc",
@@ -57,7 +60,10 @@
     "barcode": 4820304180026,
     "photo": "images/products/sauvignon-blanc-2025/transparent.png",
     "photoWhite": "images/products/sauvignon-blanc-2025/white.png",
-    "photoTransparent": "images/products/sauvignon-blanc-2025/transparent.png"
+    "photoTransparent": "images/products/sauvignon-blanc-2025/transparent.png",
+    "aiPhotos": [
+      "images/products/sauvignon-blanc-2025/ai-1.jpeg"
+    ]
   },
   {
     "name": "Трипільське Сонце",
@@ -81,14 +87,17 @@
     "stockLabel": "Є в наявності",
     "badges": [
       "Bestseller",
-      "Limited"
+      "Закінчується"
     ],
     "sku": 18003,
     "liqpayId": 27639525,
     "barcode": 4820304180033,
     "photo": "images/products/trypilske-sonce-2025/transparent.png",
     "photoWhite": "images/products/trypilske-sonce-2025/white.png",
-    "photoTransparent": "images/products/trypilske-sonce-2025/transparent.png"
+    "photoTransparent": "images/products/trypilske-sonce-2025/transparent.png",
+    "aiPhotos": [
+      "images/products/trypilske-sonce-2025/ai-1.jpeg"
+    ]
   },
   {
     "name": "Рожевий Обрій",
@@ -112,13 +121,16 @@
     "stockLabel": "Є в наявності",
     "badges": [
       "Bestseller",
-      "Limited"
+      "Закінчується"
     ],
     "sku": 18004,
     "liqpayId": 27639472,
     "barcode": 4820304180040,
     "photo": "images/products/rozhevyi-obrii-2025/transparent.png",
     "photoWhite": "images/products/rozhevyi-obrii-2025/white.png",
-    "photoTransparent": "images/products/rozhevyi-obrii-2025/transparent.png"
+    "photoTransparent": "images/products/rozhevyi-obrii-2025/transparent.png",
+    "aiPhotos": [
+      "images/products/rozhevyi-obrii-2025/ai-1.jpeg"
+    ]
   }
 ]

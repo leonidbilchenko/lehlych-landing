@@ -44,11 +44,13 @@
     <a href="../#wines" class="product-back">← До каталогу</a>
     <div class="product-grid">
 
-      <div class="product-gallery">
-        <div class="product-photo-wrap">
-          <div class="badges"><span class="badge badge-best">Bestseller</span><span class="badge badge-limited">Limited</span></div>
-          <img src="/images/products/rozhevyi-obrii-2025/transparent.png" alt="Рожевий Обрій" class="product-photo">
+      <div class="product-gallery" id="productGallery" data-idx="0">
+        <div class="gallery-main product-photo-wrap">
+          <div class="badges"><span class="badge badge-best">Bestseller</span><span class="badge badge-ending">Закінчується</span></div>
+          <img src="/images/products/rozhevyi-obrii-2025/transparent.png" alt="Рожевий Обрій" class="product-photo" id="galleryMainImg">
+          <button class="gallery-nav prev" type="button" onclick="galleryNav(-1)" aria-label="Попереднє">‹</button><button class="gallery-nav next" type="button" onclick="galleryNav(1)" aria-label="Наступне">›</button>
         </div>
+        <div class="gallery-thumbs"><button class="gallery-thumb active" type="button" onclick="gallerySet(0)"><img src="/images/products/rozhevyi-obrii-2025/transparent.png" alt="" loading="lazy"></button><button class="gallery-thumb" type="button" onclick="gallerySet(1)"><img src="/images/products/rozhevyi-obrii-2025/ai-1.jpeg" alt="" loading="lazy"></button></div>
       </div>
 
       <div class="product-info">
@@ -135,7 +137,7 @@
       <article class="wine-card">
         <a href="/trypilske-sonce-2025/" class="wine-card-link">
           <div class="bottle-wrap">
-            <div class="badges"><span class="badge badge-best">Bestseller</span><span class="badge badge-limited">Limited</span></div>
+            <div class="badges"><span class="badge badge-best">Bestseller</span><span class="badge badge-ending">Закінчується</span></div>
             <img src="/images/products/trypilske-sonce-2025/transparent.png" alt="Трипільське Сонце" class="bottle-img">
           </div>
           <div class="wine-info">

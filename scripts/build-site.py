@@ -24,6 +24,7 @@ BADGE_CLASS = {
     "Вибір сомель'є": "somm",
     "Вибір сомельʼє": "somm",
     "Акція": "sale",
+    "Закінчується": "ending",
 }
 
 
@@ -89,6 +90,41 @@ def related_block(current_slug):
   </section>'''
 
 
+def gallery_html(p):
+    """Галерея: головне фото + фото в оточенні (AI Photo). Якщо одне фото — без каруселі."""
+    imgs = []
+    if p.get("photo"):
+        imgs.append(p["photo"])
+    for a in (p.get("aiPhotos") or []):
+        if a and a not in imgs:
+            imgs.append(a)
+    if not imgs:
+        imgs = [p.get("photoWhite") or ""]
+
+    badges = badges_html(p.get("badges"))
+    main_src = "/" + esc(imgs[0])
+
+    if len(imgs) > 1:
+        nav = ('<button class="gallery-nav prev" type="button" onclick="galleryNav(-1)" aria-label="Попереднє">‹</button>'
+               '<button class="gallery-nav next" type="button" onclick="galleryNav(1)" aria-label="Наступне">›</button>')
+        thumbs = "".join(
+            f'<button class="gallery-thumb{" active" if i == 0 else ""}" type="button" onclick="gallerySet({i})">'
+            f'<img src="/{esc(im)}" alt="" loading="lazy"></button>'
+            for i, im in enumerate(imgs))
+        thumbs = f'<div class="gallery-thumbs">{thumbs}</div>'
+    else:
+        nav, thumbs = "", ""
+
+    return (f'<div class="product-gallery" id="productGallery" data-idx="0">\n'
+            f'        <div class="gallery-main product-photo-wrap">\n'
+            f'          {badges}\n'
+            f'          <img src="{main_src}" alt="{esc(p["name"])}" class="product-photo" id="galleryMainImg">\n'
+            f'          {nav}\n'
+            f'        </div>\n'
+            f'        {thumbs}\n'
+            f'      </div>')
+
+
 def build_product_page(p, footer):
     name = esc(p["name"])
     subtitle = esc(" · ".join(x for x in [p.get("wineType"), p.get("year")] if x))
@@ -140,6 +176,7 @@ def build_product_page(p, footer):
         "{{PHOTO_ROOT}}": esc(p["photo"]),
         "{{NAME}}": name,
         "{{SUBTITLE}}": subtitle,
+        "{{GALLERY}}": gallery_html(p),
         "{{BADGES}}": badges_html(p.get("badges")),
         "{{PRICE_BLOCK}}": price_block,
         "{{STOCK_CLASS}}": stock_class,

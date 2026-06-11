@@ -147,6 +147,15 @@ def main():
             if download(photos_transp[0], dest):
                 local["transparent"] = str(dest.relative_to(ROOT))
 
+        # ── фото в оточенні (колонка «AI Photo») для каруселі ──
+        photos_ai = field(pr, "AI Photo") or []
+        ai_local = []
+        for idx, url in enumerate(photos_ai):
+            ext = url.split("?")[0].split(".")[-1][:4] or "jpg"
+            dest = PHOTO_DIR / slug / f"ai-{idx + 1}.{ext}"
+            if download(url, dest):
+                ai_local.append(str(dest.relative_to(ROOT)))
+
         products.append({
             "name": name,
             "slug": slug,
@@ -175,6 +184,7 @@ def main():
             "photo": local["transparent"] or local["white"],
             "photoWhite": local["white"],
             "photoTransparent": local["transparent"],
+            "aiPhotos": ai_local,
         })
         print(f"   ✓ {name}  ({rrp} грн, {stock})")
 

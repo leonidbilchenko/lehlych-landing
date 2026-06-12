@@ -127,18 +127,25 @@ function liqpayCallback(data, signature) {
 
   if (paid) {
     const found = sheetFind(orderNum);
-    if (found) {
+    // ідемпотентність: LiqPay може слати колбек кілька разів — не дублюємо
+    const already = found && String(found.row[11]) === 'Оплачено';
+    if (found && !already) {
       sheetSetPaid(found.index);
       sendEmails(found.row, orderNum);
+      // аналітика продажів (дата замовлення + позиції з колонки «Товари»)
+      const d = (found.row[1] instanceof Date) ? found.row[1] : new Date();
+      try { recordSale(d, parseItems(found.row[8])); } catch (err) { /* ігноруємо */ }
     }
-    // Notion (best-effort)
-    try {
-      const page = notionFindOrder(orderNum);
-      if (page) notionUpdate(page.id, {
-        'Оплата': { select: { name: 'Оплачено' } },
-        'Статус': { select: { name: 'Оплачено' } },
-      });
-    } catch (err) { /* ігноруємо */ }
+    if (!already) {
+      // Notion (best-effort)
+      try {
+        const page = notionFindOrder(orderNum);
+        if (page) notionUpdate(page.id, {
+          'Оплата': { select: { name: 'Оплачено' } },
+          'Статус': { select: { name: 'Оплачено' } },
+        });
+      } catch (err) { /* ігноруємо */ }
+    }
   }
   return jsonOut({ status: 'ok' });
 }
@@ -301,4 +308,153 @@ function sendEmails(row, orderNum) {
     body: firstName + ' ' + lastName + '\n' + phone + '\n' + email + '\n' + city + ', ' + wh +
       '\n\n' + items + '\nРазом: ' + total + ' грн\n\nКоментар: ' + (comment || '—'),
   });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  АНАЛІТИКА ПРОДАЖІВ  +  ЩОДЕННИЙ TELEGRAM-ЗВІТ
+//  Script Properties: TELEGRAM_TOKEN, TELEGRAM_CHAT
+// ═══════════════════════════════════════════════════════════
+
+// Карта товарів { назва: {type, price} } — тягнеться з products.js сайту (кеш у межах виклику)
+var _PMAP = null;
+function productsMap() {
+  if (_PMAP) return _PMAP;
+  _PMAP = {};
+  try {
+    const res = UrlFetchApp.fetch(P('SITE_URL') + '/products.js', { muteHttpExceptions: true });
+    const arr = JSON.parse(res.getContentText().match(/\[[\s\S]*\]/)[0]);
+    arr.forEach(function (p) { _PMAP[p.name] = { type: p.type || '', price: p.price || 0 }; });
+  } catch (e) { /* лишаємо порожню мапу */ }
+  return _PMAP;
+}
+
+// Розбір «Назва ×2, Назва2 ×1» → [{name, qty}]
+function parseItems(str) {
+  if (!str) return [];
+  return String(str).split(',').map(function (part) {
+    const m = part.trim().match(/^(.*?)\s*[×x]\s*(\d+)$/);
+    return m ? { name: m[1].trim(), qty: parseInt(m[2], 10) } : null;
+  }).filter(Boolean);
+}
+
+function money(n) {
+  return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
+// Вкладка «Продажі»
+function salesSheet() {
+  const ss = SpreadsheetApp.openById(P('ORDERS_SHEET_ID'));
+  let sh = ss.getSheetByName('Продажі');
+  if (!sh) {
+    sh = ss.insertSheet('Продажі');
+    sh.appendRow(['МІСЯЦЬ', 'ДАТА', 'БРЕНД', 'ТИП', 'ВИНО', 'ПРОДАНО, пл.', 'СУМА, грн']);
+    sh.getRange(1, 1, 1, 7).setFontWeight('bold');
+    sh.setFrozenRows(1);
+  }
+  return sh;
+}
+
+// Записати продаж: агрегує по (день + вино), додає або інкрементує рядок
+function recordSale(dateObj, items) {
+  if (!items || !items.length) return;
+  const map = productsMap();
+  const sh = salesSheet();
+  const tz = 'Europe/Kiev';
+  const dateStr = Utilities.formatDate(dateObj, tz, 'yyyy-MM-dd');
+  const monthStr = Utilities.formatDate(dateObj, tz, 'yyyyMM');
+  const data = sh.getDataRange().getValues();
+
+  items.forEach(function (it) {
+    const info = map[it.name] || { type: '', price: 0 };
+    const sum = it.qty * info.price;
+    let rowIdx = -1;
+    for (let i = 1; i < data.length; i++) {
+      if (String(data[i][1]) === dateStr && String(data[i][4]) === it.name) { rowIdx = i + 1; break; }
+    }
+    if (rowIdx > 0) {
+      sh.getRange(rowIdx, 6).setValue(Number(sh.getRange(rowIdx, 6).getValue()) + it.qty);
+      sh.getRange(rowIdx, 7).setValue(Number(sh.getRange(rowIdx, 7).getValue()) + sum);
+    } else {
+      const row = [monthStr, dateStr, 'Lehlych Winery', info.type, it.name, it.qty, sum];
+      sh.appendRow(row);
+      data.push(row); // щоб наступні позиції цього ж виклику знайшли свіжий рядок
+    }
+  });
+}
+
+// Перебудувати «Продажі» з нуля за всіма оплаченими замовленнями (одноразово / за потреби)
+function backfillSales() {
+  const sh = salesSheet();
+  if (sh.getLastRow() > 1) sh.deleteRows(2, sh.getLastRow() - 1); // чистимо дані, лишаємо заголовок
+  const orders = sheet().getDataRange().getValues();
+  let n = 0;
+  for (let i = 1; i < orders.length; i++) {
+    const row = orders[i];
+    if (String(row[11]) !== 'Оплачено') continue; // L = Оплата
+    const d = (row[1] instanceof Date) ? row[1] : new Date(row[1]);
+    recordSale(d, parseItems(row[8])); // I = Товари
+    n++;
+  }
+  Logger.log('Перебудовано «Продажі» за ' + n + ' оплаченими замовленнями.');
+}
+
+// ── Telegram ──
+function tgSend(text) {
+  const token = P('TELEGRAM_TOKEN'), chat = P('TELEGRAM_CHAT');
+  if (!token || !chat) { Logger.log('Немає TELEGRAM_TOKEN / TELEGRAM_CHAT'); return; }
+  UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/sendMessage', {
+    method: 'post', contentType: 'application/json',
+    payload: JSON.stringify({ chat_id: chat, text: text, parse_mode: 'HTML', disable_web_page_preview: true }),
+    muteHttpExceptions: true,
+  });
+}
+
+// Тимчасова: дізнатись ID групи. Напиши щось у групу → Run → дивись Логи (Ctrl+Enter)
+function getChatId() {
+  const token = P('TELEGRAM_TOKEN');
+  const res = UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/getUpdates', { muteHttpExceptions: true });
+  const upd = JSON.parse(res.getContentText());
+  (upd.result || []).forEach(function (u) {
+    const c = ((u.message || u.my_chat_member || u.channel_post || {}).chat) || null;
+    if (c) Logger.log('CHAT_ID = ' + c.id + '   (' + (c.title || c.type) + ')');
+  });
+  if (!(upd.result || []).length) Logger.log('Порожньо. Напиши повідомлення у групу і запусти ще раз.');
+}
+
+// Щоденний звіт за ВЧОРА + підсумок з початку. Ставиться на таймер о 9:00.
+function sendDailyReport() {
+  const sh = salesSheet();
+  const data = sh.getDataRange().getValues();
+  const tz = 'Europe/Kiev';
+  const yest = new Date(Date.now() - 24 * 3600 * 1000);
+  const yStr = Utilities.formatDate(yest, tz, 'yyyy-MM-dd');
+  const yHuman = Utilities.formatDate(yest, tz, 'dd.MM.yyyy');
+
+  let dayB = 0, dayM = 0, totB = 0, totM = 0;
+  const byWine = {};
+  for (let i = 1; i < data.length; i++) {
+    const date = String(data[i][1]), wine = data[i][4];
+    const qty = Number(data[i][5]) || 0, sum = Number(data[i][6]) || 0;
+    totB += qty; totM += sum;
+    if (date === yStr) {
+      dayB += qty; dayM += sum;
+      if (!byWine[wine]) byWine[wine] = { qty: 0, sum: 0 };
+      byWine[wine].qty += qty; byWine[wine].sum += sum;
+    }
+  }
+
+  let msg = '📊 <b>Продажі за ' + yHuman + '</b>\n\n';
+  const wines = Object.keys(byWine);
+  if (!wines.length) {
+    msg += 'Вчора оплачених замовлень не було.\n';
+  } else {
+    msg += '🍷 <b>По сортах:</b>\n';
+    wines.sort(function (a, b) { return byWine[b].qty - byWine[a].qty; });
+    wines.forEach(function (w) {
+      msg += '• ' + w + ' — <b>' + byWine[w].qty + '</b> пл. · ' + money(byWine[w].sum) + ' грн\n';
+    });
+    msg += '\n✅ <b>Разом за день:</b> ' + dayB + ' пляшок · ' + money(dayM) + ' грн\n';
+  }
+  msg += '\n📈 <b>Усього з початку:</b> ' + totB + ' пляшок · ' + money(totM) + ' грн';
+  tgSend(msg);
 }

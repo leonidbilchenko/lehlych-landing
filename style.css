@@ -1293,6 +1293,8 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
 .perk-body { flex: 1; }
 .perk-title { font-family: 'Ambulatoria', serif; font-weight: 700; font-size: 17px; color: var(--text); margin: 0 0 4px; }
 .perk-text { font-size: 14px; line-height: 1.55; color: var(--muted); margin: 0; }
+.perk-text a { color: var(--gold); text-decoration: underline; }
+.perk-text a:hover { color: var(--text); }
 
 .product-tabs {
   width: 100%;

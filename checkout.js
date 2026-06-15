@@ -217,6 +217,8 @@ if (fPhone) {
     set('fCity', data.city); set('fWarehouse', data.warehouse);
     set('fComment', data.comment);
     const wh = $('fWarehouse'); if (wh && data.warehouse) wh.disabled = false;
+    // людина вже погоджувалась з офертою/політикою на першій спробі — ставимо галочку
+    const agree = $('agreeTerms'); if (agree) agree.checked = true;
     // прибираємо recover з адреси (щоб не застосовувалось повторно)
     history.replaceState({}, '', location.pathname);
   } catch (e) { /* ігноруємо биті посилання */ }

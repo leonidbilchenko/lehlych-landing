@@ -47,6 +47,14 @@
 - Колонки CRM: № замовлення, Дата, Прізвище, Ім'я, Телефон, Email, Місто, Відділення, Товари, Сума, Статус (Нове/Оплачено/Відправлено/Доставлено/Скасовано), Оплата (Очікує/Оплачено), Коментар.
 - Покупцю після оплати: лист-підтвердження (Apps Script) + фіскальний чек (LiqPay ПРРО). Копія листа — на lehlychwinery@gmail.com.
 
+## Аналітика продажів + Telegram-звіт
+- Вкладка **«Продажі»** в Google Таблиці (МІСЯЦЬ/ДАТА/БРЕНД/ТИП/ВИНО/ПРОДАНО/СУМА). Агрегація по день+вино, лише оплачені.
+- Запис автоматично при оплаті (`liqpayCallback` → `recordSale`, ідемпотентно). Ціну й тип бере з `products.js` сайту (`productsMap`); позиції — з колонки «Товари» (`parseItems`).
+- `backfillSales()` — перебудувати «Продажі» з нуля за всіма оплаченими замовленнями (одноразово/за потреби).
+- **Щоденний звіт о 9:00** (`sendDailyReport`) у Telegram-групу: за вчора по сортах + разом + підсумок з початку. Тригер: Apps Script → Тригери → Денний таймер 9:00–10:00.
+- Telegram: бот «Lehlych Продажі», група «Lehlych_Sales». Script Properties: `TELEGRAM_TOKEN`, `TELEGRAM_CHAT` (`-1004461856394`).
+- `getChatId()` — тимчасова: дізнатись ID групи (Run → Логи).
+
 ## Бекенд (Apps Script)
 - Web App URL (CHECKOUT_URL у checkout.js):
   `https://script.google.com/macros/s/AKfycbwMR4ohnguTxkzUdoqDDERrM3caroSHZ99Ry8LUYguqVOboGpXp4GV60x2NLxzqQrtNVQ/exec`
@@ -57,7 +65,7 @@
 
 ## Секрети (НІДЕ в коді сайту!)
 - **Apps Script → Project Settings → Script Properties:**
-  ORDERS_SHEET_ID, NOTION_ORDERS_DB, NOTION_TOKEN, LIQPAY_PUBLIC (`i25552296555`), LIQPAY_PRIVATE, SANDBOX (`0`), SITE_URL (`https://lehlych.com`), WINERY_EMAIL.
+  ORDERS_SHEET_ID, NOTION_ORDERS_DB, NOTION_TOKEN, LIQPAY_PUBLIC (`i25552296555`), LIQPAY_PRIVATE, SANDBOX (`0`), SITE_URL (`https://lehlych.com`), WINERY_EMAIL, TELEGRAM_TOKEN, TELEGRAM_CHAT.
 - **Локально:** `.secrets/notion-token.txt` (gitignored).
 - **GitHub Secret:** `NOTION_TOKEN` (для авто-синхронізації).
 

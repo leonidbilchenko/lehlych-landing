@@ -152,7 +152,10 @@ function liqpayCallback(data, signature) {
     const found = sheetFind(orderNum);
     if (found && String(found.row[11]) === 'Очікує') {
       setPayStatus(found.index, 'Не пройшла');
-      try { sendFailedEmail(found.row, orderNum); } catch (err) { /* ігноруємо */ }
+      // не турбуємо тих, хто вже оплатив іншим замовленням (той самий клієнт, у межах години)
+      if (!paidSamePersonWithinHour(found.row)) {
+        try { sendFailedEmail(found.row, orderNum); } catch (err) { /* ігноруємо */ }
+      }
       try {
         const page = notionFindOrder(orderNum);
         if (page) notionUpdate(page.id, { 'Оплата': { select: { name: 'Не пройшла' } } });
@@ -570,10 +573,36 @@ function scanAbandoned() {
     const created = (row[1] instanceof Date) ? row[1].getTime() : new Date(row[1]).getTime();
     if (isNaN(created) || (now - created) < HOUR) continue; // ще рано
     sh.getRange(i + 1, 12).setValue('Незавершене');
+    if (paidSamePersonWithinHour(row, data)) continue; // вже оплатив (той самий клієнт) — не турбуємо
     try { sendAbandonedEmail(row, row[0]); } catch (err) { /* ігноруємо */ }
     try {
       const page = notionFindOrder(row[0]);
       if (page) notionUpdate(page.id, { 'Оплата': { select: { name: 'Незавершене' } } });
     } catch (err) { /* ігноруємо */ }
   }
+}
+
+// останні 9 цифр телефону (щоб +380… і 0… вважались однаковими)
+function normPhone(p) { return String(p || '').replace(/\D/g, '').slice(-9); }
+
+// Чи є ОПЛАЧЕНЕ замовлення того ж клієнта (email / телефон / ПІБ) у межах години від цього
+function paidSamePersonWithinHour(row, data) {
+  data = data || sheet().getDataRange().getValues();
+  const t = (row[1] instanceof Date) ? row[1].getTime() : new Date(row[1]).getTime();
+  const HOUR = 3600 * 1000;
+  const email = String(row[5] || '').toLowerCase().trim();
+  const phone = normPhone(row[4]);
+  const fio = (String(row[3] || '').trim() + '|' + String(row[2] || '').trim()).toLowerCase();
+  const hasFio = fio.replace(/[|\s]/g, '') !== '';
+  for (let j = 1; j < data.length; j++) {
+    const r = data[j];
+    if (String(r[11]) !== 'Оплачено') continue;
+    const rt = (r[1] instanceof Date) ? r[1].getTime() : new Date(r[1]).getTime();
+    if (isNaN(rt) || Math.abs(rt - t) > HOUR) continue; // не в межах години
+    const sameEmail = email && String(r[5] || '').toLowerCase().trim() === email;
+    const samePhone = phone && normPhone(r[4]) === phone;
+    const sameFio = hasFio && (String(r[3] || '').trim() + '|' + String(r[2] || '').trim()).toLowerCase() === fio;
+    if (sameEmail || samePhone || sameFio) return true;
+  }
+  return false;
 }

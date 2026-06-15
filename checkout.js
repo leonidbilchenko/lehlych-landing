@@ -197,6 +197,31 @@ if (fPhone) {
   });
 }
 
+// ─── Відновлення замовлення з листа (?recover=) ───────────
+(function tryRecover() {
+  const r = new URLSearchParams(location.search).get('recover');
+  if (!r) return;
+  try {
+    const bytes = Uint8Array.from(atob(decodeURIComponent(r)), c => c.charCodeAt(0));
+    const data = JSON.parse(new TextDecoder('utf-8').decode(bytes));
+    // відновлюємо кошик
+    if (Array.isArray(data.items) && data.items.length) {
+      const cart = {};
+      data.items.forEach(it => { if (it.slug) cart[it.slug] = it.qty; });
+      localStorage.setItem('lehlych_cart', JSON.stringify(cart));
+    }
+    // підставляємо поля, які клієнт уже заповнював
+    const set = (id, v) => { const el = $(id); if (el && v) el.value = v; };
+    set('fLastName', data.lastName); set('fFirstName', data.firstName);
+    set('fPhone', data.phone); set('fEmail', data.email);
+    set('fCity', data.city); set('fWarehouse', data.warehouse);
+    set('fComment', data.comment);
+    const wh = $('fWarehouse'); if (wh && data.warehouse) wh.disabled = false;
+    // прибираємо recover з адреси (щоб не застосовувалось повторно)
+    history.replaceState({}, '', location.pathname);
+  } catch (e) { /* ігноруємо биті посилання */ }
+})();
+
 // init
 renderSummary();
 updatePayButton();

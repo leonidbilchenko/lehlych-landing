@@ -124,6 +124,7 @@ function liqpayCallback(data, signature) {
   const payment = JSON.parse(Utilities.newBlob(Utilities.base64Decode(data)).getDataAsString());
   const orderNum = payment.order_id;
   const paid = (payment.status === 'success' || payment.status === 'sandbox');
+  const failed = (payment.status === 'failure' || payment.status === 'error');
 
   if (paid) {
     const found = sheetFind(orderNum);
@@ -144,6 +145,17 @@ function liqpayCallback(data, signature) {
           'Оплата': { select: { name: 'Оплачено' } },
           'Статус': { select: { name: 'Оплачено' } },
         });
+      } catch (err) { /* ігноруємо */ }
+    }
+  } else if (failed) {
+    // Оплата не пройшла → статус «Не пройшла» + лист (лише поки замовлення в «Очікує»)
+    const found = sheetFind(orderNum);
+    if (found && String(found.row[11]) === 'Очікує') {
+      setPayStatus(found.index, 'Не пройшла');
+      try { sendFailedEmail(found.row, orderNum); } catch (err) { /* ігноруємо */ }
+      try {
+        const page = notionFindOrder(orderNum);
+        if (page) notionUpdate(page.id, { 'Оплата': { select: { name: 'Не пройшла' } } });
       } catch (err) { /* ігноруємо */ }
     }
   }
@@ -177,6 +189,9 @@ function sheetSetPaid(rowIndex) {
   const sh = sheet();
   sh.getRange(rowIndex, 11).setValue('Оплачено'); // Статус
   sh.getRange(rowIndex, 12).setValue('Оплачено'); // Оплата
+}
+function setPayStatus(rowIndex, value) {
+  sheet().getRange(rowIndex, 12).setValue(value); // Оплата (L)
 }
 
 // ─────────────────────────────────────────────────────────
@@ -323,7 +338,7 @@ function productsMap() {
   try {
     const res = UrlFetchApp.fetch(P('SITE_URL') + '/products.js', { muteHttpExceptions: true });
     const arr = JSON.parse(res.getContentText().match(/\[[\s\S]*\]/)[0]);
-    arr.forEach(function (p) { _PMAP[p.name] = { type: p.type || '', price: p.price || 0 }; });
+    arr.forEach(function (p) { _PMAP[p.name] = { slug: p.slug || '', type: p.type || '', price: p.price || 0 }; });
   } catch (e) { /* лишаємо порожню мапу */ }
   return _PMAP;
 }
@@ -457,4 +472,108 @@ function sendDailyReport() {
   }
   msg += '\n📈 <b>Усього з початку:</b> ' + totB + ' пляшок · ' + money(totM) + ' грн';
   tgSend(msg);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ЛИСТИ ПРО НЕЗАВЕРШЕНУ ОПЛАТУ
+//  1) failed   — LiqPay повідомив про помилку оплати
+//  2) abandoned — замовлення «висить» в «Очікує» > 1 год
+// ═══════════════════════════════════════════════════════════
+
+// Фірмовий шаблон листа (лого + кнопка + футер)
+function brandedEmail(heading, beforeHtml, btnText, btnUrl, afterHtml) {
+  const btn = btnUrl ? (
+    '<table role="presentation" cellpadding="0" cellspacing="0" style="margin:8px 0 8px;"><tr><td style="border-radius:8px;background:#1f0f0c;">' +
+    '<a href="' + btnUrl + '" target="_blank" style="display:inline-block;padding:14px 30px;font-family:Georgia,serif;font-size:16px;color:#e8ddc7;text-decoration:none;">' + btnText + '</a>' +
+    '</td></tr></table>') : '';
+  return '<div style="margin:0;padding:0;background:#f4f1ec;">' +
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f1ec;padding:32px 16px;"><tr><td align="center">' +
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:14px;overflow:hidden;font-family:Georgia,\'Times New Roman\',serif;color:#2b2b2b;">' +
+    '<tr><td style="background:#1f0f0c;padding:16px 24px;text-align:center;">' +
+    '<img src="https://lehlych.com/logo/Logo%20Lehlych%20White@4x.png" alt="Lehlych Winery" width="300" style="display:inline-block;width:100%;max-width:300px;height:auto;border:0;"></td></tr>' +
+    '<tr><td style="padding:34px 32px 28px;">' +
+    '<h1 style="margin:0 0 18px;font-size:23px;font-weight:400;color:#2b2b2b;">' + heading + '</h1>' +
+    beforeHtml + btn + (afterHtml || '') +
+    '<p style="margin:22px 0 0;font-size:16px;color:#2b2b2b;">З любовʼю,<br>команда Lehlych Winery 🍷</p>' +
+    '</td></tr>' +
+    '<tr><td style="background:#1f0f0c;padding:20px 32px;text-align:center;">' +
+    '<p style="margin:0 0 6px;font-size:12px;color:#9a8f7a;">lehlych.com · lehlychwinery@gmail.com</p>' +
+    '<p style="margin:0;font-size:11px;color:#6f6a5f;">18+ Надмірне споживання алкоголю шкідливе для вашого здоровʼя</p>' +
+    '</td></tr></table></td></tr></table></div>';
+}
+
+// Посилання на checkout із передзаповненими даними (?recover=base64)
+function recoverUrl(row) {
+  const map = productsMap();
+  const items = parseItems(row[8]).map(function (it) {
+    const info = map[it.name] || {};
+    return { slug: info.slug || '', qty: it.qty };
+  }).filter(function (x) { return x.slug; });
+  const payload = {
+    items: items,
+    lastName: row[2], firstName: row[3], phone: String(row[4] || ''),
+    email: row[5], city: row[6], warehouse: row[7], comment: row[12] || '',
+  };
+  const b64 = Utilities.base64Encode(JSON.stringify(payload), Utilities.Charset.UTF_8);
+  return P('SITE_URL') + '/checkout/?recover=' + encodeURIComponent(b64);
+}
+
+function par(text) {
+  return '<p style="margin:0 0 14px;font-size:16px;line-height:1.6;color:#555;">' + text + '</p>';
+}
+
+// 1) Лист: оплата не пройшла
+function sendFailedEmail(row, orderNum) {
+  const email = row[5]; if (!email) return;
+  const name = row[3] || '';
+  const url = recoverUrl(row);
+  const html = brandedEmail(
+    'Здається, оплату не вдалося завершити',
+    par('Добрий день, ' + name + '.') +
+    par('Схоже, під час оплати сталася помилка, і замовлення не було завершене.') +
+    par('Ви можете повернутися до нього й спробувати оплатити ще раз.'),
+    'Повернутися до оплати', url,
+    par('Якщо знову не вийде — напишіть нам, ми допоможемо.')
+  );
+  const plain = 'Добрий день, ' + name + '.\n\nСхоже, під час оплати сталася помилка, і замовлення не було завершене. ' +
+    'Спробуйте оплатити ще раз: ' + url + '\n\nЯкщо знову не вийде — напишіть нам, ми допоможемо.\n\nЗ любовʼю, команда Lehlych Winery';
+  MailApp.sendEmail({ to: email, replyTo: P('WINERY_EMAIL'), subject: 'Здається, оплату не вдалося завершити', body: plain, htmlBody: html, name: 'Lehlych Winery' });
+}
+
+// 2) Лист: незавершене замовлення (покинутий кошик)
+function sendAbandonedEmail(row, orderNum) {
+  const email = row[5]; if (!email) return;
+  const name = row[3] || '';
+  const url = recoverUrl(row);
+  const html = brandedEmail(
+    'Ваше вино ще чекає на вас',
+    par('Добрий день, ' + name + '.') +
+    par('Ви почали оформлювати замовлення на lehlych.com, але не завершили його.') +
+    par('Ми зберегли обрані позиції, щоб ви могли спокійно повернутися до покупки, коли буде зручно.'),
+    'Повернутися до замовлення', url, ''
+  );
+  const plain = 'Добрий день, ' + name + '.\n\nВи почали оформлювати замовлення на lehlych.com, але не завершили його. ' +
+    'Ми зберегли обрані позиції — повернутися можна тут: ' + url + '\n\nЗ любовʼю, команда Lehlych Winery';
+  MailApp.sendEmail({ to: email, replyTo: P('WINERY_EMAIL'), subject: 'Ваше вино ще чекає на вас', body: plain, htmlBody: html, name: 'Lehlych Winery' });
+}
+
+// Скан покинутих: замовлення в «Очікує» старші за 1 год → «Незавершене» + лист #2.
+// Ставиться на погодинний тригер.
+function scanAbandoned() {
+  const sh = sheet();
+  const data = sh.getDataRange().getValues();
+  const now = Date.now();
+  const HOUR = 3600 * 1000;
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    if (String(row[11]) !== 'Очікує') continue; // лише ті, що очікують
+    const created = (row[1] instanceof Date) ? row[1].getTime() : new Date(row[1]).getTime();
+    if (isNaN(created) || (now - created) < HOUR) continue; // ще рано
+    sh.getRange(i + 1, 12).setValue('Незавершене');
+    try { sendAbandonedEmail(row, row[0]); } catch (err) { /* ігноруємо */ }
+    try {
+      const page = notionFindOrder(row[0]);
+      if (page) notionUpdate(page.id, { 'Оплата': { select: { name: 'Незавершене' } } });
+    } catch (err) { /* ігноруємо */ }
+  }
 }

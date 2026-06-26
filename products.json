@@ -127,7 +127,7 @@
     "liqpayId": 27639472,
     "barcode": 4820304180040,
     "photo": "images/products/rozhevyi-obrii-2025/transparent.png",
-    "photoWhite": "images/products/rozhevyi-obrii-2025/white.png",
+    "photoWhite": null,
     "photoTransparent": "images/products/rozhevyi-obrii-2025/transparent.png",
     "aiPhotos": [
       "images/products/rozhevyi-obrii-2025/ai-1.jpeg"

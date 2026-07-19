@@ -117,8 +117,8 @@
     "price": 689,
     "salePrice": null,
     "onSale": false,
-    "inStock": true,
-    "stockLabel": "Є в наявності",
+    "inStock": false,
+    "stockLabel": "Розпродано",
     "badges": [
       "Bestseller",
       "Закінчується"

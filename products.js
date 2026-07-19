@@ -31,7 +31,7 @@ window.PRODUCTS = [
     "name": "Рожевий Обрій",
     "price": 689,
     "photo": "/images/products/rozhevyi-obrii-2025/transparent.png",
-    "inStock": true,
+    "inStock": false,
     "liqpayId": 27639472,
     "type": "Сухе рожеве вино"
   }

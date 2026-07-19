@@ -1209,6 +1209,39 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
 .cart-checkout:hover { opacity: 0.88; }
 .cart-checkout.disabled { opacity: 0.4; pointer-events: none; }
 
+/* Смужка прогресу безкоштовної доставки */
+.ship-bar {
+  font-size: 13px; color: var(--text); line-height: 1.4;
+  margin-bottom: 14px;
+}
+.ship-bar b { color: var(--gold); }
+.ship-bar.done { color: #4f8a3f; font-weight: 700; }
+.ship-track {
+  display: block; height: 6px; border-radius: 4px;
+  background: var(--gold-dim); margin-top: 8px; overflow: hidden;
+}
+.ship-fill {
+  display: block; height: 100%; border-radius: 4px;
+  background: var(--gold); transition: width 0.3s ease;
+}
+
+/* Дефіцит + рядок довіри на сторінці товару */
+.product-scarcity {
+  font-size: 14px; font-weight: 600; color: #c0392b;
+  margin: -10px 0 18px;
+}
+.buy-trust {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; line-height: 1.4; color: var(--muted);
+  margin: 14px 0 0;
+}
+.buy-trust svg { flex-shrink: 0; color: var(--gold); }
+
+/* Кошик: вужче й зручніше на мобільному */
+@media (max-width: 600px) {
+  .cart-drawer { width: 80vw; max-width: 330px; }
+}
+
 /* ─── Адаптив ─── */
 @media (max-width: 760px) {
   .product-grid { grid-template-columns: 1fr; gap: 28px; }

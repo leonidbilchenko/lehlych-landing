@@ -181,6 +181,10 @@ def build_product_page(p, footer):
         "{{PRICE_BLOCK}}": price_block,
         "{{STOCK_CLASS}}": stock_class,
         "{{STOCK_LABEL}}": stock_label,
+        "{{SCARCITY}}": (
+            '<p class="product-scarcity">🔥 Залишилось мало — встигніть замовити</p>'
+            if (in_stock and "Закінчується" in (p.get("badges") or [])) else ""
+        ),
         "{{BUY_BLOCK}}": buy_block,
         "{{SPECS}}": specs,
         "{{DESCRIPTION}}": desc,

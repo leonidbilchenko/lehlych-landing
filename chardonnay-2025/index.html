@@ -60,8 +60,14 @@
         <p class="product-price">849 грн</p>
 
         <p class="product-stock in">Є в наявності</p>
+        
 
         <div class="product-buy"><div class="qty-ctrl"><button class="qty-btn" onclick="pqty(-1)">−</button><input class="qty-input" id="pQty" type="number" value="1" min="1" max="99"><button class="qty-btn" onclick="pqty(1)">+</button></div><button class="add-cart-btn" onclick="addToCart('chardonnay-2025', document.getElementById('pQty').value)">Додати в кошик</button></div>
+
+        <p class="buy-trust">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Оплата карткою, Apple&nbsp;Pay та Google&nbsp;Pay · фіскальний чек · Нова&nbsp;Пошта по Україні
+        </p>
 
         <div class="product-tabs">
           <div class="tabs-nav">
@@ -86,7 +92,7 @@
             </span>
             <div class="perk-body">
               <p class="perk-title">Доставка</p>
-              <p class="perk-text">Відправлення замовлень здійснюється з понеділка по пʼятницю до відділень та поштоматів Нової пошти по Україні. Термін доставки та вартість відправлення визначаються відповідно до правил і <a href="https://site-assets.novapost.com/73069d46-8cc5-4856-8544-c721c076da15.pdf" target="_blank" rel="noopener">тарифів</a> логістичного оператора.</p>
+              <p class="perk-text"><strong>Безкоштовна доставка від 6 пляшок.</strong> Відправлення замовлень здійснюється з понеділка по пʼятницю до відділень та поштоматів Нової пошти по Україні. Термін доставки та вартість відправлення визначаються відповідно до правил і <a href="https://site-assets.novapost.com/73069d46-8cc5-4856-8544-c721c076da15.pdf" target="_blank" rel="noopener">тарифів</a> логістичного оператора.</p>
             </div>
           </div>
           <div class="perk">
@@ -160,6 +166,7 @@
     </div>
     <div class="cart-items" id="cartItems"></div>
     <div class="cart-foot">
+      <div class="ship-bar" id="shipBar" hidden></div>
       <div class="cart-total"><span>Разом</span><span id="cartTotal">0 грн</span></div>
       <a href="../checkout/" class="cart-checkout" id="cartCheckout">Оформити замовлення</a>
     </div>

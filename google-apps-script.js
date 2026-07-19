@@ -355,6 +355,11 @@ function parseItems(str) {
   }).filter(Boolean);
 }
 
+// Дата → "yyyy-MM-dd" (комірка може бути і текстом, і об'єктом Date — нормалізуємо)
+function dateKey(v) {
+  if (v instanceof Date) return Utilities.formatDate(v, 'Europe/Kiev', 'yyyy-MM-dd');
+  return String(v || '').slice(0, 10);
+}
 function money(n) {
   return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
@@ -387,7 +392,7 @@ function recordSale(dateObj, items) {
     const sum = it.qty * info.price;
     let rowIdx = -1;
     for (let i = 1; i < data.length; i++) {
-      if (String(data[i][1]) === dateStr && String(data[i][4]) === it.name) { rowIdx = i + 1; break; }
+      if (dateKey(data[i][1]) === dateStr && String(data[i][4]) === it.name) { rowIdx = i + 1; break; }
     }
     if (rowIdx > 0) {
       sh.getRange(rowIdx, 6).setValue(Number(sh.getRange(rowIdx, 6).getValue()) + it.qty);
@@ -451,7 +456,7 @@ function sendDailyReport() {
   let dayB = 0, dayM = 0, totB = 0, totM = 0;
   const byWine = {};
   for (let i = 1; i < data.length; i++) {
-    const date = String(data[i][1]), wine = data[i][4];
+    const date = dateKey(data[i][1]), wine = data[i][4];
     const qty = Number(data[i][5]) || 0, sum = Number(data[i][6]) || 0;
     totB += qty; totM += sum;
     if (date === yStr) {

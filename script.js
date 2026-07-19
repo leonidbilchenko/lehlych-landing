@@ -150,6 +150,34 @@ function renderCart() {
 
   const checkout = document.getElementById('cartCheckout');
   if (checkout) checkout.classList.toggle('disabled', !slugs.length);
+
+  renderShipBar();
+}
+
+// ─── Прогрес безкоштовної доставки ────────────────────────
+const FREE_SHIP_QTY = 6;
+function bottlesWord(n) {
+  const d = n % 10, dd = n % 100;
+  if (d === 1 && dd !== 11) return 'пляшка';
+  if (d >= 2 && d <= 4 && (dd < 10 || dd >= 20)) return 'пляшки';
+  return 'пляшок';
+}
+function renderShipBar() {
+  const bar = document.getElementById('shipBar');
+  if (!bar) return;
+  const n = cartCount();
+  if (n === 0) { bar.hidden = true; return; }
+  bar.hidden = false;
+  if (n >= FREE_SHIP_QTY) {
+    bar.className = 'ship-bar done';
+    bar.innerHTML = '🎉 Доставка безкоштовна!';
+  } else {
+    const left = FREE_SHIP_QTY - n;
+    const pct = Math.round((n / FREE_SHIP_QTY) * 100);
+    bar.className = 'ship-bar';
+    bar.innerHTML = 'Ще <b>' + left + ' ' + bottlesWord(left) + '</b> — і доставка безкоштовна 🚚' +
+      '<span class="ship-track"><span class="ship-fill" style="width:' + pct + '%"></span></span>';
+  }
 }
 
 function openCart() {

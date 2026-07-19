@@ -120,8 +120,7 @@
     "inStock": false,
     "stockLabel": "Розпродано",
     "badges": [
-      "Bestseller",
-      "Закінчується"
+      "Розпродано"
     ],
     "sku": 18004,
     "liqpayId": 27639472,

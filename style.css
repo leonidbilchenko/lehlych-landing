@@ -1239,7 +1239,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
 
 /* Кошик: вужче й зручніше на мобільному */
 @media (max-width: 600px) {
-  .cart-drawer { width: 80vw; max-width: 330px; }
+  .cart-drawer { width: 76vw; max-width: 300px; }
 }
 
 /* ─── Адаптив ─── */

@@ -98,6 +98,10 @@ def gallery_html(p):
     for a in (p.get("aiPhotos") or []):
         if a and a not in imgs:
             imgs.append(a)
+    # аромапрофіль — завжди останніми
+    for a in (p.get("aromaPhotos") or []):
+        if a and a not in imgs:
+            imgs.append(a)
     if not imgs:
         imgs = [p.get("photoWhite") or ""]
 

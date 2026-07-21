@@ -30,6 +30,9 @@
     "photoTransparent": "images/products/chardonnay-2025/transparent.png",
     "aiPhotos": [
       "images/products/chardonnay-2025/ai-1.jpeg"
+    ],
+    "aromaPhotos": [
+      "images/products/chardonnay-2025/aroma-1.png"
     ]
   },
   {
@@ -63,6 +66,9 @@
     "photoTransparent": "images/products/sauvignon-blanc-2025/transparent.png",
     "aiPhotos": [
       "images/products/sauvignon-blanc-2025/ai-1.jpeg"
+    ],
+    "aromaPhotos": [
+      "images/products/sauvignon-blanc-2025/aroma-1.png"
     ]
   },
   {
@@ -97,6 +103,9 @@
     "photoTransparent": "images/products/trypilske-sonce-2025/transparent.png",
     "aiPhotos": [
       "images/products/trypilske-sonce-2025/ai-1.jpeg"
+    ],
+    "aromaPhotos": [
+      "images/products/trypilske-sonce-2025/aroma-1.png"
     ]
   },
   {
@@ -130,6 +139,9 @@
     "photoTransparent": "images/products/rozhevyi-obrii-2025/transparent.png",
     "aiPhotos": [
       "images/products/rozhevyi-obrii-2025/ai-1.jpeg"
+    ],
+    "aromaPhotos": [
+      "images/products/rozhevyi-obrii-2025/aroma-1.png"
     ]
   }
 ]

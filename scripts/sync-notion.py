@@ -156,6 +156,15 @@ def main():
             if download(url, dest):
                 ai_local.append(str(dest.relative_to(ROOT)))
 
+        # ── фото аромапрофілю (колонка «Aroma profile») — у карусель останніми ──
+        photos_aroma = field(pr, "Aroma profile") or []
+        aroma_local = []
+        for idx, url in enumerate(photos_aroma):
+            ext = url.split("?")[0].split(".")[-1][:4] or "jpg"
+            dest = PHOTO_DIR / slug / f"aroma-{idx + 1}.{ext}"
+            if download(url, dest):
+                aroma_local.append(str(dest.relative_to(ROOT)))
+
         products.append({
             "name": name,
             "slug": slug,
@@ -185,6 +194,7 @@ def main():
             "photoWhite": local["white"],
             "photoTransparent": local["transparent"],
             "aiPhotos": ai_local,
+            "aromaPhotos": aroma_local,
         })
         print(f"   ✓ {name}  ({rrp} грн, {stock})")
 

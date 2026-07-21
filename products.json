@@ -20,7 +20,8 @@
     "inStock": true,
     "stockLabel": "Є в наявності",
     "badges": [
-      "Вибір сомельє"
+      "Вибір сомельє",
+      "Bestseller"
     ],
     "sku": 18001,
     "liqpayId": 27639556,

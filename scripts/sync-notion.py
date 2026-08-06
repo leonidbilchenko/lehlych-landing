@@ -6,7 +6,7 @@
 #  Запуск:  python3 scripts/sync-notion.py
 #  Токен:   береться з .secrets/notion-token.txt  АБО env NOTION_TOKEN
 # ─────────────────────────────────────────────────────────────
-import os, sys, json, urllib.request, urllib.error, pathlib, re
+import os, sys, json, time, urllib.request, urllib.error, pathlib, re
 
 DATABASE_ID = "379dec54c7e68022a9eee2b687a05d99"
 NOTION_VERSION = "2022-06-28"
@@ -34,7 +34,7 @@ def api(path, token, method="GET", body=None):
     req.add_header("Notion-Version", NOTION_VERSION)
     req.add_header("Content-Type", "application/json")
     try:
-        with urllib.request.urlopen(req) as r:
+        with urllib.request.urlopen(req, timeout=60) as r:
             return json.load(r)
     except urllib.error.HTTPError as e:
         sys.exit(f"❌ Notion API {e.code}: {e.read().decode()}")
@@ -80,15 +80,20 @@ def slugify(name):
     return s
 
 
-def download(url, dest):
+def download(url, dest, attempts=3, timeout=45):
+    """Завантажує файл із таймаутом і повторами (без цього job може зависнути)."""
     dest.parent.mkdir(parents=True, exist_ok=True)
-    try:
-        with urllib.request.urlopen(url) as r:
-            dest.write_bytes(r.read())
-        return True
-    except Exception as e:
-        print(f"   ⚠️ не вдалось завантажити фото: {e}")
-        return False
+    for i in range(1, attempts + 1):
+        try:
+            with urllib.request.urlopen(url, timeout=timeout) as r:
+                data = r.read()
+            dest.write_bytes(data)
+            return True
+        except Exception as e:
+            print(f"   ⚠️ фото, спроба {i}/{attempts}: {e}")
+            if i < attempts:
+                time.sleep(3 * i)
+    return False
 
 
 def main():

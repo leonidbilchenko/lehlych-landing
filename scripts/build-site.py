@@ -227,6 +227,26 @@ def main():
         (outdir / "index.html").write_text(page)
         print(f"   ✓ /{p['slug']}/")
 
+    # ── сторінка екскурсій ──
+    exc_tpl = ROOT / "templates" / "excursion.html"
+    if exc_tpl.exists():
+        photos = sorted((ROOT / "images" / "excursion").glob("excursion-*.jpg"))
+        gallery = "\n".join(
+            f'<img src="../images/excursion/{p.name}" alt="Екскурсія Lehlych Winery" loading="lazy">'
+            for p in photos[1:]          # перше фото — головне, у галерею не йде
+        )
+        page = exc_tpl.read_text().replace("{{FOOTER}}", footer).replace("{{GALLERY}}", gallery)
+        d = ROOT / "excursion"
+        d.mkdir(exist_ok=True)
+        (d / "index.html").write_text(page)
+        print(f"   ✓ /excursion/  ({len(photos)} фото)")
+
+        # excursions.js — слоти для фронтенду
+        exc_json = ROOT / "excursions.json"
+        slots = json.loads(exc_json.read_text()) if exc_json.exists() else []
+        (ROOT / "excursions.js").write_text(
+            "window.EXCURSIONS = " + json.dumps(slots, ensure_ascii=False, indent=2) + ";\n")
+
     # ── статичні сторінки (checkout, thank-you) з тим же футером ──
     for tpl_name, outdir in [("checkout.html", "checkout"), ("thankyou.html", "thank-you")]:
         tpl_path = ROOT / "templates" / tpl_name

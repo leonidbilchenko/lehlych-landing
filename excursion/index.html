@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Екскурсія виноробнею — Lehlych Winery</title>
+  <meta name="description" content="Екскурсія виноградником і виноробнею Lehlych Winery в Ржищеві з дегустацією п'яти вин. Тривалість до 3 годин.">
+  <link rel="canonical" href="https://lehlych.com/excursion/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Екскурсія виноробнею — Lehlych Winery">
+  <meta property="og:description" content="Виноградник, виноробня та дегустація п'яти вин у Ржищеві на Київщині.">
+  <meta property="og:image" content="https://lehlych.com/images/excursion/excursion-01.jpg">
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <!-- AGE GATE -->
+  <div class="age-gate" id="ageGate">
+    <div class="age-gate-box">
+      <img src="../logo/Logo Lehlych@4x.png" alt="Lehlych Winery" class="age-gate-logo">
+      <h2 class="age-gate-title">УВАГА!</h2>
+      <p class="age-gate-text">Сайт містить інформацію, не рекомендовану для осіб молодше 18 років.</p>
+      <p class="age-gate-question">Чи досягли ви повноліття?</p>
+      <div class="age-gate-btns">
+        <button class="age-gate-no" onclick="ageNo()">НІ</button>
+        <button class="age-gate-yes" onclick="ageYes()">ТАК</button>
+      </div>
+      <p class="age-gate-cookie">Натискаючи "Так", ви також погоджуєтесь на використання сайтом файлів cookie.</p>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="shop-header">
+    <a href="../" class="shop-header-logo"><img src="../logo/Logo Lehlych@4x.png" alt="Lehlych Winery"></a>
+    <button class="cart-btn" onclick="openCart()" aria-label="Кошик">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2.5l2.2 12.2a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.2L21 7H6"/></svg>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </header>
+
+  <main class="exc">
+
+    <!-- HERO -->
+    <section class="exc-hero">
+      <img src="../images/excursion/excursion-01.jpg" alt="Виноградник Lehlych Winery" class="exc-hero-img">
+      <div class="exc-hero-body">
+        <h1 class="exc-title">Екскурсія виноробнею</h1>
+        <p class="exc-sub">Ржищів, Київщина · до 3 годин · дегустація 5 вин</p>
+        <p class="exc-price"><span>1200</span> грн з особи</p>
+        <a href="#dates" class="hero-cta exc-cta">Обрати дату</a>
+      </div>
+    </section>
+
+    <!-- ПРОГРАМА -->
+    <section class="exc-block">
+      <h2 class="exc-h2">Програма</h2>
+      <div class="exc-program">
+        <div class="exc-step">
+          <span class="exc-step-ico">🍇</span>
+          <div>
+            <h3>На винограднику</h3>
+            <p>Розповімо про історію створення виноробні, її концепцію та шлях, з якого почалася Lehlych Winery. Також поговоримо про сорти винограду, агротехнології та особливості нашого виноградника.</p>
+          </div>
+        </div>
+        <div class="exc-step">
+          <span class="exc-step-ico">📸</span>
+          <div><h3>Час для фотографій</h3><p>Зупиняємось на винограднику для світлин.</p></div>
+        </div>
+        <div class="exc-step">
+          <span class="exc-step-ico">🚗</span>
+          <div>
+            <h3>Переїзд до виноробні</h3>
+            <p>Після виноградника перемістимося автомобілями до виноробні. Вона знаходиться приблизно за 4 км від виноградника.</p>
+          </div>
+        </div>
+        <div class="exc-step">
+          <span class="exc-step-ico">🏡</span>
+          <div>
+            <h3>На виноробні</h3>
+            <p>Розповімо про технологію виробництва вина та покажемо, як народжується наше вино.</p>
+          </div>
+        </div>
+        <div class="exc-step">
+          <span class="exc-step-ico">🍷</span>
+          <div>
+            <h3>Дегустація</h3>
+            <p>Продегустуємо наші вина: Шардоне, Совіньйон Блан, Трипільське Сонце, Мерло та Піно Нуар.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ГАЛЕРЕЯ -->
+    <section class="exc-block">
+      <h2 class="exc-h2">Як це виглядає</h2>
+      <div class="exc-gallery"><img src="../images/excursion/excursion-02.jpg" alt="Екскурсія Lehlych Winery" loading="lazy">
+<img src="../images/excursion/excursion-03.jpg" alt="Екскурсія Lehlych Winery" loading="lazy">
+<img src="../images/excursion/excursion-04.jpg" alt="Екскурсія Lehlych Winery" loading="lazy">
+<img src="../images/excursion/excursion-05.jpg" alt="Екскурсія Lehlych Winery" loading="lazy">
+<img src="../images/excursion/excursion-06.jpg" alt="Екскурсія Lehlych Winery" loading="lazy">
+<img src="../images/excursion/excursion-07.jpg" alt="Екскурсія Lehlych Winery" loading="lazy">
+<img src="../images/excursion/excursion-08.jpg" alt="Екскурсія Lehlych Winery" loading="lazy">
+<img src="../images/excursion/excursion-09.jpg" alt="Екскурсія Lehlych Winery" loading="lazy">
+<img src="../images/excursion/excursion-10.jpg" alt="Екскурсія Lehlych Winery" loading="lazy">
+<img src="../images/excursion/excursion-11.jpg" alt="Екскурсія Lehlych Winery" loading="lazy">
+<img src="../images/excursion/excursion-12.jpg" alt="Екскурсія Lehlych Winery" loading="lazy">
+<img src="../images/excursion/excursion-13.jpg" alt="Екскурсія Lehlych Winery" loading="lazy">
+<img src="../images/excursion/excursion-14.jpg" alt="Екскурсія Lehlych Winery" loading="lazy">
+<img src="../images/excursion/excursion-15.jpg" alt="Екскурсія Lehlych Winery" loading="lazy">
+<img src="../images/excursion/excursion-16.jpg" alt="Екскурсія Lehlych Winery" loading="lazy">
+<img src="../images/excursion/excursion-17.jpg" alt="Екскурсія Lehlych Winery" loading="lazy"></div>
+    </section>
+
+    <!-- ДАТИ -->
+    <section class="exc-block" id="dates">
+      <h2 class="exc-h2">Найближчі дати</h2>
+      <div class="exc-slots" id="excSlots"></div>
+      <p class="exc-note">Екскурсія відбувається за умови групи від 10 осіб. Якщо група не набереться — ми звʼяжемось і запропонуємо іншу дату або повернемо кошти.</p>
+    </section>
+
+    <!-- ФОРМА БРОНЮВАННЯ (зʼявляється після вибору дати) -->
+    <section class="exc-form" id="excForm" hidden></section>
+
+    <!-- УМОВИ -->
+    <section class="exc-block">
+      <h2 class="exc-h2">Умови</h2>
+      <div class="exc-rules">
+        <div class="exc-rule"><b>Вартість</b><p>1200 грн з особи. 900 грн — для ветеранів і осіб з посвідченням УБД, а також для тих, хто не вживає алкоголь. Діти — безкоштовно.</p></div>
+        <div class="exc-rule"><b>Оплата</b><p>Місце підтверджується оплатою. Кількість місць обмежена.</p></div>
+        <div class="exc-rule"><b>Скасування</b><p>За 72 години і більше до початку — повернення 100%. Пізніше кошти не повертаються.</p></div>
+        <div class="exc-rule"><b>Перенесення</b><p>Один раз, не пізніше ніж за 24 години до початку.</p></div>
+        <div class="exc-rule"><b>Запізнення</b><p>Чекаємо 10 хвилин, далі група вирушає за програмою.</p></div>
+        <div class="exc-rule"><b>Погода</b><p>Екскурсія відбувається за будь-якої погоди — вдягайтесь відповідно. За штормового попередження стежте за нашими соцмережами.</p></div>
+        <div class="exc-rule"><b>Діти</b><p>Програма розрахована на дорослих і передбачає дегустацію. Діти — безкоштовно, у супроводі батьків; окремої дитячої програми немає.</p></div>
+        <div class="exc-rule"><b>Проїзд</b><p>Гості добираються самостійно, вартість проїзду не входить у ціну.</p></div>
+      </div>
+      <p class="exc-note">Хочете свій день або час? Напишіть нам у <a href="https://www.instagram.com/lehlychwinery/" target="_blank" rel="noopener">Direct</a> — організуємо. Умова: група від 10 осіб або оплата, еквівалентна вартості для 10 осіб.</p>
+    </section>
+
+  </main>
+
+  <!-- CART DRAWER -->
+  <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-head">
+      <span>Кошик</span>
+      <button class="cart-close" onclick="closeCart()" aria-label="Закрити">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-foot">
+      <div class="ship-bar" id="shipBar" hidden></div>
+      <div class="cart-total"><span>Разом</span><span id="cartTotal">0 грн</span></div>
+      <a href="../checkout/" class="cart-checkout" id="cartCheckout">Оформити замовлення</a>
+    </div>
+  </aside>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+      <!-- Ліва колонка -->
+      <div class="footer-brand">
+        <img src="../logo/Logo Lehlych White.svg" alt="Lehlych Winery" class="footer-logo">
+        <div class="footer-contacts">
+          <p>Київська обл., м. Ржищів</p>
+          <p><a href="tel:+380507745381">+38 (050) 774-53-81</a></p>
+          <p><a href="mailto:lehlychwinery@gmail.com">lehlychwinery@gmail.com</a></p>
+        </div>
+        <div class="footer-socials">
+          <a href="https://www.facebook.com/profile.php?id=61572016280086" target="_blank" rel="noopener" class="social-link" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/lehlychwinery/" target="_blank" rel="noopener" class="social-link" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="https://www.threads.com/@lehlychwinery" target="_blank" rel="noopener" class="social-link" aria-label="Threads">
+            <svg viewBox="0 0 192 192" fill="currentColor"><path d="M141.537 88.988a66.667 66.667 0 0 0-2.518-1.143c-1.482-27.307-16.403-42.94-41.457-43.1h-.34c-14.986 0-27.449 6.396-35.12 18.036l13.779 9.452c5.73-8.695 14.724-10.548 21.348-10.548h.229c8.249.053 14.474 2.452 18.502 7.13 2.932 3.405 4.893 8.111 5.864 14.05-7.314-1.243-15.224-1.626-23.68-1.14-23.82 1.371-39.134 15.264-38.105 34.568.522 9.792 5.4 18.216 13.735 23.719 7.047 4.652 16.124 6.927 25.557 6.412 12.458-.683 22.231-5.436 29.049-14.127 5.178-6.6 8.453-15.153 9.899-25.93 5.937 3.583 10.337 8.298 12.767 13.966 4.132 9.635 4.373 25.468-8.546 38.376-11.319 11.308-24.925 16.2-45.488 16.351-22.809-.169-40.06-7.484-51.275-21.741C35.236 139.966 29.808 120.682 29.605 96c.203-24.682 5.63-43.966 16.133-57.317C56.954 24.425 74.205 17.11 97.014 16.94c22.975.17 40.526 7.52 52.171 21.847 5.71 7.026 10.015 15.86 12.853 26.162l16.147-4.308c-3.44-12.68-8.853-23.606-16.219-32.668C147.036 9.607 125.202.195 97.07 0h-.113C68.882.194 47.292 9.642 32.788 28.08 19.882 44.485 13.224 67.315 13.001 95.932v.136c.223 28.617 6.881 51.447 19.787 67.854C47.292 182.358 68.882 191.806 96.957 192h.113c24.96-.173 42.554-6.708 57.048-21.189 18.963-18.945 18.392-42.692 12.142-57.27-4.484-10.454-13.033-18.945-24.723-24.553Z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Користувачам -->
+      <div class="footer-nav">
+        <p class="footer-nav-title">Користувачам</p>
+        <ul>
+          <li><span class="soon" data-tip="Розділ в розробці">Екскурсія</span></li>
+          <li><span class="soon" data-tip="Розділ в розробці">Корпоративні замовлення</span></li>
+          <li><span class="soon" data-tip="Розділ в розробці">Співпраця</span></li>
+        </ul>
+      </div>
+
+      <!-- Допомога -->
+      <div class="footer-nav">
+        <p class="footer-nav-title">Допомога</p>
+        <ul>
+          <li><a href="https://bilchenko-bm.notion.site/378dec54c7e680749038d1e2b05a1c25" target="_blank" rel="noopener">Контакти</a></li>
+          <li><span class="soon" data-tip="Розділ в розробці">Доставка та оплата</span></li>
+          <li><a href="https://bilchenko-bm.notion.site/378dec54c7e680b29832fe6d92147636" target="_blank" rel="noopener">Політика конфіденційності</a></li>
+          <li><a href="https://bilchenko-bm.notion.site/378dec54c7e6802cab1cdd8984c52977" target="_blank" rel="noopener">Договір публічної оферти</a></li>
+          <li><a href="https://bilchenko-bm.notion.site/378dec54c7e68087b59bd3f9df1584aa" target="_blank" rel="noopener">Повернення та обмін</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Самий низ -->
+    <div class="footer-bar">
+      <p class="footer-copy">© Copyright 2026</p>
+      <div class="footer-payments">
+        <!-- Apple Pay -->
+        <span class="pay-badge pay-text" style="font-family: -apple-system, SF Pro Display, Helvetica Neue, Arial, sans-serif; font-size: 13px; font-weight: 600; letter-spacing: -0.3px;">&#63743; Pay</span>
+        <!-- Google Pay -->
+        <span class="pay-badge pay-text" style="font-family: Helvetica Neue, Arial, sans-serif; font-size: 13px; font-weight: 500;"><span style="color:#4285F4">G</span><span style="color:#EA4335">o</span><span style="color:#FBBC05">o</span><span style="color:#4285F4">g</span><span style="color:#34A853">l</span><span style="color:#EA4335">e</span>&nbsp;Pay</span>
+        <!-- Mastercard -->
+        <span class="pay-badge">
+          <svg width="38" height="24" viewBox="0 0 38 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="14" cy="12" r="10" fill="#EB001B"/>
+            <circle cx="24" cy="12" r="10" fill="#F79E1B"/>
+            <path d="M19 4.8a10 10 0 0 1 0 14.4A10 10 0 0 1 19 4.8Z" fill="#FF5F00"/>
+          </svg>
+        </span>
+        <!-- Visa -->
+        <span class="pay-badge pay-text" style="font-family: Helvetica Neue, Arial, sans-serif; font-size: 15px; font-weight: 900; font-style: italic; letter-spacing: 0.5px;">VISA</span>
+      </div>
+      <div class="footer-18">
+        <span class="badge-18">18+</span>
+        <span>НАДМІРНЕ СПОЖИВАННЯ АЛКОГОЛЮ ШКІДЛИВЕ ДЛЯ ВАШОГО ЗДОРОВ'Я</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../products.js"></script>
+  <script src="../script.js"></script>
+  <script src="../excursions.js"></script>
+  <script src="../excursion.js"></script>
+</body>
+</html>

@@ -1,8 +1,40 @@
 [
   {
+    "name": "Pino Noire",
+    "slug": "pino-noire-2025",
+    "order": 1,
+    "type": "Вино",
+    "wineType": "Сухе червоне вино",
+    "year": "2025",
+    "grape": "Піно Нуар 100%",
+    "color": "Глибокий пурпуровий",
+    "alcohol": "12,5% об.",
+    "volume": "0,75 л.",
+    "serving": "+12…+14°С",
+    "origin": "Бесарабія (Одещина)",
+    "aroma": "Стигла вишня, ожина, смородиновий джем, прянощі, шкіра",
+    "description": "Це вино втілює мить вечора у спільному колі друзів і близьких біля багаття, коли в повітрі переплітаються аромати дерева, землі й теплого диму. У його характері розкриваються відтінки червоних ягід, стиглих фруктів, польових квітів і делікатних спецій, а м’яка зігрівальна глибина смаку робить його особливо доречним для неквапливого смакування. Це вино для уважності до кожного нюансу й моментів, які хочеться відчути сповна та розділити з тими, хто поруч",
+    "price": 849,
+    "salePrice": null,
+    "onSale": false,
+    "inStock": true,
+    "stockLabel": "Є в наявності",
+    "badges": [
+      "Новинка"
+    ],
+    "sku": 18007,
+    "liqpayId": 29282268,
+    "barcode": 4820304180071,
+    "photo": "images/products/pino-noire-2025/transparent.png",
+    "photoWhite": "images/products/pino-noire-2025/white.png",
+    "photoTransparent": "images/products/pino-noire-2025/transparent.png",
+    "aiPhotos": [],
+    "aromaPhotos": []
+  },
+  {
     "name": "Chardonnay",
     "slug": "chardonnay-2025",
-    "order": 1,
+    "order": 2,
     "type": "Вино",
     "wineType": "Сухе біле вино",
     "year": "2025",
@@ -39,7 +71,7 @@
   {
     "name": "Sauvignon Blanc",
     "slug": "sauvignon-blanc-2025",
-    "order": 2,
+    "order": 3,
     "type": "Вино",
     "wineType": "Сухе біле вино",
     "year": "2025",
@@ -75,7 +107,7 @@
   {
     "name": "Трипільське Сонце",
     "slug": "trypilske-sonce-2025",
-    "order": 3,
+    "order": 4,
     "type": "Вино",
     "wineType": "Сухе бурштинове вино",
     "year": "2025",
@@ -112,7 +144,7 @@
   {
     "name": "Рожевий Обрій",
     "slug": "rozhevyi-obrii-2025",
-    "order": 4,
+    "order": 5,
     "type": "Вино",
     "wineType": "Сухе рожеве вино",
     "year": "2025",

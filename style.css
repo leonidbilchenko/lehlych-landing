@@ -144,9 +144,9 @@ body {
   z-index: 200;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 6px 32px;
-  background: rgba(255,247,242,0.92);
+  justify-content: space-between;
+  padding: 4px 32px;
+  background: rgba(255,247,242,0.95);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--gold-dim);
   transform: translateY(-100%);
@@ -154,7 +154,7 @@ body {
 }
 .sticky-header.visible { transform: translateY(0); }
 
-.sticky-logo { height: 52px; }
+.sticky-logo { height: 70px; }
 
 /* ─── HERO ───────────────────────────────────────────── */
 .hero {
@@ -830,8 +830,9 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
    ═══════════════════════════════════════════════════════════ */
 
 /* ─── Sticky header з кошиком ─── */
-.sticky-header { justify-content: center; position: fixed; }
+.sticky-header { justify-content: space-between; position: fixed; }
 .sticky-logo-link { display: flex; }
+.sticky-header .cart-btn { position: relative; right: auto; top: auto; transform: none; }
 .cart-btn {
   position: absolute;
   right: 24px;

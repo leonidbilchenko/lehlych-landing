@@ -160,7 +160,7 @@
     "salePrice": null,
     "onSale": false,
     "inStock": false,
-    "stockLabel": "Розпродано",
+    "stockLabel": "Немає в наявності",
     "badges": [
       "Розпродано"
     ],

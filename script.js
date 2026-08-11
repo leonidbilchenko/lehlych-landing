@@ -64,8 +64,22 @@ function ageNo() {
 const CART_KEY = 'lehlych_cart';
 
 function getCart() {
-  try { return JSON.parse(localStorage.getItem(CART_KEY)) || {}; }
+  let cart;
+  try { cart = JSON.parse(localStorage.getItem(CART_KEY)) || {}; }
   catch { return {}; }
+  // Каталог міг змінитись відтоді, як клієнт наповнив кошик: вино зняли з
+  // продажу або змінили slug. Такі позиції треба прибрати — інакше кошик
+  // показує зайве, а чекаут падає на товарі, якого не існує.
+  const known = (window.PRODUCTS || []).map(p => p.slug);
+  if (!known.length) return cart;   // каталог ще не завантажився — не чіпаємо
+  const clean = {};
+  let dropped = false;
+  for (const slug in cart) {
+    if (known.includes(slug)) clean[slug] = cart[slug];
+    else dropped = true;
+  }
+  if (dropped) localStorage.setItem(CART_KEY, JSON.stringify(clean));
+  return clean;
 }
 function saveCart(cart) {
   localStorage.setItem(CART_KEY, JSON.stringify(cart));

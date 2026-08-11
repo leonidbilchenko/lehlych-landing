@@ -52,7 +52,10 @@ function ckQty(slug, qty) { setCartQty(slug, qty); renderSummary(); }
 function ckRemove(slug) { removeFromCart(slug); renderSummary(); }
 function orderItems() {
   const c = getCart();
-  return Object.keys(c).map(s => { const p = product(s); return { slug: s, name: p.name, qty: c[s], price: p.price, liqpayId: p.liqpayId }; });
+  return Object.keys(c).map(s => {
+    const p = product(s); if (!p) return null;
+    return { slug: s, name: p.name, qty: c[s], price: p.price, liqpayId: p.liqpayId };
+  }).filter(Boolean);
 }
 function orderTotal() {
   const c = getCart();
@@ -207,8 +210,9 @@ if (fPhone) {
     // відновлюємо кошик
     if (Array.isArray(data.items) && data.items.length) {
       const cart = {};
-      data.items.forEach(it => { if (it.slug) cart[it.slug] = it.qty; });
-      localStorage.setItem('lehlych_cart', JSON.stringify(cart));
+      // лист міг бути надісланий давно — беремо лише те, що досі є в каталозі
+      data.items.forEach(it => { if (it.slug && product(it.slug)) cart[it.slug] = it.qty; });
+      if (Object.keys(cart).length) localStorage.setItem('lehlych_cart', JSON.stringify(cart));
     }
     // підставляємо поля, які клієнт уже заповнював
     const set = (id, v) => { const el = $(id); if (el && v) el.value = v; };

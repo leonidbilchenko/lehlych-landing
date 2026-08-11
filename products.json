@@ -1,7 +1,7 @@
 [
   {
-    "name": "Pino Noire",
-    "slug": "pino-noire-2025",
+    "name": "Pinot Noir",
+    "slug": "pinot-noir-2025",
     "order": 1,
     "type": "Вино",
     "wineType": "Сухе червоне вино",
@@ -25,9 +25,9 @@
     "sku": 18007,
     "liqpayId": 29282268,
     "barcode": 4820304180071,
-    "photo": "images/products/pino-noire-2025/transparent.png",
-    "photoWhite": "images/products/pino-noire-2025/white.png",
-    "photoTransparent": "images/products/pino-noire-2025/transparent.png",
+    "photo": "images/products/pinot-noir-2025/transparent.png",
+    "photoWhite": "images/products/pinot-noir-2025/white.png",
+    "photoTransparent": "images/products/pinot-noir-2025/transparent.png",
     "aiPhotos": [],
     "aromaPhotos": []
   },

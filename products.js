@@ -1,9 +1,9 @@
 window.PRODUCTS = [
   {
-    "slug": "pino-noire-2025",
-    "name": "Pino Noire",
+    "slug": "pinot-noir-2025",
+    "name": "Pinot Noir",
     "price": 849,
-    "photo": "/images/products/pino-noire-2025/transparent.png",
+    "photo": "/images/products/pinot-noir-2025/transparent.png",
     "inStock": true,
     "liqpayId": 29282268,
     "type": "Сухе червоне вино"

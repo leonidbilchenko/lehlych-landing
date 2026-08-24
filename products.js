@@ -13,7 +13,7 @@ window.PRODUCTS = [
     "name": "Chardonnay",
     "price": 849,
     "photo": "/images/products/chardonnay-2025/transparent.png",
-    "inStock": true,
+    "inStock": false,
     "liqpayId": 27639556,
     "type": "Сухе біле вино"
   },

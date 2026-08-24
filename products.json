@@ -49,11 +49,10 @@
     "price": 849,
     "salePrice": null,
     "onSale": false,
-    "inStock": true,
-    "stockLabel": "Є в наявності",
+    "inStock": false,
+    "stockLabel": "Розпродано",
     "badges": [
-      "Вибір сомельє",
-      "Bestseller"
+      "Розпродано"
     ],
     "sku": 18001,
     "liqpayId": 27639556,

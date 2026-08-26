@@ -1612,27 +1612,6 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
   .checkout-summary { position: static; }
 }
 
-/* ═══════════════ THANK YOU ═══════════════ */
-.thankyou { min-height: 70vh; display: flex; align-items: center; justify-content: center; padding: 40px 24px; }
-.thankyou-box { max-width: 480px; text-align: center; }
-.thankyou-icon {
-  width: 64px; height: 64px; margin: 0 auto 24px;
-  border-radius: 50%; background: #5a8a4a; color: #fff;
-  font-size: 32px; display: flex; align-items: center; justify-content: center;
-}
-.thankyou-title {
-  font-family: 'Ambulatoria', serif; font-weight: 700;
-  font-size: clamp(26px, 4vw, 36px); margin-bottom: 12px;
-}
-.thankyou-order { font-size: 14px; color: var(--gold); font-weight: 600; margin-bottom: 16px; }
-.thankyou-text { font-size: 15px; line-height: 1.7; color: rgba(30,21,8,0.78); margin-bottom: 28px; }
-.thankyou-btn {
-  display: inline-block; background: var(--gold); color: #fff;
-  text-decoration: none; font-weight: 700; letter-spacing: 0.08em;
-  text-transform: uppercase; font-size: 14px; padding: 14px 32px; border-radius: var(--radius);
-}
-.thankyou-btn:hover { opacity: 0.88; }
-
 /* ─── Згоди на checkout ─── */
 .checkout-agree {
   display: flex;

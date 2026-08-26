@@ -590,7 +590,9 @@ function scanAbandoned() {
 // останні 9 цифр телефону (щоб +380… і 0… вважались однаковими)
 function normPhone(p) { return String(p || '').replace(/\D/g, '').slice(-9); }
 
-// Чи є ОПЛАЧЕНЕ замовлення того ж клієнта (email / телефон / ПІБ) у межах години від цього
+// Чи є ОПЛАЧЕНЕ замовлення того ж клієнта (email / телефон / ПІБ):
+// або з цього моменту й далі (людина повернулась і купила — байдуже, через скільки),
+// або в межах години до нього (щоб зарахувати дубль, створений майже одночасно).
 function paidSamePersonWithinHour(row, data) {
   data = data || sheet().getDataRange().getValues();
   const t = (row[1] instanceof Date) ? row[1].getTime() : new Date(row[1]).getTime();
@@ -603,7 +605,7 @@ function paidSamePersonWithinHour(row, data) {
     const r = data[j];
     if (String(r[11]) !== 'Оплачено') continue;
     const rt = (r[1] instanceof Date) ? r[1].getTime() : new Date(r[1]).getTime();
-    if (isNaN(rt) || Math.abs(rt - t) > HOUR) continue; // не в межах години
+    if (isNaN(rt) || rt < t - HOUR) continue; // давніша покупка — не рахується
     const sameEmail = email && String(r[5] || '').toLowerCase().trim() === email;
     const samePhone = phone && normPhone(r[4]) === phone;
     const sameFio = hasFio && (String(r[3] || '').trim() + '|' + String(r[2] || '').trim()).toLowerCase() === fio;

@@ -32,45 +32,9 @@
     "aromaPhotos": []
   },
   {
-    "name": "Chardonnay",
-    "slug": "chardonnay-2025",
-    "order": 2,
-    "type": "Вино",
-    "wineType": "Сухе біле вино",
-    "year": "2025",
-    "grape": "Шардоне 100%",
-    "color": "Світло-золотистий",
-    "alcohol": "12% об.",
-    "volume": "0,75 л.",
-    "serving": "+8…+12°С",
-    "origin": "Бесарабія (Одещина)",
-    "aroma": "жовте яблуко, жовта груша, айва, білий персик, абрикос, ананас, лайм, польові квіти і сухі трави",
-    "description": "Це вино зберігає настрій серпневого вечора в Ржищеві, коли денне тепло ще тримається в розігрітих яблуках, сухих польових травах. Із заходом сонця повітря наповнюється легким подихом вітру та свіжістю річок Леглич і Дніпро, а простір навколо розкривається м’якими, теплими ароматами. У цій гармонії тиші, тепла й вечірньої прохолоди народжується особлива мить для відпочинку, спокою та келиха вина",
-    "price": 849,
-    "salePrice": null,
-    "onSale": false,
-    "inStock": false,
-    "stockLabel": "Розпродано",
-    "badges": [
-      "Розпродано"
-    ],
-    "sku": 18001,
-    "liqpayId": 27639556,
-    "barcode": 4820304180019,
-    "photo": "images/products/chardonnay-2025/transparent.png",
-    "photoWhite": "images/products/chardonnay-2025/white.png",
-    "photoTransparent": "images/products/chardonnay-2025/transparent.png",
-    "aiPhotos": [
-      "images/products/chardonnay-2025/ai-1.jpeg"
-    ],
-    "aromaPhotos": [
-      "images/products/chardonnay-2025/aroma-1.png"
-    ]
-  },
-  {
     "name": "Sauvignon Blanc",
     "slug": "sauvignon-blanc-2025",
-    "order": 3,
+    "order": 2,
     "type": "Вино",
     "wineType": "Сухе біле вино",
     "year": "2025",
@@ -106,7 +70,7 @@
   {
     "name": "Трипільське Сонце",
     "slug": "trypilske-sonce-2025",
-    "order": 4,
+    "order": 3,
     "type": "Вино",
     "wineType": "Сухе бурштинове вино",
     "year": "2025",
@@ -138,6 +102,42 @@
     ],
     "aromaPhotos": [
       "images/products/trypilske-sonce-2025/aroma-1.png"
+    ]
+  },
+  {
+    "name": "Chardonnay",
+    "slug": "chardonnay-2025",
+    "order": 4,
+    "type": "Вино",
+    "wineType": "Сухе біле вино",
+    "year": "2025",
+    "grape": "Шардоне 100%",
+    "color": "Світло-золотистий",
+    "alcohol": "12% об.",
+    "volume": "0,75 л.",
+    "serving": "+8…+12°С",
+    "origin": "Бесарабія (Одещина)",
+    "aroma": "жовте яблуко, жовта груша, айва, білий персик, абрикос, ананас, лайм, польові квіти і сухі трави",
+    "description": "Це вино зберігає настрій серпневого вечора в Ржищеві, коли денне тепло ще тримається в розігрітих яблуках, сухих польових травах. Із заходом сонця повітря наповнюється легким подихом вітру та свіжістю річок Леглич і Дніпро, а простір навколо розкривається м’якими, теплими ароматами. У цій гармонії тиші, тепла й вечірньої прохолоди народжується особлива мить для відпочинку, спокою та келиха вина",
+    "price": 849,
+    "salePrice": null,
+    "onSale": false,
+    "inStock": false,
+    "stockLabel": "Розпродано",
+    "badges": [
+      "Розпродано"
+    ],
+    "sku": 18001,
+    "liqpayId": 27639556,
+    "barcode": 4820304180019,
+    "photo": "images/products/chardonnay-2025/transparent.png",
+    "photoWhite": "images/products/chardonnay-2025/white.png",
+    "photoTransparent": "images/products/chardonnay-2025/transparent.png",
+    "aiPhotos": [
+      "images/products/chardonnay-2025/ai-1.jpeg"
+    ],
+    "aromaPhotos": [
+      "images/products/chardonnay-2025/aroma-1.png"
     ]
   },
   {

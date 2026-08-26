@@ -46,7 +46,7 @@
 
       <div class="product-gallery" id="productGallery" data-idx="0">
         <div class="gallery-main">
-          <div class="badges"><span class="badge badge-somm">Вибір сомельє</span><span class="badge badge-best">Bestseller</span></div>
+          <div class="badges"><span class="badge badge-def">Розпродано</span></div>
           <img src="/images/products/chardonnay-2025/transparent.png" alt="Chardonnay" class="product-photo" id="galleryMainImg">
           <button class="gallery-nav prev" type="button" onclick="galleryNav(-1)" aria-label="Попереднє">‹</button><button class="gallery-nav next" type="button" onclick="galleryNav(1)" aria-label="Наступне">›</button>
         </div>
@@ -59,10 +59,10 @@
 
         <p class="product-price">849 грн</p>
 
-        <p class="product-stock in">Є в наявності</p>
+        <p class="product-stock out">Розпродано</p>
         
 
-        <div class="product-buy"><div class="qty-ctrl"><button class="qty-btn" onclick="pqty(-1)">−</button><input class="qty-input" id="pQty" type="number" value="1" min="1" max="99"><button class="qty-btn" onclick="pqty(1)">+</button></div><button class="add-cart-btn" onclick="addToCart('chardonnay-2025', document.getElementById('pQty').value)">Додати в кошик</button></div>
+        <button class="add-cart-btn out" disabled>Немає в наявності</button>
 
         <p class="buy-trust">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>

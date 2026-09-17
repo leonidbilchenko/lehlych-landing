@@ -242,3 +242,32 @@ function pqty(delta) {
 // init
 updateCartCount();
 renderCart();
+
+// ─── Галерея в промо-блоці на головній ────────────────────
+const PROMO_PHOTOS = [
+  'excursion-06', 'excursion-02', 'excursion-10',
+  'excursion-12', 'excursion-14', 'excursion-15', 'excursion-17',
+];
+
+function promoSet(i) {
+  const g = document.getElementById('excPromoGal');
+  const img = document.getElementById('excPromoImg');
+  if (!g || !img) return;
+  i = (i + PROMO_PHOTOS.length) % PROMO_PHOTOS.length;
+  img.src = 'images/excursion/' + PROMO_PHOTOS[i] + '.jpg';
+  g.dataset.idx = i;
+  const dots = document.querySelectorAll('#excPromoDots .promo-dot');
+  dots.forEach((d, idx) => d.classList.toggle('active', idx === i));
+}
+function promoNav(d) {
+  const g = document.getElementById('excPromoGal');
+  if (!g) return;
+  promoSet(parseInt(g.dataset.idx || '0', 10) + d);
+}
+(function initPromoGallery() {
+  const box = document.getElementById('excPromoDots');
+  if (!box) return;
+  box.innerHTML = PROMO_PHOTOS.map((_, i) =>
+    `<button type="button" class="promo-dot${i === 0 ? ' active' : ''}" onclick="promoSet(${i})" aria-label="Фото ${i + 1}"></button>`
+  ).join('');
+})();

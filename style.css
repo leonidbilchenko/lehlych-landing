@@ -1759,7 +1759,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
 /* ─── Промо-блок на головній (екскурсії, етикетка) ─── */
 .promo {
   max-width: 1180px;
-  margin: 0 auto 96px;
+  margin: 96px auto;
   padding: 0 32px;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1767,6 +1767,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
   align-items: center;
 }
 .promo-media {
+  position: relative;
   border-radius: var(--radius);
   overflow: hidden;
   background: var(--bg-card);
@@ -1778,15 +1779,15 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--gold);
-  margin-bottom: 14px;
+  margin-bottom: 20px;
 }
 .promo-title {
   font-family: 'Ambulatoria', serif;
   font-weight: 700;
   font-size: clamp(26px, 3.4vw, 36px);
-  line-height: 1.1;
+  line-height: 1.15;
   color: var(--text);
-  margin-bottom: 18px;
+  margin-bottom: 10px;
 }
 .promo-text { font-size: 16px; line-height: 1.75; color: var(--muted); margin-bottom: 16px; }
 .promo-meta {
@@ -1811,6 +1812,17 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
 }
 .promo-cta:hover { background: var(--gold); color: var(--bg); }
 
+.promo-dots {
+  position: absolute; left: 0; right: 0; bottom: 14px;
+  display: flex; justify-content: center; gap: 8px;
+}
+.promo-dot {
+  width: 7px; height: 7px; padding: 0; border: none; border-radius: 50%;
+  background: rgba(255,255,255,0.55); cursor: pointer;
+  transition: background .2s, transform .2s;
+}
+.promo-dot.active { background: #fff; transform: scale(1.25); }
+
 /* дзеркальний варіант — фото праворуч */
 .promo-alt .promo-media { order: 2; }
 
@@ -1818,7 +1830,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
   .promo {
     grid-template-columns: 1fr;
     gap: 28px;
-    margin-bottom: 64px;
+    margin: 64px auto;
     padding: 0 24px;
   }
   .promo-media { aspect-ratio: 3 / 2; }

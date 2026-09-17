@@ -60,12 +60,15 @@
 
   <!-- ЕКСКУРСІЇ -->
   <section class="promo" id="excursions">
-    <div class="promo-media">
-      <img src="images/excursion/excursion-06.jpg" alt="Дегустація на виноробні Lehlych Winery" loading="lazy">
+    <div class="promo-media" id="excPromoGal" data-idx="0">
+      <img src="images/excursion/excursion-06.jpg" alt="Екскурсія виноробнею Lehlych Winery" id="excPromoImg" loading="lazy">
+      <button class="gallery-nav prev" type="button" onclick="promoNav(-1)" aria-label="Попереднє фото">‹</button>
+      <button class="gallery-nav next" type="button" onclick="promoNav(1)" aria-label="Наступне фото">›</button>
+      <div class="promo-dots" id="excPromoDots"></div>
     </div>
     <div class="promo-body">
+      <h2 class="promo-title">Екскурсія виноробнею з дегустацією вин</h2>
       <p class="promo-kicker">Ржищів · Київщина</p>
-      <h2 class="promo-title">Екскурсія виноробнею</h2>
       <p class="promo-text">Пройдемо весь шлях нашого вина — від лози до келиха: виноградник над річкою Леглич, виноробня та дегустація пʼяти вин. Уся програма — до трьох годин.</p>
       <p class="promo-meta">від 900 грн з особи · група від 10 осіб</p>
       <a href="excursion/" class="promo-cta">Детальніше</a>

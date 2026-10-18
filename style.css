@@ -303,8 +303,11 @@ body {
 .bottle-img.flat {
   filter: none;
   border-radius: var(--radius);
-  aspect-ratio: 3 / 4;
+  /* Та сама пропорція, що й у фото пляшок (1200×1200), інакше картка
+     виростає і кнопки «Купити» в ряду стають на різній висоті. */
+  aspect-ratio: 1 / 1;
   object-fit: cover;
+  object-position: center 38%;
 }
 
 .medal {

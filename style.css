@@ -1841,7 +1841,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
 .hw {
   position: relative;
   max-width: 1180px;
-  margin: 96px auto;
+  margin: 96px auto 0;
   padding: 0 32px;
 }
 .hw-inner {
@@ -1909,7 +1909,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
 .hw-btn:hover { background: #fff; color: #1a120d; border-color: #fff; }
 
 @media (max-width: 760px) {
-  .hw { margin: 64px auto; padding: 0 24px; }
+  .hw { margin: 64px auto 0; padding: 0 24px; }
   .hw-inner { min-height: 400px; padding: 48px 24px; background-position: center 46%; }
   .hw-date { top: 20px; right: 20px; font-size: 11px; }
   .hw-actions { flex-direction: column; width: 100%; }

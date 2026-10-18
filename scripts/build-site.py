@@ -8,7 +8,9 @@
 #
 #  Запуск:  python3 scripts/build-site.py
 # ─────────────────────────────────────────────────────────────
-import json, pathlib, re, html as htmllib
+import hashlib
+import json
+import pathlib, re, html as htmllib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 PRODUCTS = json.loads((ROOT / "products.json").read_text())
@@ -268,7 +270,34 @@ def main():
     } for p in PRODUCTS]
     (ROOT / "products.js").write_text("window.PRODUCTS = " + json.dumps(data, ensure_ascii=False, indent=2) + ";\n")
     print(f"→ products.js: {len(data)} товарів")
+
+    stamp_assets()
     print("\n✅ Збірку завершено")
+
+
+def stamp_assets():
+    """Додає ?v=<хеш> до посилань на products.js, script.js і style.css.
+
+    Без цього браузер може віддати свіжий HTML зі старим products.js —
+    тоді нове вино є в каталозі, але кошик вважає його неіснуючим
+    і мовчки викидає. Хеш міняється лише коли міняється сам файл.
+    """
+    assets = ["products.js", "script.js", "style.css", "checkout.js", "excursion.js", "excursions.js"]
+    ver = {}
+    for a in assets:
+        f = ROOT / a
+        if f.exists():
+            ver[a] = hashlib.md5(f.read_bytes()).hexdigest()[:8]
+
+    pattern = re.compile(r'((?:\.\./)*)(' + "|".join(re.escape(a) for a in ver) + r')(\?v=[0-9a-f]+)?')
+    touched = 0
+    for html in [ROOT / "index.html"] + list(ROOT.glob("*/index.html")):
+        txt = html.read_text()
+        new_txt = pattern.sub(lambda m: f"{m.group(1)}{m.group(2)}?v={ver[m.group(2)]}", txt)
+        if new_txt != txt:
+            html.write_text(new_txt)
+            touched += 1
+    print(f"→ Версії файлів проставлено на {touched} сторінках")
 
 
 if __name__ == "__main__":

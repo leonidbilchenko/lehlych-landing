@@ -1,5 +1,23 @@
 window.PRODUCTS = [
   {
+    "slug": "halloween-sauvignon-blanc-2025",
+    "name": "Halloween Sauvignon Blanc",
+    "price": 649,
+    "photo": "/images/products/halloween-sauvignon-blanc-2025/ai-1.jpeg",
+    "inStock": true,
+    "liqpayId": 27639485,
+    "type": "Сухе біле вино"
+  },
+  {
+    "slug": "halloween-pinot-noir-2025",
+    "name": "Halloween Pinot Noir",
+    "price": 849,
+    "photo": "/images/products/halloween-pinot-noir-2025/ai-1.jpeg",
+    "inStock": true,
+    "liqpayId": 29282268,
+    "type": "Сухе червоне вино"
+  },
+  {
     "slug": "sauvignon-blanc-2025",
     "name": "Sauvignon Blanc",
     "price": 649,

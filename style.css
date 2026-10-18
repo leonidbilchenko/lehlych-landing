@@ -1836,3 +1836,82 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
   .promo-media { aspect-ratio: 3 / 2; }
   .promo-alt .promo-media { order: 0; }
 }
+
+/* ═══════════════ HALLOWEEN ═══════════════ */
+.hw {
+  position: relative;
+  max-width: 1180px;
+  margin: 96px auto;
+  padding: 0 32px;
+}
+.hw-inner {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  min-height: 460px;
+  padding: 56px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: #0b0a09 url('images/halloween/banner.jpg') center 48% / cover no-repeat;
+}
+.hw-inner::after {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(60% 55% at 50% 50%, rgba(10,8,7,0.62) 0%, rgba(10,8,7,0.12) 100%),
+    linear-gradient(180deg, rgba(10,8,7,0.5) 0%, rgba(10,8,7,0.18) 40%, rgba(10,8,7,0.62) 100%);
+}
+.hw-inner > * { position: relative; z-index: 1; }
+
+.hw-date {
+  position: absolute; top: 28px; right: 32px;
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: #fff;
+}
+.hw-pre {
+  font-size: clamp(26px, 4vw, 44px);
+  font-weight: 300;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.hw-title {
+  font-family: 'BiroScript', cursive;
+  font-weight: 400;
+  font-size: clamp(64px, 11vw, 132px);
+  line-height: 0.9;
+  color: #fff;
+  margin-bottom: 22px;
+}
+.hw-sub {
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.88);
+  margin-bottom: 32px;
+}
+.hw-actions { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+.hw-btn {
+  display: inline-block;
+  padding: 13px 30px;
+  border: 1px solid rgba(255,255,255,0.65);
+  border-radius: var(--radius);
+  color: #fff;
+  text-decoration: none;
+  font-size: 13px; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  transition: background .2s, color .2s, border-color .2s;
+}
+.hw-btn:hover { background: #fff; color: #1a120d; border-color: #fff; }
+
+@media (max-width: 760px) {
+  .hw { margin: 64px auto; padding: 0 24px; }
+  .hw-inner { min-height: 400px; padding: 48px 24px; background-position: center 46%; }
+  .hw-date { top: 20px; right: 20px; font-size: 11px; }
+  .hw-actions { flex-direction: column; width: 100%; }
+  .hw-btn { width: 100%; }
+}

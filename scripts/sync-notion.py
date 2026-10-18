@@ -161,6 +161,13 @@ def main():
             if download(url, dest):
                 ai_local.append(str(dest.relative_to(ROOT)))
 
+        # Якщо заглавного фото немає — беремо перше другорядне (AI Photo).
+        # Так нова позиція показується одразу, не чекаючи на фото пляшки на прозорому.
+        if not local["transparent"] and ai_local:
+            local["transparent"] = ai_local[0]
+        if not local["white"] and ai_local:
+            local["white"] = ai_local[0]
+
         # ── фото аромапрофілю (колонка «Aroma profile») — у карусель останніми ──
         photos_aroma = field(pr, "Aroma profile") or []
         aroma_local = []

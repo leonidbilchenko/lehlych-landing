@@ -163,10 +163,13 @@ def main():
 
         # Якщо заглавного фото немає — беремо перше другорядне (AI Photo).
         # Так нова позиція показується одразу, не чекаючи на фото пляшки на прозорому.
-        if not local["transparent"] and ai_local:
+        # Помічаємо такий випадок: це звичайний прямокутний кадр, а не пляшка на
+        # прозорому, тож тінь-силует до нього застосовувати не можна.
+        photo_is_flat = False
+        if not local["transparent"] and not local["white"] and ai_local:
             local["transparent"] = ai_local[0]
-        if not local["white"] and ai_local:
             local["white"] = ai_local[0]
+            photo_is_flat = True
 
         # ── фото аромапрофілю (колонка «Aroma profile») — у карусель останніми ──
         photos_aroma = field(pr, "Aroma profile") or []
@@ -203,6 +206,7 @@ def main():
             "liqpayId": field(pr, "LiqPay ID"),
             "barcode": field(pr, "Barcode"),
             "photo": local["transparent"] or local["white"],
+            "photoFlat": photo_is_flat,
             "photoWhite": local["white"],
             "photoTransparent": local["transparent"],
             "aiPhotos": ai_local,

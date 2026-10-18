@@ -26,6 +26,7 @@
     "liqpayId": 27639485,
     "barcode": 4820304180026,
     "photo": "images/products/halloween-sauvignon-blanc-2025/ai-1.jpeg",
+    "photoFlat": true,
     "photoWhite": "images/products/halloween-sauvignon-blanc-2025/ai-1.jpeg",
     "photoTransparent": "images/products/halloween-sauvignon-blanc-2025/ai-1.jpeg",
     "aiPhotos": [
@@ -62,6 +63,7 @@
     "liqpayId": 29282268,
     "barcode": 4820304180071,
     "photo": "images/products/halloween-pinot-noir-2025/ai-1.jpeg",
+    "photoFlat": true,
     "photoWhite": "images/products/halloween-pinot-noir-2025/ai-1.jpeg",
     "photoTransparent": "images/products/halloween-pinot-noir-2025/ai-1.jpeg",
     "aiPhotos": [
@@ -98,6 +100,7 @@
     "liqpayId": 27639485,
     "barcode": 4820304180026,
     "photo": "images/products/sauvignon-blanc-2025/transparent.png",
+    "photoFlat": false,
     "photoWhite": "images/products/sauvignon-blanc-2025/white.png",
     "photoTransparent": "images/products/sauvignon-blanc-2025/transparent.png",
     "aiPhotos": [
@@ -134,6 +137,7 @@
     "liqpayId": 29282268,
     "barcode": 4820304180071,
     "photo": "images/products/pinot-noir-2025/transparent.png",
+    "photoFlat": false,
     "photoWhite": "images/products/pinot-noir-2025/white.png",
     "photoTransparent": "images/products/pinot-noir-2025/transparent.png",
     "aiPhotos": [],
@@ -166,6 +170,7 @@
     "liqpayId": 29282277,
     "barcode": 4820304180057,
     "photo": "images/products/merlot-oak-aged-2025/transparent.png",
+    "photoFlat": false,
     "photoWhite": "images/products/merlot-oak-aged-2025/white.png",
     "photoTransparent": "images/products/merlot-oak-aged-2025/transparent.png",
     "aiPhotos": [],
@@ -198,6 +203,7 @@
     "liqpayId": 29282274,
     "barcode": 4820304180064,
     "photo": "images/products/pinot-noir-oak-aged-2025/transparent.png",
+    "photoFlat": false,
     "photoWhite": "images/products/pinot-noir-oak-aged-2025/white.png",
     "photoTransparent": "images/products/pinot-noir-oak-aged-2025/transparent.png",
     "aiPhotos": [],
@@ -230,6 +236,7 @@
     "liqpayId": 27639525,
     "barcode": 4820304180033,
     "photo": "images/products/trypilske-sonce-2025/transparent.png",
+    "photoFlat": false,
     "photoWhite": "images/products/trypilske-sonce-2025/white.png",
     "photoTransparent": "images/products/trypilske-sonce-2025/transparent.png",
     "aiPhotos": [
@@ -266,6 +273,7 @@
     "liqpayId": 27639472,
     "barcode": 4820304180040,
     "photo": "images/products/rozhevyi-obrii-2025/transparent.png",
+    "photoFlat": false,
     "photoWhite": "images/products/rozhevyi-obrii-2025/white.png",
     "photoTransparent": "images/products/rozhevyi-obrii-2025/transparent.png",
     "aiPhotos": [
@@ -302,6 +310,7 @@
     "liqpayId": 27639556,
     "barcode": 4820304180019,
     "photo": "images/products/chardonnay-2025/transparent.png",
+    "photoFlat": false,
     "photoWhite": "images/products/chardonnay-2025/white.png",
     "photoTransparent": "images/products/chardonnay-2025/transparent.png",
     "aiPhotos": [

@@ -59,7 +59,7 @@ def catalog_card(p, href_prefix=""):
         <a href="{href_prefix}{p["slug"]}/" class="wine-card-link">
           <div class="bottle-wrap">
             {badges_html(p.get("badges"))}
-            <img src="/{esc(p["photo"])}" alt="{esc(p["name"])}" class="bottle-img">
+            <img src="/{esc(p["photo"])}" alt="{esc(p["name"])}" class="bottle-img{" flat" if p.get("photoFlat") else ""}">
           </div>
           <div class="wine-info">
             <h3 class="wine-name">{esc(p["name"])}</h3>

@@ -298,6 +298,14 @@ body {
   display: block;
   filter: drop-shadow(0 20px 48px rgba(0,0,0,0.75));
 }
+/* Звичайний прямокутний кадр замість пляшки на прозорому:
+   тінь-силует тут перетворюється на брудну рамку, тому прибираємо. */
+.bottle-img.flat {
+  filter: none;
+  border-radius: var(--radius);
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}
 
 .medal {
   position: absolute;
@@ -314,6 +322,7 @@ body {
   gap: 6px;
   width: 100%;
   text-align: center;
+  margin-top: 18px;
 }
 
 .wine-name {

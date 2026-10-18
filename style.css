@@ -31,7 +31,7 @@ html { scroll-behavior: smooth; }
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Ambulatoria', Georgia, serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', Georgia, serif;
   font-weight: 400;
   font-size: 16px;
   line-height: 1.65;
@@ -72,7 +72,7 @@ body {
 }
 
 .age-gate-title {
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-weight: 700;
   font-size: 22px;
   letter-spacing: 0.12em;
@@ -105,7 +105,7 @@ body {
   border: 1px solid var(--gold-line);
   border-radius: var(--radius);
   color: var(--gold);
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -120,7 +120,7 @@ body {
   border: none;
   border-radius: var(--radius);
   color: var(--bg);
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -222,7 +222,7 @@ body {
 }
 
 .hero-title {
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-weight: 700;
   font-size: clamp(20px, 3vw, 36px);
   line-height: 1.25;
@@ -247,7 +247,7 @@ body {
   padding: 13px 34px;
   border: 1px solid rgba(232,200,122,0.5);
   color: #e8c87a;
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-weight: 500;
   font-size: 13px;
   letter-spacing: 0.14em;
@@ -326,7 +326,7 @@ body {
 }
 
 .wine-name {
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-weight: 600;
   font-size: clamp(18px, 2vw, 22px);
   line-height: 1.2;
@@ -344,7 +344,7 @@ body {
 }
 
 .wine-price {
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-size: 18px;
   font-weight: 700;
   color: var(--text);
@@ -408,7 +408,7 @@ body {
   border-left: 1px solid var(--gold-line);
   border-right: 1px solid var(--gold-line);
   color: var(--text);
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-weight: 500;
   font-size: 15px;
   text-align: center;
@@ -462,7 +462,7 @@ body {
 }
 
 .order-title {
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-weight: 600;
   font-size: clamp(26px, 3.5vw, 40px);
   line-height: 1.15;
@@ -512,7 +512,7 @@ textarea {
   border: 1px solid var(--gold-dim);
   border-radius: var(--radius);
   color: var(--text);
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-size: 15px;
   font-weight: 400;
   padding: 12px 16px;
@@ -566,7 +566,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
   border: none;
   border-radius: var(--radius);
   color: var(--bg);
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -876,7 +876,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
 /* ─── Заголовок каталогу ─── */
 .wines-head { text-align: center; margin-bottom: 48px; }
 .wines-title {
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-weight: 700;
   font-size: clamp(26px, 4vw, 38px);
   letter-spacing: 0.02em;
@@ -936,7 +936,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
   color: #fff;
   border: none;
   border-radius: var(--radius);
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -1033,7 +1033,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
 .gallery-thumb.active { border-color: var(--gold); border-width: 2px; }
 
 .product-name {
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-weight: 700;
   font-size: clamp(28px, 4vw, 40px);
   line-height: 1.1;
@@ -1064,7 +1064,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
   color: #fff;
   border: none;
   border-radius: var(--radius);
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -1099,7 +1099,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
   gap: 32px;
 }
 .product-detail-title {
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-weight: 700;
   font-size: 19px;
   letter-spacing: 0.02em;
@@ -1142,7 +1142,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
   justify-content: space-between;
   padding: 20px 24px;
   border-bottom: 1px solid var(--gold-dim);
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-weight: 700;
   font-size: 18px;
   letter-spacing: 0.02em;
@@ -1265,7 +1265,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
   padding: 8px 24px 90px;
 }
 .related-title {
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-weight: 700;
   font-size: clamp(22px, 3vw, 30px);
   letter-spacing: 0.02em;
@@ -1352,7 +1352,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
   background: none;
   border: none;
   padding: 0 0 14px;
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -1395,7 +1395,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
    ═══════════════════════════════════════════════════════════ */
 .checkout { max-width: 1000px; margin: 0 auto; padding: 24px 24px 90px; }
 .checkout-title {
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-weight: 700;
   font-size: clamp(26px, 4vw, 38px);
   letter-spacing: 0.02em;
@@ -1409,7 +1409,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
   align-items: start;
 }
 .checkout-section-title {
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-weight: 700;
   font-size: 15px;
   letter-spacing: 0.04em;
@@ -1478,7 +1478,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
   color: #fff;
   border: none;
   border-radius: var(--radius);
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -1504,7 +1504,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
   color: var(--gold);
 }
 .thankyou h1 {
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-weight: 700;
   font-size: clamp(26px, 4vw, 36px);
   color: var(--text);
@@ -1522,7 +1522,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
 /* ═══════════════ CHECKOUT ═══════════════ */
 .checkout { max-width: 1000px; margin: 0 auto; padding: 32px 24px 80px; }
 .checkout-title {
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-weight: 700;
   font-size: clamp(26px, 4vw, 38px);
   letter-spacing: 0.02em;
@@ -1535,7 +1535,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
   align-items: start;
 }
 .checkout-sec {
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-weight: 700;
   font-size: 15px;
   letter-spacing: 0.04em;
@@ -1599,7 +1599,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
   width: 100%;
   background: var(--gold);
   color: #fff; border: none; border-radius: var(--radius);
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-size: 15px; font-weight: 700;
   letter-spacing: 0.08em; text-transform: uppercase;
   padding: 16px; cursor: pointer; transition: opacity 0.2s;
@@ -1669,7 +1669,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
 }
 .exc-hero-img { width: 100%; border-radius: 10px; display: block; }
 .exc-title {
-  font-family: 'Ambulatoria', serif; font-weight: 700;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif; font-weight: 700;
   font-size: clamp(28px, 4vw, 42px); line-height: 1.1; color: var(--text); margin: 0 0 10px;
 }
 .exc-sub { font-size: 14px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); margin: 0 0 20px; }
@@ -1680,7 +1680,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
 /* Блоки */
 .exc-block { margin-bottom: 64px; }
 .exc-h2 {
-  font-family: 'Ambulatoria', serif; font-weight: 700; font-size: 24px;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif; font-weight: 700; font-size: 24px;
   color: var(--text); margin: 0 0 24px;
 }
 .exc-note { font-size: 14px; line-height: 1.6; color: var(--muted); margin: 18px 0 0; }
@@ -1753,7 +1753,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
 .exc-counter span { font-size: 16px; min-width: 22px; text-align: center; }
 .exc-sum {
   display: flex; justify-content: space-between; align-items: baseline;
-  font-family: 'Ambulatoria', serif; font-weight: 700; font-size: 20px;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif; font-weight: 700; font-size: 20px;
   color: var(--text); padding: 8px 0 4px;
 }
 .exc-seats-left { font-size: 13px; color: #c0392b; margin: 0 0 20px; min-height: 18px; }
@@ -1791,7 +1791,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
   margin-bottom: 20px;
 }
 .promo-title {
-  font-family: 'Ambulatoria', serif;
+  font-family: 'Ambulatoria', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', serif;
   font-weight: 700;
   font-size: clamp(26px, 3.4vw, 36px);
   line-height: 1.15;
@@ -1889,7 +1889,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); font-weight: 30
   margin-bottom: 2px;
 }
 .hw-title {
-  font-family: 'BiroScript', cursive;
+  font-family: 'BiroScript', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', cursive;
   font-weight: 400;
   font-size: clamp(64px, 11vw, 132px);
   line-height: 0.9;

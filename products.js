@@ -1,7 +1,7 @@
 window.PRODUCTS = [
   {
     "slug": "halloween-sauvignon-blanc-2025",
-    "name": "Halloween Sauvignon Blanc",
+    "name": "👻 Sauvignon Blanc | Halloween Edition",
     "price": 649,
     "photo": "/images/products/halloween-sauvignon-blanc-2025/ai-1.jpeg",
     "inStock": true,
@@ -10,7 +10,7 @@ window.PRODUCTS = [
   },
   {
     "slug": "halloween-pinot-noir-2025",
-    "name": "Halloween Pinot Noir",
+    "name": "🎃 Pinot Noir | Halloween Edition",
     "price": 849,
     "photo": "/images/products/halloween-pinot-noir-2025/ai-1.jpeg",
     "inStock": true,

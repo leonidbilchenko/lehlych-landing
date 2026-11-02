@@ -380,6 +380,16 @@ function tradeDay(dateObj) {
   };
 }
 
+// Торговий день, що завершився останнім. Беремо той, який триває зараз, і
+// відступаємо на календарну добу назад — через полудень, щоб переведення
+// годинників наприкінці жовтня не зсунуло межу на зайвий день.
+function prevTradeDay() {
+  const cur = tradeDay(new Date()).date.split('-');
+  const d = new Date(Number(cur[0]), Number(cur[1]) - 1, Number(cur[2]), 12, 0, 0);
+  d.setDate(d.getDate() - 1);
+  return Utilities.formatDate(d, 'Europe/Kiev', 'yyyy-MM-dd');
+}
+
 // Вкладка «Продажі»
 function salesSheet() {
   const ss = SpreadsheetApp.openById(P('ORDERS_SHEET_ID'));
@@ -464,8 +474,8 @@ function sendDailyReport() {
   const sh = salesSheet();
   const data = sh.getDataRange().getValues();
   // Звіт іде о 9:00 і покриває торговий день, що тільки-но завершився:
-  // вчора 9:00 → сьогодні 9:00. tradeDay() від «добу тому» дає саме його.
-  const yStr = tradeDay(new Date(Date.now() - 24 * 3600 * 1000)).date;
+  // вчора 9:00 → сьогодні 9:00.
+  const yStr = prevTradeDay();
   const yHuman = yStr.split('-').reverse().join('.');
 
   let dayB = 0, dayM = 0, totB = 0, totM = 0;

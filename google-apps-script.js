@@ -133,9 +133,11 @@ function liqpayCallback(data, signature) {
     if (found && !already) {
       sheetSetPaid(found.index);
       sendEmails(found.row, orderNum);
-      // аналітика продажів (дата замовлення + позиції з колонки «Товари»)
-      const d = (found.row[1] instanceof Date) ? found.row[1] : new Date();
-      try { recordSale(d, parseItems(found.row[8])); } catch (err) { /* ігноруємо */ }
+      // аналітика продажів: дата ОПЛАТИ, а не створення замовлення. Якщо людина
+      // оформила вчора, а заплатила сьогодні, продаж має лягти в сьогоднішній
+      // день — інакше він потрапляє в день, звіт за який уже пішов, і не
+      // показується в жодній денній розбивці.
+      try { recordSale(new Date(), parseItems(found.row[8])); } catch (err) { /* ігноруємо */ }
     }
     if (!already) {
       // Notion (best-effort)
@@ -458,6 +460,10 @@ function sendDailyReport() {
   for (let i = 1; i < data.length; i++) {
     const date = dateKey(data[i][1]), wine = data[i][4];
     const qty = Number(data[i][5]) || 0, sum = Number(data[i][6]) || 0;
+    // Підсумок рахуємо лише по день звіту включно. Інакше продажі, які сталися
+    // сьогодні вранці (звіт іде о 9:00), вже потрапляють у «з початку», але ще
+    // не мають денної розбивки — і виходить «замовлень не було», а сума зросла.
+    if (date > yStr) continue;
     totB += qty; totM += sum;
     if (date === yStr) {
       dayB += qty; dayM += sum;

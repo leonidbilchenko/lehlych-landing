@@ -366,6 +366,20 @@ function money(n) {
   return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
 
+// Торговий день: доба рахується з 9:00 до 9:00, а не з півночі. Оплата о 3:00
+// ночі 2 листопада належить торговому дню 1 листопада — і потрапляє у звіт,
+// який іде о 9:00 того ж ранку, а не чекає ще добу.
+var DAY_START_HOUR = 9;
+function tradeDay(dateObj) {
+  const tz = 'Europe/Kiev';
+  const h = Number(Utilities.formatDate(dateObj, tz, 'H'));
+  const d = (h < DAY_START_HOUR) ? new Date(dateObj.getTime() - 24 * 3600 * 1000) : dateObj;
+  return {
+    date: Utilities.formatDate(d, tz, 'yyyy-MM-dd'),
+    month: Utilities.formatDate(d, tz, 'yyyyMM'),
+  };
+}
+
 // Вкладка «Продажі»
 function salesSheet() {
   const ss = SpreadsheetApp.openById(P('ORDERS_SHEET_ID'));
@@ -384,9 +398,8 @@ function recordSale(dateObj, items) {
   if (!items || !items.length) return;
   const map = productsMap();
   const sh = salesSheet();
-  const tz = 'Europe/Kiev';
-  const dateStr = Utilities.formatDate(dateObj, tz, 'yyyy-MM-dd');
-  const monthStr = Utilities.formatDate(dateObj, tz, 'yyyyMM');
+  const td = tradeDay(dateObj);
+  const dateStr = td.date, monthStr = td.month;
   const data = sh.getDataRange().getValues();
 
   items.forEach(function (it) {
@@ -450,10 +463,10 @@ function getChatId() {
 function sendDailyReport() {
   const sh = salesSheet();
   const data = sh.getDataRange().getValues();
-  const tz = 'Europe/Kiev';
-  const yest = new Date(Date.now() - 24 * 3600 * 1000);
-  const yStr = Utilities.formatDate(yest, tz, 'yyyy-MM-dd');
-  const yHuman = Utilities.formatDate(yest, tz, 'dd.MM.yyyy');
+  // Звіт іде о 9:00 і покриває торговий день, що тільки-но завершився:
+  // вчора 9:00 → сьогодні 9:00. tradeDay() від «добу тому» дає саме його.
+  const yStr = tradeDay(new Date(Date.now() - 24 * 3600 * 1000)).date;
+  const yHuman = yStr.split('-').reverse().join('.');
 
   let dayB = 0, dayM = 0, totB = 0, totM = 0;
   const byWine = {};
@@ -472,10 +485,10 @@ function sendDailyReport() {
     }
   }
 
-  let msg = '📊 <b>Продажі за ' + yHuman + '</b>\n\n';
+  let msg = '📊 <b>Продажі за ' + yHuman + '</b>\n<i>з 9:00 до 9:00</i>\n\n';
   const wines = Object.keys(byWine);
   if (!wines.length) {
-    msg += 'Вчора оплачених замовлень не було.\n';
+    msg += 'За цю добу оплачених замовлень не було.\n';
   } else {
     msg += '🍷 <b>По сортах:</b>\n';
     wines.sort(function (a, b) { return byWine[b].qty - byWine[a].qty; });

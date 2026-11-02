@@ -632,3 +632,18 @@ function paidSamePersonWithinHour(row, data) {
   }
   return false;
 }
+
+// Діагностика LiqPay: перевірити, що ключі в Script Properties робочі.
+// Run → Логи (Ctrl+Enter). Очікувана відповідь — помилка про неіснуюче
+// замовлення; якщо ж «invalid signature», значить ключі не ті.
+function liqpayTest() {
+  var params = { public_key: P('LIQPAY_PUBLIC'), version: 3, action: 'status', order_id: 'diagnostic_123' };
+  var data = Utilities.base64Encode(JSON.stringify(params), Utilities.Charset.UTF_8);
+  var sign = Utilities.base64Encode(
+    Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_1, P('LIQPAY_PRIVATE') + data + P('LIQPAY_PRIVATE'), Utilities.Charset.UTF_8)
+  );
+  var r = UrlFetchApp.fetch('https://www.liqpay.ua/api/request', {
+    method: 'post', payload: { data: data, signature: sign }, muteHttpExceptions: true
+  });
+  Logger.log(r.getContentText());
+}

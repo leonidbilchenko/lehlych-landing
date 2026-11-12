@@ -132,7 +132,9 @@ function liqpayCallback(data, signature) {
     const already = found && String(found.row[11]) === 'Оплачено';
     if (found && !already) {
       sheetSetPaid(found.index);
-      sendEmails(found.row, orderNum);
+      // Листи — найменш важлива частина. Якщо впадуть, облік продажу й Notion
+      // нижче все одно мають відпрацювати.
+      try { sendEmails(found.row, orderNum); } catch (err) { /* ігноруємо */ }
       // аналітика продажів: дата ОПЛАТИ, а не створення замовлення. Якщо людина
       // оформила вчора, а заплатила сьогодні, продаж має лягти в сьогоднішній
       // день — інакше він потрапляє в день, звіт за який уже пішов, і не
@@ -314,20 +316,34 @@ function sendEmails(row, orderNum) {
       '</td></tr></table>' +
       '</div>';
 
-    MailApp.sendEmail({
-      to: email, replyTo: winery,
-      subject: 'Lehlych Winery — замовлення №' + orderNum + ' оплачено',
-      body: plain,
-      htmlBody: html,
-      name: 'Lehlych Winery',
-    });
+    try {
+      MailApp.sendEmail({
+        to: email, replyTo: winery,
+        subject: 'Lehlych Winery — замовлення №' + orderNum + ' оплачено',
+        body: plain,
+        htmlBody: html,
+        name: 'Lehlych Winery',
+      });
+    } catch (err) {
+      // Лист клієнту не пішов (найчастіше — вичерпана добова квота MailApp).
+      // Мовчати не можна: людина заплатила і не отримала підтвердження.
+      tgSend('⚠️ <b>Лист клієнту НЕ відправився</b>\n№' + orderNum + ' · ' +
+        tgEsc(email) + '\n' + tgEsc(String(err)) + '\n\nНапиши людині вручну.');
+    }
   }
-  MailApp.sendEmail({
-    to: winery,
-    subject: '[Оплачено №' + orderNum + '] ' + firstName + ' ' + lastName + ' — ' + total + ' грн',
-    body: firstName + ' ' + lastName + '\n' + phone + '\n' + email + '\n' + city + ', ' + wh +
-      '\n\n' + items + '\nРазом: ' + total + ' грн\n\nКоментар: ' + (comment || '—'),
-  });
+
+  // Сповіщення собі — у Telegram, а не листом на власну адресу. Скрипт працює
+  // від імені lehlychwinery@gmail.com, і лист сам собі Gmail відбиває як
+  // підробку відправника: 550 5.7.27, SPF для gmail.com не проходить, бо лист
+  // іде через релей Apps Script. Полагодити це в DNS неможливо — домен чужий.
+  tgSend(
+    '🛒 <b>Оплачено №' + orderNum + '</b>\n' +
+    tgEsc(firstName + ' ' + lastName) + '\n' +
+    tgEsc(String(phone)) + ' · ' + tgEsc(String(email)) + '\n' +
+    tgEsc(city + ', ' + wh) + '\n\n' +
+    tgEsc(String(items)) + '\n<b>Разом: ' + total + ' грн</b>' +
+    (comment ? '\n\nКоментар: ' + tgEsc(String(comment)) : '')
+  );
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -449,6 +465,12 @@ function backfillSales() {
 }
 
 // ── Telegram ──
+// Повідомлення йдуть з parse_mode=HTML, тож «<» чи «&» у імені або коментарі
+// клієнта зламали б розмітку, і Telegram відхилив би весь запит.
+function tgEsc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
 function tgSend(text) {
   const token = P('TELEGRAM_TOKEN'), chat = P('TELEGRAM_CHAT');
   if (!token || !chat) { Logger.log('Немає TELEGRAM_TOKEN / TELEGRAM_CHAT'); return; }

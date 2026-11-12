@@ -519,7 +519,7 @@ function sendDailyReport() {
     }
   }
 
-  let msg = '📊 <b>Продажі за ' + yHuman + '</b>\n<i>з 9:00 до 9:00</i>\n\n';
+  let msg = '📊 <b>Продажі за ' + yHuman + '</b>\n<i>за попередню добу</i>\n\n';
   const wines = Object.keys(byWine);
   if (!wines.length) {
     msg += 'За цю добу оплачених замовлень не було.\n';

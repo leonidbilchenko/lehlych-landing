@@ -332,18 +332,7 @@ function sendEmails(row, orderNum) {
     }
   }
 
-  // Сповіщення собі — у Telegram, а не листом на власну адресу. Скрипт працює
-  // від імені lehlychwinery@gmail.com, і лист сам собі Gmail відбиває як
-  // підробку відправника: 550 5.7.27, SPF для gmail.com не проходить, бо лист
-  // іде через релей Apps Script. Полагодити це в DNS неможливо — домен чужий.
-  tgSend(
-    '🛒 <b>Оплачено №' + orderNum + '</b>\n' +
-    tgEsc(firstName + ' ' + lastName) + '\n' +
-    tgEsc(String(phone)) + ' · ' + tgEsc(String(email)) + '\n' +
-    tgEsc(city + ', ' + wh) + '\n\n' +
-    tgEsc(String(items)) + '\n<b>Разом: ' + total + ' грн</b>' +
-    (comment ? '\n\nКоментар: ' + tgEsc(String(comment)) : '')
-  );
+  notifyOrder(row, orderNum);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -533,6 +522,34 @@ function sendDailyReport() {
   }
   msg += '\n📈 <b>Усього з початку:</b> ' + totB + ' пляшок · ' + money(totM) + ' грн';
   tgSend(msg);
+}
+
+// Сповіщення про оплату — у Telegram, а не листом на власну адресу. Скрипт
+// працює від імені lehlychwinery@gmail.com, і лист сам собі Gmail відбиває як
+// підробку відправника: 550 5.7.27, SPF для gmail.com не проходить, бо лист
+// іде через релей Apps Script. Полагодити це в DNS неможливо — домен чужий.
+function notifyOrder(row, orderNum) {
+  const firstName = row[3], lastName = row[2], phone = row[4], email = row[5];
+  const city = row[6], wh = row[7], items = row[8], total = row[9], comment = row[12];
+  tgSend(
+    '🛒 <b>Оплачено №' + orderNum + '</b>\n' +
+    tgEsc(firstName + ' ' + lastName) + '\n' +
+    tgEsc(String(phone)) + ' · ' + tgEsc(String(email)) + '\n' +
+    tgEsc(city + ', ' + wh) + '\n\n' +
+    tgEsc(String(items)) + '\n<b>Разом: ' + total + ' грн</b>' +
+    (comment ? '\n\nКоментар: ' + tgEsc(String(comment)) : '')
+  );
+}
+
+// Надіслати сповіщення про замовлення в Telegram ще раз — якщо воно колись
+// загубилось. Встав номер між лапок, обери зверху resendNotify і «Запустити».
+// Листів нікому не шле, тільки повідомлення в групу.
+function resendNotify() {
+  const ORDER = 'LW261112-210536';
+  const found = sheetFind(ORDER);
+  if (!found) { Logger.log('Замовлення ' + ORDER + ' не знайдено в таблиці.'); return; }
+  notifyOrder(found.row, ORDER);
+  Logger.log('Сповіщення про ' + ORDER + ' надіслано в Telegram.');
 }
 
 // ═══════════════════════════════════════════════════════════

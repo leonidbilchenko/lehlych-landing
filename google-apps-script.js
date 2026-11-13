@@ -549,14 +549,23 @@ function notifyOrder(row, orderNum) {
 }
 
 // Надіслати сповіщення про замовлення в Telegram ще раз — якщо воно колись
-// загубилось. Встав номер між лапок, обери зверху resendNotify і «Запустити».
-// Листів нікому не шле, тільки повідомлення в групу.
+// загубилось. Обери зверху resendNotify і «Запустити».
+// Порожній ORDER означає «останнє оплачене». Потрібне конкретне — встав номер
+// між лапок. Листів нікому не шле, тільки повідомлення в групу.
 function resendNotify() {
-  const ORDER = 'LW261112-210536';
-  const found = sheetFind(ORDER);
-  if (!found) { Logger.log('Замовлення ' + ORDER + ' не знайдено в таблиці.'); return; }
-  notifyOrder(found.row, ORDER);
-  Logger.log('Сповіщення про ' + ORDER + ' надіслано в Telegram.');
+  const ORDER = '';
+  let found = null, num = ORDER;
+  if (ORDER) {
+    found = sheetFind(ORDER);
+  } else {
+    const data = sheet().getDataRange().getValues();
+    for (let i = data.length - 1; i > 0; i--) {
+      if (String(data[i][11]) === 'Оплачено') { found = { index: i + 1, row: data[i] }; num = String(data[i][0]); break; }
+    }
+  }
+  if (!found) { Logger.log('Замовлення ' + (ORDER || '(останнє оплачене)') + ' не знайдено.'); return; }
+  notifyOrder(found.row, num);
+  Logger.log('Сповіщення про ' + num + ' надіслано в Telegram.');
 }
 
 // ═══════════════════════════════════════════════════════════

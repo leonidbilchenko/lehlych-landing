@@ -541,7 +541,6 @@ function notifyOrder(row, orderNum) {
     '🛒 <b>Оплачено №' + orderNum + '</b>\n\n' +
     '<b>ПІБ:</b> ' + tgEsc(lastName + ' ' + firstName) + '\n' +
     '<b>Тел:</b> ' + tgEsc(String(phone)) + '\n' +
-    '<b>Пошта:</b> ' + tgEsc(String(email)) + '\n' +
     '<b>Нова Пошта:</b> ' + tgEsc(city + ', ' + wh) + '\n\n' +
     bottles + '\n\n' +
     '<b>Разом: ' + total + ' грн</b>' +

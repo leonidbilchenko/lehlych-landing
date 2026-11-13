@@ -531,13 +531,21 @@ function sendDailyReport() {
 function notifyOrder(row, orderNum) {
   const firstName = row[3], lastName = row[2], phone = row[4], email = row[5];
   const city = row[6], wh = row[7], items = row[8], total = row[9], comment = row[12];
+  // Кожна пляшка — окремим рядком: повідомлення читають під час пакування,
+  // і перелік в один рядок доводиться вичитувати по комах.
+  const parsed = parseItems(items);
+  const bottles = parsed.length
+    ? parsed.map(function (it) { return '• ' + tgEsc(it.name) + ' × ' + it.qty; }).join('\n')
+    : tgEsc(String(items));
   tgSend(
-    '🛒 <b>Оплачено №' + orderNum + '</b>\n' +
-    tgEsc(firstName + ' ' + lastName) + '\n' +
-    tgEsc(String(phone)) + ' · ' + tgEsc(String(email)) + '\n' +
-    tgEsc(city + ', ' + wh) + '\n\n' +
-    tgEsc(String(items)) + '\n<b>Разом: ' + total + ' грн</b>' +
-    (comment ? '\n\nКоментар: ' + tgEsc(String(comment)) : '')
+    '🛒 <b>Оплачено №' + orderNum + '</b>\n\n' +
+    '<b>ПІБ:</b> ' + tgEsc(lastName + ' ' + firstName) + '\n' +
+    '<b>Тел:</b> ' + tgEsc(String(phone)) + '\n' +
+    '<b>Пошта:</b> ' + tgEsc(String(email)) + '\n' +
+    '<b>Нова Пошта:</b> ' + tgEsc(city + ', ' + wh) + '\n\n' +
+    bottles + '\n\n' +
+    '<b>Разом: ' + total + ' грн</b>' +
+    (comment ? '\n\n<b>Коментар:</b> ' + tgEsc(String(comment)) : '')
   );
 }
 

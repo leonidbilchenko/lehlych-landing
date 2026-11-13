@@ -550,22 +550,32 @@ function notifyOrder(row, orderNum) {
 
 // Надіслати сповіщення про замовлення в Telegram ще раз — якщо воно колись
 // загубилось. Обери зверху resendNotify і «Запустити».
-// Порожній ORDER означає «останнє оплачене». Потрібне конкретне — встав номер
-// між лапок. Листів нікому не шле, тільки повідомлення в групу.
+//   ORDER порожній → останні COUNT оплачених, від давнішого до свіжішого
+//   ORDER з номером → саме це замовлення, COUNT не враховується
+// Листів нікому не шле, тільки повідомлення в групу.
 function resendNotify() {
   const ORDER = '';
-  let found = null, num = ORDER;
+  const COUNT = 2;
+
   if (ORDER) {
-    found = sheetFind(ORDER);
-  } else {
-    const data = sheet().getDataRange().getValues();
-    for (let i = data.length - 1; i > 0; i--) {
-      if (String(data[i][11]) === 'Оплачено') { found = { index: i + 1, row: data[i] }; num = String(data[i][0]); break; }
-    }
+    const found = sheetFind(ORDER);
+    if (!found) { Logger.log('Замовлення ' + ORDER + ' не знайдено.'); return; }
+    notifyOrder(found.row, ORDER);
+    Logger.log('Сповіщення про ' + ORDER + ' надіслано в Telegram.');
+    return;
   }
-  if (!found) { Logger.log('Замовлення ' + (ORDER || '(останнє оплачене)') + ' не знайдено.'); return; }
-  notifyOrder(found.row, num);
-  Logger.log('Сповіщення про ' + num + ' надіслано в Telegram.');
+
+  const data = sheet().getDataRange().getValues();
+  const rows = [];
+  for (let i = data.length - 1; i > 0 && rows.length < COUNT; i--) {
+    if (String(data[i][11]) === 'Оплачено') rows.push(data[i]);
+  }
+  if (!rows.length) { Logger.log('Оплачених замовлень у таблиці немає.'); return; }
+  // знайшли з кінця — розвертаємо, щоб у чаті вони лягли в хронологічному порядку
+  rows.reverse().forEach(function (row) {
+    notifyOrder(row, String(row[0]));
+    Logger.log('Сповіщення про ' + row[0] + ' надіслано в Telegram.');
+  });
 }
 
 // ═══════════════════════════════════════════════════════════

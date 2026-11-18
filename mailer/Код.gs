@@ -79,6 +79,28 @@ function assertTz() {
 }
 
 // ─────────────────────────────────────────────────────────
+//  ДОЗВОЛИ
+//
+//  Google показує на екрані дозволів окрему галочку для кожного дозволу,
+//  і за замовчуванням вони зняті. Пропустиш одну — сервіс впаде посеред
+//  роботи (18.11.2026: «немає дозволу викликати UrlFetchApp.fetch»).
+//  requireAllScopes перевіряє, що надано ВСІ, і якщо ні — сам показує
+//  вікно дозволів ще раз. Тригер так не вміє, тому дозволи перевіряє
+//  кожна дія з меню, і запуск розсилки без повного набору неможливий.
+// ─────────────────────────────────────────────────────────
+function ensureScopes() {
+  if (ScriptApp.requireAllScopes) ScriptApp.requireAllScopes(ScriptApp.AuthMode.FULL);
+}
+
+// Запустити вручну з редактора, якщо треба надати пропущені дозволи
+function authorize() {
+  ensureScopes();
+  Logger.log('Дозволи: ' +
+    ScriptApp.getAuthorizationInfo(ScriptApp.AuthMode.FULL).getAuthorizationStatus() +
+    ' (NOT_REQUIRED = усе надано)');
+}
+
+// ─────────────────────────────────────────────────────────
 //  ЗАПОБІЖНИК АКАУНТА
 //
 //  Google має відому пастку: якщо в браузері відкрито кілька акаунтів,
@@ -136,6 +158,7 @@ function onOpen() {
     .addItem('Надіслати наступну порцію зараз', 'processQueue')
     .addSeparator()
     .addItem('Стан і квота', 'statusReport')
+    .addItem('Перевірити дозволи', 'authorize')
     .addItem('Порахувати відповіді', 'countReplies')
     .addItem('Зібрати відмови з пошти', 'scanBounces')
     .addToUi();
@@ -154,6 +177,7 @@ function sh(name) {
 //  ПІДГОТОВКА ТАБЛИЦІ
 // ─────────────────────────────────────────────────────────
 function setupSheets() {
+  ensureScopes();
   assertAccount();
   var book = ss();
   var created = [];
@@ -635,6 +659,7 @@ function b64wrap(text) {
 //  ПЕРЕВІРКА ПЕРЕД ВІДПРАВКОЮ
 // ─────────────────────────────────────────────────────────
 function checkCampaign() {
+  ensureScopes();
   var account = assertAccount();
   var c = currentCampaign();
   var html, warn = [], info = [];
@@ -690,6 +715,7 @@ function checkCampaign() {
 }
 
 function sendTest() {
+  ensureScopes();
   assertAccount();
   var c = currentCampaign();
   var to = P('TEST_EMAIL');
@@ -714,6 +740,7 @@ function sendTest() {
 //  ЗАПУСК І ЧЕРГА
 // ─────────────────────────────────────────────────────────
 function startCampaign() {
+  ensureScopes();
   var account = assertAccount();
   assertTz();
   var c = currentCampaign();
@@ -949,6 +976,7 @@ function statusReport() {
 //  слали, нових пишемо в «Лог» і в примітку контакту.
 // ─────────────────────────────────────────────────────────
 function countReplies() {
+  ensureScopes();
   assertAccount();   // читання пошти — теж лише з дозволеного акаунта
   var c = currentCampaign();
   var subj = c.subject.replace(/"/g, '');
@@ -1024,6 +1052,7 @@ function countReplies() {
 //  звідти і гасимо адреси, щоб не бити в мертву скриньку.
 // ─────────────────────────────────────────────────────────
 function scanBounces() {
+  ensureScopes();
   assertAccount();
   var threads = GmailApp.search(
     'from:(mailer-daemon OR postmaster) newer_than:30d', 0, 150);

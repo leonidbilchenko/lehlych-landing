@@ -59,6 +59,26 @@ function P(key) { return PropertiesService.getScriptProperties().getProperty(key
 function Pnum(key, dflt) { var v = parseInt(P(key), 10); return isNaN(v) ? dflt : v; }
 
 // ─────────────────────────────────────────────────────────
+//  ЧАСОВИЙ ПОЯС
+//
+//  Europe/Kyiv — чинна назва зони (tzdata 2022b). Якщо Java на сервері
+//  Google раптом її не знає, Utilities.formatDate НЕ падає, а мовчки
+//  рахує за Гринвічем — і вікно «9:00–17:00 за Києвом» зсунулось би
+//  на дві-три години. Тому не віримо на слово: tzOk() перевіряє, що
+//  зміщення не нульове. Київ — це +02:00 узимку і +03:00 улітку.
+// ─────────────────────────────────────────────────────────
+var TZ = 'Europe/Kyiv';
+
+function tzOffset() { return Utilities.formatDate(new Date(), TZ, 'Z'); }   // напр. +0200
+function tzOk()     { return /^\+0[23]00$/.test(tzOffset()); }
+function assertTz() {
+  if (!tzOk()) {
+    throw new Error('Google не знає часового поясу ' + TZ + ' (зміщення ' + tzOffset() +
+                    '). Вікно відправки рахувалося б неправильно. Нічого не надіслано');
+  }
+}
+
+// ─────────────────────────────────────────────────────────
 //  ЗАПОБІЖНИК АКАУНТА
 //
 //  Google має відому пастку: якщо в браузері відкрито кілька акаунтів,
@@ -483,7 +503,7 @@ function handleUnsub(e) {
         if (c.email === email) {
           setContactField(c.row, 'Статус', 'відписався');
           setContactField(c.row, 'Примітка', 'Відписався ' +
-            Utilities.formatDate(new Date(), 'Europe/Kiev', 'dd.MM.yyyy'));
+            Utilities.formatDate(new Date(), TZ, 'dd.MM.yyyy'));
         }
       });
     }
@@ -562,7 +582,7 @@ function buildMime(o) {
   L.push('To: ' + o.to);
   L.push('Reply-To: ' + o.replyTo);
   L.push('Subject: ' + mimeWord(o.subject));
-  L.push('Date: ' + Utilities.formatDate(new Date(), 'Europe/Kiev',
+  L.push('Date: ' + Utilities.formatDate(new Date(), TZ,
           "EEE, dd MMM yyyy HH:mm:ss Z"));
   L.push('MIME-Version: 1.0');
   if (o.unsubLink) {
@@ -639,6 +659,9 @@ function checkCampaign() {
   if (noCompany) info.push(noCompany + ' одержувачів без назви компанії');
 
   info.push('Акаунт: ' + account + '  ✓ дозволений');
+  info.push('Часовий пояс: ' + TZ + ', зараз ' +
+            Utilities.formatDate(new Date(), TZ, 'HH:mm') + ' (' + tzOffset() + ')' +
+            (tzOk() ? '  ✓' : '  ✗ ЗОНА НЕ ВІДОМА — розсилка не запуститься'));
   info.push('Відправник: ' + P('SENDER_NAME') + ' <' + P('SENDER_EMAIL') + '>');
   info.push('Відповіді прийдуть на: ' + (P('REPLY_TO') || P('SENDER_EMAIL')));
   info.push('Категорія: ' + (c.category || '— не задана, піде всім —'));
@@ -683,6 +706,7 @@ function sendTest() {
 // ─────────────────────────────────────────────────────────
 function startCampaign() {
   var account = assertAccount();
+  assertTz();
   var c = currentCampaign();
   var people = recipientsFor(c.category);
   var sentSet = alreadySent(c.name);
@@ -728,9 +752,9 @@ function ensureTrigger() {
 function kyivNow() {
   var d = new Date();
   return {
-    dow:  parseInt(Utilities.formatDate(d, 'Europe/Kiev', 'u'), 10),  // 1 = пн … 7 = нд
-    hour: parseInt(Utilities.formatDate(d, 'Europe/Kiev', 'H'), 10),
-    min:  parseInt(Utilities.formatDate(d, 'Europe/Kiev', 'm'), 10)
+    dow:  parseInt(Utilities.formatDate(d, TZ, 'u'), 10),  // 1 = пн … 7 = нд
+    hour: parseInt(Utilities.formatDate(d, TZ, 'H'), 10),
+    min:  parseInt(Utilities.formatDate(d, TZ, 'm'), 10)
   };
 }
 
@@ -761,7 +785,7 @@ function processQueue() {
 
     // Тригер працює без людини — тож при чужому акаунті не кидаємо
     // помилку в порожнечу, а зупиняємо кампанію й лишаємо слід у Лозі
-    try { assertAccount(); }
+    try { assertAccount(); assertTz(); }
     catch (err) {
       dropTrigger();
       setCampaignField(row, 'Статус', 'пауза');
@@ -815,7 +839,7 @@ function processQueue() {
 
         logRow(c.name, person.email, person.company, 'надіслано', how);
         setContactField(person.row, 'Останній лист',
-          c.name + ' · ' + Utilities.formatDate(new Date(), 'Europe/Kiev', 'dd.MM.yyyy'));
+          c.name + ' · ' + Utilities.formatDate(new Date(), TZ, 'dd.MM.yyyy'));
         okCount++;
       } catch (err) {
         logRow(c.name, person.email, person.company, 'помилка', String(err).slice(0, 300));
@@ -852,7 +876,7 @@ function alreadySent(campaignName) {
 }
 
 function countSentToday(campaignName) {
-  var today = Utilities.formatDate(new Date(), 'Europe/Kiev', 'yyyy-MM-dd');
+  var today = Utilities.formatDate(new Date(), TZ, 'yyyy-MM-dd');
   var vals = sh(SHEETS.log).getDataRange().getValues();
   var n = 0;
   for (var i = 1; i < vals.length; i++) {
@@ -860,7 +884,7 @@ function countSentToday(campaignName) {
     if (String(vals[i][4]) !== 'надіслано') continue;
     var d = vals[i][0];
     if (!(d instanceof Date)) continue;
-    if (Utilities.formatDate(d, 'Europe/Kiev', 'yyyy-MM-dd') === today) n++;
+    if (Utilities.formatDate(d, TZ, 'yyyy-MM-dd') === today) n++;
   }
   return n;
 }
@@ -953,9 +977,9 @@ function countReplies() {
     if (logged[em]) return;
     var ct = byEmail[em];
     logRow(c.name, em, ct ? ct.company : '', 'відповідь',
-           Utilities.formatDate(repliers[em], 'Europe/Kiev', 'dd.MM.yyyy HH:mm'));
+           Utilities.formatDate(repliers[em], TZ, 'dd.MM.yyyy HH:mm'));
     if (ct) setContactField(ct.row, 'Примітка', 'Відповів(ла) на «' + c.name + '» ' +
-      Utilities.formatDate(repliers[em], 'Europe/Kiev', 'dd.MM.yyyy'));
+      Utilities.formatDate(repliers[em], TZ, 'dd.MM.yyyy'));
     fresh.push(ct ? ct.company + ' — ' + em : em);
   });
 
@@ -1020,7 +1044,7 @@ function scanBounces() {
     setContactField(c.row, 'Статус', 'відмова');
     setContactField(c.row, 'Відмов', 1);
     setContactField(c.row, 'Примітка', 'Відмова ' +
-      Utilities.formatDate(new Date(), 'Europe/Kiev', 'dd.MM.yyyy'));
+      Utilities.formatDate(new Date(), TZ, 'dd.MM.yyyy'));
     logRow('—', c.email, c.company, 'відмова', 'знайдено в пошті');
     marked.push(c.email);
     names.push(c.company || c.email);

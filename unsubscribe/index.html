@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- У посиланні — адреса одержувача. Нікуди її не передаємо: ні реферером
+     (навіть Google Fonts), ні аналітикою. Тому тут немає script.js з GA і
+     пікселем, і build-site.py цієї сторінки не чіпає -->
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
+<title>Відписка — Lehlych Winery</title>
+<link rel="icon" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFF7F2;
+    --ink: #1E1508;
+    --muted: #5A4038;
+    --gold: #9A6F28;
+    --dark: #1F0F0C;
+    --line: #E3D3C4;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    -webkit-text-size-adjust: 100%;
+  }
+  header {
+    background: var(--dark);
+    padding: 28px 16px 26px;
+    text-align: center;
+  }
+  header a { display: inline-block; }
+  header img { width: 150px; height: auto; display: block; }
+  main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 16px 64px;
+  }
+  .card {
+    width: 100%;
+    max-width: 460px;
+    text-align: center;
+  }
+  .mark {
+    width: 48px; height: 48px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--line);
+    color: var(--gold);
+    font-size: 22px; font-weight: 700;
+  }
+  .mark.ok   { border-color: var(--gold); }
+  .mark.wait { border-top-color: var(--gold); animation: spin 0.9s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .mark.wait { animation: none; } }
+  h1 {
+    margin: 0 0 12px;
+    font-size: 24px; line-height: 1.3; font-weight: 700;
+  }
+  p {
+    margin: 0;
+    font-size: 16px; line-height: 1.6;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+  }
+  p a { color: var(--gold); }
+  .back {
+    display: inline-block;
+    margin-top: 32px;
+    color: var(--gold);
+    font-size: 14px; font-weight: 600;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+  }
+  .back:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="/" aria-label="Lehlych Winery — на головну">
+    <img src="/images/email/logo-white-2026.png" width="150" alt="Lehlych Winery">
+  </a>
+</header>
+
+<main>
+  <div class="card" role="status" aria-live="polite">
+    <div class="mark wait" id="mark" aria-hidden="true"></div>
+    <h1 id="title">Відписуємо…</h1>
+    <p id="text">Зачекайте кілька секунд</p>
+    <noscript>
+      <p>Для відписки потрібен JavaScript. Або просто напишіть нам на
+        <a href="mailto:info@lehlych.com?subject=%D0%92%D1%96%D0%B4%D0%BF%D0%B8%D1%81%D0%BA%D0%B0">info@lehlych.com</a> — відпишемо вручну</p>
+    </noscript>
+    <a class="back" href="/">lehlych.com</a>
+  </div>
+</main>
+
+<script>
+(function () {
+  // Вебзастосунок «Відписка» (Apps Script). Адреса не секретна — вона є
+  // в заголовку List-Unsubscribe кожного листа. Після «Нової версії»
+  // розгортання вона НЕ змінюється, міняти тут нічого не треба
+  var API = 'https://script.google.com/macros/s/AKfycbz5RHHojWs5kE5J7CcgpsU3LaBr7w-T5_6V2EGrU_jq7K8hBmzPVt7dptOtb8rL1JCt/exec';
+  var CONTACT = 'info@lehlych.com';
+
+  var q = new URLSearchParams(location.search);
+  var u = q.get('u') || '';
+  var s = q.get('s') || '';
+  var campaign = q.get('campaign') || '';
+
+  // Адреса людини більше не потрібна в рядку браузера й історії
+  try { history.replaceState(null, '', location.pathname); } catch (e) {}
+
+  var mark = document.getElementById('mark');
+  var title = document.getElementById('title');
+  var text = document.getElementById('text');
+
+  function show(t, msg, ok, withMail) {
+    title.textContent = t;
+    text.textContent = msg;
+    mark.className = 'mark' + (ok ? ' ok' : '');
+    mark.textContent = ok ? '✓' : '!';
+    if (withMail) {
+      text.appendChild(document.createTextNode('. Напишіть нам на '));
+      var a = document.createElement('a');
+      a.href = 'mailto:' + CONTACT + '?subject=' + encodeURIComponent('Відписка');
+      a.textContent = CONTACT;
+      text.appendChild(a);
+      text.appendChild(document.createTextNode(' — відпишемо вручну'));
+    }
+  }
+
+  if (!u || !s) {
+    show('Посилання неповне', 'Схоже, його скопійовано не до кінця', false, true);
+    return;
+  }
+
+  // credentials: 'omit' — браузер не передає кук Google. Саме через куки
+  // при кількох акаунтах script.google.com відповідає «не вдається відкрити файл».
+  // Параметр кампанії — campaign, НЕ «c»: на «c» Google відповідає 400
+  var params = new URLSearchParams({ u: u, s: s, campaign: campaign, format: 'json' });
+  var ctrl = ('AbortController' in window) ? new AbortController() : null;
+  var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 20000);
+
+  fetch(API + '?' + params.toString(), {
+    method: 'GET',
+    credentials: 'omit',
+    cache: 'no-store',
+    signal: ctrl ? ctrl.signal : undefined
+  })
+    .then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function (d) {
+      clearTimeout(timer);
+      if (d && d.ok) {
+        show(d.title, d.text, true, false);
+      } else if (d && d.code === 'bad_sig') {
+        show(d.title, d.text, false, true);
+      } else {
+        show((d && d.title) || 'Не вдалося відписати',
+             (d && d.text) || 'Щось пішло не так', false, !(d && d.code === 'save_failed'));
+      }
+    })
+    .catch(function () {
+      clearTimeout(timer);
+      show('Не вдалося відписати', 'Сервіс зараз не відповідає', false, true);
+    });
+})();
+</script>
+
+</body>
+</html>

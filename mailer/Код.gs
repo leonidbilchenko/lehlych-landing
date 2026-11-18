@@ -399,7 +399,7 @@ function contactMap(contact, campaign) {
     'імʼя': contact.name,
     'ім\'я': contact.name,
     'email': contact.email,
-    'unsubscribe_url': unsubUrl(contact.email, campaign.name)
+    'unsubscribe_url': unsubPageUrl(contact.email, campaign.name)   // у тексті листа — сторінка на сайті
   };
 }
 
@@ -502,10 +502,28 @@ function unsubSig(email) {
   return Utilities.base64EncodeWebSafe(raw).replace(/=+$/, '').slice(0, 24);
 }
 
+// Посилання для службового заголовка List-Unsubscribe. Його відкриває
+// сервер Gmail — без кук і акаунтів, — тож воно веде прямо на вебзастосунок
 function unsubUrl(email, campaignName) {
   var base = P('WEBAPP_URL');
   if (!base) return (P('SITE_URL') || 'https://lehlych.com') + '/#unsubscribe-not-configured';
-  return base + '?u=' + encodeURIComponent(email) +
+  return base + '?' + unsubQuery(email, campaignName);
+}
+
+// Посилання в тексті листа веде на lehlych.com/unsubscribe/, а не на
+// script.google.com. Людина тисне його у своєму браузері, а там може бути
+// кілька акаунтів Google — тоді script.google.com відповідає «На жаль, зараз
+// не вдається відкрити файл» (так і сталося 18.11.2026). Сторінка на сайті
+// звертається до сервісу fetch-запитом, у якому браузер не передає кук
+// Google, тож акаунти їй не заважають. Так само сайт уже ходить в Apps
+// Script при оформленні замовлення
+function unsubPageUrl(email, campaignName) {
+  return (P('SITE_URL') || 'https://lehlych.com').replace(/\/+$/, '') +
+         '/unsubscribe/?' + unsubQuery(email, campaignName);
+}
+
+function unsubQuery(email, campaignName) {
+  return 'u=' + encodeURIComponent(email) +
          '&s=' + unsubSig(email) +
          // НЕ «c»: Google вважає параметр c службовим і на посилання з ним
          // віддає 400 замість сторінки відписки (перевірено 18.11.2026)
@@ -518,20 +536,36 @@ function unsubUrl(email, campaignName) {
 function doGet(e)  { return handleUnsub(e); }
 function doPost(e) { return handleUnsub(e); }
 
+// format=json — для сторінки lehlych.com/unsubscribe/, інакше — HTML
 function handleUnsub(e) {
   var p = (e && e.parameter) || {};
-  var email = String(p.u || '').trim().toLowerCase();
-  var sig = String(p.s || '').trim();
+  var r = unsubscribe(String(p.u || ''), String(p.s || ''), String(p.campaign || ''));
+  if (String(p.format || '') === 'json') {
+    return ContentService.createTextOutput(JSON.stringify(r))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+  return page(r.title, escapeHtml(r.text));
+}
 
-  if (!email || !sig) return page('Сторінка не знайдена', 'Посилання неповне');
+// Тексти тут бачить одержувач, тому звертання на «ви»
+function unsubscribe(emailRaw, sigRaw, campaign) {
+  var email = String(emailRaw).trim().toLowerCase();
+  var sig = String(sigRaw).trim();
+
+  if (!email || !sig) {
+    return { ok: false, code: 'incomplete', title: 'Сторінка не знайдена', text: 'Посилання неповне' };
+  }
 
   var ok = false;
   try { ok = (sig === unsubSig(email)); } catch (err) { ok = false; }
-  if (!ok) return page('Посилання не підходить', 'Перевір, чи воно скопійоване повністю');
+  if (!ok) {
+    return { ok: false, code: 'bad_sig', title: 'Посилання не підходить',
+             text: 'Перевірте, чи воно скопійоване повністю' };
+  }
 
   try {
     if (!unsubSet()[email]) {
-      sh(SHEETS.unsub).appendRow([email, new Date(), String(p.campaign || ''), 'лист']);
+      sh(SHEETS.unsub).appendRow([email, new Date(), String(campaign || ''), 'лист']);
       contactsAll().forEach(function (c) {
         if (c.email === email) {
           setContactField(c.row, 'Статус', 'відписався');
@@ -541,12 +575,12 @@ function handleUnsub(e) {
       });
     }
   } catch (err) {
-    return page('Не вдалося зберегти', 'Напиши нам на ' + (P('REPLY_TO') || P('SENDER_EMAIL')) +
-                ' — відпишемо вручну');
+    return { ok: false, code: 'save_failed', title: 'Не вдалося зберегти',
+             text: 'Напишіть нам на ' + (P('REPLY_TO') || P('SENDER_EMAIL')) + ' — відпишемо вручну' };
   }
 
-  return page('Готово, ви відписані',
-    'Більше листів від Lehlych Winery на <b>' + escapeHtml(email) + '</b> не надійде');
+  return { ok: true, code: 'done', title: 'Готово, ви відписані',
+           text: 'Більше листів від Lehlych Winery на ' + email + ' не надійде' };
 }
 
 function page(title, text) {

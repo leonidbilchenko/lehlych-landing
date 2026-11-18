@@ -6,15 +6,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="x-apple-disable-message-reformatting" />
 <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
-<meta name="color-scheme" content="light dark" />
-<meta name="supported-color-schemes" content="light dark" />
+<!-- Лише світла схема: окремих стилів для темної в листі немає, і "light dark"
+     лише обіцяв би клієнтам те, чого немає -->
+<meta name="color-scheme" content="light" />
+<meta name="supported-color-schemes" content="light" />
 <title>Корпоративні свята з Lehlych Winery</title>
 
 <!--
   КАМПАНІЯ:    Корпоративні свята, листопад 2026
   КАТЕГОРІЯ:   cold_corporate
   ТЕКСТ:       Обсідіан → Розсилка_Тексти/Корпоративні свята.md (Елліна)
-  КАРТИНКИ:    images/email/logo-white-2026.png  (новий логотип)
+  КАРТИНКИ:    images/email/header-2026.png       (шапка: темне тло + логотип)
+               images/email/footer-logo-2026.png  (логотип футера на темній плашці)
                images/email/corporate-tasting.jpg
                images/email/corporate-teambuilding.jpg
                images/email/corporate-bottles.jpg
@@ -76,8 +79,6 @@
     .px      { padding-left:20px !important; padding-right:20px !important; }
     .imgcell { padding-left:20px !important; padding-right:20px !important; }
     .full    { width:100% !important; height:auto !important; }
-    .logo    { width:140px !important; }
-    .head    { padding-top:24px !important; padding-bottom:22px !important; }
     .h2      { font-size:22px !important; }
     .sec     { padding-top:52px !important; }
   }
@@ -102,11 +103,14 @@
 
   <table role="presentation" class="wrap" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px;max-width:600px;background-color:#FFF7F2;">
 
-    <!-- ── ШАПКА ─────────────────────────────────────── -->
+    <!-- ── ШАПКА ─────────────────────────────────────────
+         Уся шапка — одна картинка: темне тло з логотипом. Gmail у темному
+         режимі перефарбовує тло комірок у світле, а картинки не чіпає.
+         Білий логотип на прозорому тлі там зникав (18.11.2026, айфон) -->
     <tr>
-      <td class="head" align="center" bgcolor="#1F0F0C" style="background-color:#1F0F0C;padding:32px 24px 30px 24px;">
-        <a href="{{site_url}}/" target="_blank" style="text-decoration:none;">
-          <img src="https://lehlych.com/images/email/logo-white-2026.png" width="170" class="logo" alt="Lehlych Winery" style="width:170px;height:auto;display:block;border:0;" />
+      <td align="center" bgcolor="#1F0F0C" style="background-color:#1F0F0C;padding:0;">
+        <a href="{{site_url}}/" target="_blank" style="text-decoration:none;display:block;">
+          <img src="https://lehlych.com/images/email/header-2026.png" width="600" class="full" alt="Lehlych Winery" style="width:100%;max-width:600px;height:auto;display:block;border:0;color:#E8DDC7;font-family:'Montserrat','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:22px;font-weight:600;text-align:center;" />
         </a>
       </td>
     </tr>
@@ -300,7 +304,9 @@
     <tr>
       <td class="px" bgcolor="#1F0F0C" align="center" style="background-color:#1F0F0C;padding:36px 40px 28px 40px;">
 
-        <img src="https://lehlych.com/images/email/logo-white-2026.png" width="120" alt="Lehlych Winery" style="width:120px;height:auto;display:block;border:0;margin:0 auto;" />
+        <!-- Логотип на власній темній плашці: у світлому режимі зливається з
+             футером, у темному Gmail лишається видимим -->
+        <img src="https://lehlych.com/images/email/footer-logo-2026.png" width="160" alt="Lehlych Winery" style="width:160px;height:auto;display:block;border:0;margin:0 auto;color:#E8DDC7;font-family:'Montserrat','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;" />
 
         <div style="height:20px;line-height:20px;font-size:0;">&nbsp;</div>
 

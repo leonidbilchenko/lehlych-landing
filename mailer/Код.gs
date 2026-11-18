@@ -8,6 +8,9 @@
 //  Як запустити: див. MAILER.md в Обсідіані.
 //
 //  Script Properties (Project Settings → Script properties):
+//    ALLOWED_ACCOUNT — ЄДИНИЙ акаунт Google, з якого сервісу дозволено працювати.
+//                      Без неї, або з будь-якого іншого акаунта, сервіс
+//                      нічого не шле й пошту не читає. Див. assertAccount()
 //    SENDER_EMAIL   — адреса відправника (аліас акаунта), напр. info@lehlych.com
 //    SENDER_NAME    — Lehlych Winery
 //    REPLY_TO       — куди падають відповіді, напр. bilchenko@lehlych.com
@@ -56,6 +59,49 @@ function P(key) { return PropertiesService.getScriptProperties().getProperty(key
 function Pnum(key, dflt) { var v = parseInt(P(key), 10); return isNaN(v) ? dflt : v; }
 
 // ─────────────────────────────────────────────────────────
+//  ЗАПОБІЖНИК АКАУНТА
+//
+//  Google має відому пастку: якщо в браузері відкрито кілька акаунтів,
+//  таблиця, скрипт чи дозволи можуть тихо опинитися не в тому акаунті.
+//  Сторонні акаунти (зокрема робочі акаунти Леоніда з інших місць) НІКОЛИ
+//  не повинні слати чи читати пошту Lehlych. Тому кожна дія з поштою
+//  спершу звіряє, від чийого імені вона виконується, з ALLOWED_ACCOUNT.
+//  Не збігається, не задано або Google не віддав адресу — стоп.
+// ─────────────────────────────────────────────────────────
+function assertAccount() {
+  var allowed = P('ALLOWED_ACCOUNT').trim().toLowerCase();
+  if (!allowed) {
+    throw new Error('Не задано ALLOWED_ACCOUNT у Script Properties. Нічого не надіслано');
+  }
+
+  var me = '';
+  try { me = String(Session.getEffectiveUser().getEmail() || '').trim().toLowerCase(); } catch (e) {}
+  if (!me) {
+    throw new Error('Google не повідомив, з якого акаунта запущено скрипт. Нічого не надіслано');
+  }
+  if (me !== allowed) {
+    throw new Error('Скрипт запущено з акаунта ' + me + ', а дозволено лише ' + allowed +
+                    '. Нічого не надіслано. Відкрий таблицю у профілі Chrome, де є лише акаунт Lehlych');
+  }
+
+  // Друга, незалежна перевірка — саме та поштова скринька, з якої піде лист
+  try {
+    var box = String(Gmail.Users.getProfile('me').emailAddress || '').toLowerCase();
+    if (box && box !== allowed) {
+      throw new Error('Пошта, з якої піде лист (' + box + '), не збігається з ' + allowed +
+                      '. Нічого не надіслано');
+    }
+  } catch (e) {
+    if (/не збігається/.test(String(e))) throw e;   // інші помилки — це просто не ввімкнений Gmail API
+  }
+
+  if (!/@lehlych\.com$/i.test(P('SENDER_EMAIL'))) {
+    throw new Error('SENDER_EMAIL має бути адресою на @lehlych.com. Нічого не надіслано');
+  }
+  return me;
+}
+
+// ─────────────────────────────────────────────────────────
 //  МЕНЮ
 // ─────────────────────────────────────────────────────────
 function onOpen() {
@@ -88,6 +134,7 @@ function sh(name) {
 //  ПІДГОТОВКА ТАБЛИЦІ
 // ─────────────────────────────────────────────────────────
 function setupSheets() {
+  assertAccount();
   var book = ss();
   var created = [];
 
@@ -483,6 +530,7 @@ function escapeHtml(s) {
 //  Якщо Gmail API недоступний — падаємо на MailApp.
 // ─────────────────────────────────────────────────────────
 function sendOne(to, subject, html, plain, unsubLink) {
+  assertAccount();   // остання лінія: навіть якщо хтось викличе sendOne напряму
   var from = P('SENDER_EMAIL');
   var name = P('SENDER_NAME') || 'Lehlych Winery';
   var reply = P('REPLY_TO') || from;
@@ -558,6 +606,7 @@ function b64wrap(text) {
 //  ПЕРЕВІРКА ПЕРЕД ВІДПРАВКОЮ
 // ─────────────────────────────────────────────────────────
 function checkCampaign() {
+  var account = assertAccount();
   var c = currentCampaign();
   var html, warn = [], info = [];
 
@@ -589,6 +638,8 @@ function checkCampaign() {
   var noCompany = left.filter(function (p) { return !p.company; }).length;
   if (noCompany) info.push(noCompany + ' одержувачів без назви компанії');
 
+  info.push('Акаунт: ' + account + '  ✓ дозволений');
+  info.push('Відправник: ' + P('SENDER_NAME') + ' <' + P('SENDER_EMAIL') + '>');
   info.push('Категорія: ' + (c.category || '— не задана, піде всім —'));
   info.push('У категорії: ' + people.length);
   info.push('Уже надіслано: ' + Object.keys(sentSet).length);
@@ -606,6 +657,7 @@ function checkCampaign() {
 }
 
 function sendTest() {
+  assertAccount();
   var c = currentCampaign();
   var to = P('TEST_EMAIL');
   if (!to) { ui().alert('Не задано TEST_EMAIL у Script Properties'); return; }
@@ -629,6 +681,7 @@ function sendTest() {
 //  ЗАПУСК І ЧЕРГА
 // ─────────────────────────────────────────────────────────
 function startCampaign() {
+  var account = assertAccount();
   var c = currentCampaign();
   var people = recipientsFor(c.category);
   var sentSet = alreadySent(c.name);
@@ -637,7 +690,9 @@ function startCampaign() {
   if (!left.length) { ui().alert('Усім із цієї категорії вже надіслано'); return; }
 
   var answer = ui().alert('Запустити «' + c.name + '»?',
-    'Одержувачів лишилось: ' + left.length +
+    'Акаунт: ' + account +
+    '\nВідправник: ' + P('SENDER_NAME') + ' <' + P('SENDER_EMAIL') + '>' +
+    '\n\nОдержувачів лишилось: ' + left.length +
     '\nКатегорія: ' + c.category +
     '\nЛіміт на добу: ' + c.cap +
     '\nТема: ' + c.subject +
@@ -701,6 +756,16 @@ function processQueue() {
   try {
     var row = parseInt(P('ACTIVE_ROW'), 10);
     if (!row) { dropTrigger(); return; }
+
+    // Тригер працює без людини — тож при чужому акаунті не кидаємо
+    // помилку в порожнечу, а зупиняємо кампанію й лишаємо слід у Лозі
+    try { assertAccount(); }
+    catch (err) {
+      dropTrigger();
+      setCampaignField(row, 'Статус', 'пауза');
+      logRow('—', '—', '', 'зупинено', String(err).slice(0, 400));
+      return;
+    }
 
     var c = readCampaign(row);
     if (c.status !== 'відправляється') { dropTrigger(); return; }
@@ -849,6 +914,7 @@ function statusReport() {
 //  слали, нових пишемо в «Лог» і в примітку контакту.
 // ─────────────────────────────────────────────────────────
 function countReplies() {
+  assertAccount();   // читання пошти — теж лише з дозволеного акаунта
   var c = currentCampaign();
   var subj = c.subject.replace(/"/g, '');
   var threads = GmailApp.search('subject:"' + subj + '" -from:me newer_than:90d', 0, 300);
@@ -911,6 +977,7 @@ function countReplies() {
 //  звідти і гасимо адреси, щоб не бити в мертву скриньку.
 // ─────────────────────────────────────────────────────────
 function scanBounces() {
+  assertAccount();
   var threads = GmailApp.search(
     'from:(mailer-daemon OR postmaster) newer_than:30d', 0, 150);
   var found = {}, rx = /[A-Za-z0-9._%+\-']+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}/g;

@@ -62,7 +62,10 @@
   td { mso-line-height-rule:exactly; }
   img { -ms-interpolation-mode:bicubic; border:0; outline:none; text-decoration:none; }
 
-  a[x-apple-data-detectors], .unstyle a {
+  /* Лише автопосилання айфона (телефони, адреси). НЕ вішати цей стиль на
+     власні посилання: color:inherit перебиває задані кольори — так 18.11.2026
+     золоті контакти в підписі стали чорними */
+  a[x-apple-data-detectors] {
     color:inherit !important; text-decoration:none !important;
     font-size:inherit !important; font-family:inherit !important;
     font-weight:inherit !important; line-height:inherit !important;
@@ -282,7 +285,7 @@
     <!-- ── ПІДПИС ────────────────────────────────────── -->
     <tr>
       <td class="px" align="left" style="padding:32px 0 48px 0;font-family:'Montserrat','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;line-height:1.6;color:#1E1508;">
-        <p class="unstyle" style="margin:0;">
+        <p style="margin:0;">
           З теплом,<br />
           <span style="font-weight:600;">Елліна Юрченко</span><br />
           <span style="color:#5A4038;">Засновниця Lehlych Winery</span><br />
@@ -301,7 +304,7 @@
 
         <div style="height:20px;line-height:20px;font-size:0;">&nbsp;</div>
 
-        <p class="unstyle" style="margin:0;font-family:'Montserrat','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:1.75;color:#9A8F7A;">
+        <p style="margin:0;font-family:'Montserrat','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:1.75;color:#9A8F7A;">
           Київська обл., м. Ржищів<br />
           <a href="tel:+380507745381" style="color:#E8DDC7;text-decoration:none;">+38 (050) 774-53-81</a><br />
           <a href="mailto:lehlychwinery@gmail.com" style="color:#E8DDC7;text-decoration:none;">lehlychwinery@gmail.com</a>

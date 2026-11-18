@@ -476,7 +476,9 @@ function unsubUrl(email, campaignName) {
   if (!base) return (P('SITE_URL') || 'https://lehlych.com') + '/#unsubscribe-not-configured';
   return base + '?u=' + encodeURIComponent(email) +
          '&s=' + unsubSig(email) +
-         '&c=' + encodeURIComponent(slug(campaignName || ''));
+         // НЕ «c»: Google вважає параметр c службовим і на посилання з ним
+         // віддає 400 замість сторінки відписки (перевірено 18.11.2026)
+         '&campaign=' + encodeURIComponent(slug(campaignName || ''));
 }
 
 // Gmail на кнопку «Відписатись» шле POST, а не GET — через
@@ -498,7 +500,7 @@ function handleUnsub(e) {
 
   try {
     if (!unsubSet()[email]) {
-      sh(SHEETS.unsub).appendRow([email, new Date(), String(p.c || ''), 'лист']);
+      sh(SHEETS.unsub).appendRow([email, new Date(), String(p.campaign || ''), 'лист']);
       contactsAll().forEach(function (c) {
         if (c.email === email) {
           setContactField(c.row, 'Статус', 'відписався');

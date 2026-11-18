@@ -483,7 +483,7 @@ function handleUnsub(e) {
         if (c.email === email) {
           setContactField(c.row, 'Статус', 'відписався');
           setContactField(c.row, 'Примітка', 'Відписався ' +
-            Utilities.formatDate(new Date(), 'Europe/Kyiv', 'dd.MM.yyyy'));
+            Utilities.formatDate(new Date(), 'Europe/Kiev', 'dd.MM.yyyy'));
         }
       });
     }
@@ -562,7 +562,7 @@ function buildMime(o) {
   L.push('To: ' + o.to);
   L.push('Reply-To: ' + o.replyTo);
   L.push('Subject: ' + mimeWord(o.subject));
-  L.push('Date: ' + Utilities.formatDate(new Date(), 'Europe/Kyiv',
+  L.push('Date: ' + Utilities.formatDate(new Date(), 'Europe/Kiev',
           "EEE, dd MMM yyyy HH:mm:ss Z"));
   L.push('MIME-Version: 1.0');
   if (o.unsubLink) {
@@ -728,9 +728,9 @@ function ensureTrigger() {
 function kyivNow() {
   var d = new Date();
   return {
-    dow:  parseInt(Utilities.formatDate(d, 'Europe/Kyiv', 'u'), 10),  // 1 = пн … 7 = нд
-    hour: parseInt(Utilities.formatDate(d, 'Europe/Kyiv', 'H'), 10),
-    min:  parseInt(Utilities.formatDate(d, 'Europe/Kyiv', 'm'), 10)
+    dow:  parseInt(Utilities.formatDate(d, 'Europe/Kiev', 'u'), 10),  // 1 = пн … 7 = нд
+    hour: parseInt(Utilities.formatDate(d, 'Europe/Kiev', 'H'), 10),
+    min:  parseInt(Utilities.formatDate(d, 'Europe/Kiev', 'm'), 10)
   };
 }
 
@@ -815,7 +815,7 @@ function processQueue() {
 
         logRow(c.name, person.email, person.company, 'надіслано', how);
         setContactField(person.row, 'Останній лист',
-          c.name + ' · ' + Utilities.formatDate(new Date(), 'Europe/Kyiv', 'dd.MM.yyyy'));
+          c.name + ' · ' + Utilities.formatDate(new Date(), 'Europe/Kiev', 'dd.MM.yyyy'));
         okCount++;
       } catch (err) {
         logRow(c.name, person.email, person.company, 'помилка', String(err).slice(0, 300));
@@ -852,7 +852,7 @@ function alreadySent(campaignName) {
 }
 
 function countSentToday(campaignName) {
-  var today = Utilities.formatDate(new Date(), 'Europe/Kyiv', 'yyyy-MM-dd');
+  var today = Utilities.formatDate(new Date(), 'Europe/Kiev', 'yyyy-MM-dd');
   var vals = sh(SHEETS.log).getDataRange().getValues();
   var n = 0;
   for (var i = 1; i < vals.length; i++) {
@@ -860,7 +860,7 @@ function countSentToday(campaignName) {
     if (String(vals[i][4]) !== 'надіслано') continue;
     var d = vals[i][0];
     if (!(d instanceof Date)) continue;
-    if (Utilities.formatDate(d, 'Europe/Kyiv', 'yyyy-MM-dd') === today) n++;
+    if (Utilities.formatDate(d, 'Europe/Kiev', 'yyyy-MM-dd') === today) n++;
   }
   return n;
 }
@@ -953,9 +953,9 @@ function countReplies() {
     if (logged[em]) return;
     var ct = byEmail[em];
     logRow(c.name, em, ct ? ct.company : '', 'відповідь',
-           Utilities.formatDate(repliers[em], 'Europe/Kyiv', 'dd.MM.yyyy HH:mm'));
+           Utilities.formatDate(repliers[em], 'Europe/Kiev', 'dd.MM.yyyy HH:mm'));
     if (ct) setContactField(ct.row, 'Примітка', 'Відповів(ла) на «' + c.name + '» ' +
-      Utilities.formatDate(repliers[em], 'Europe/Kyiv', 'dd.MM.yyyy'));
+      Utilities.formatDate(repliers[em], 'Europe/Kiev', 'dd.MM.yyyy'));
     fresh.push(ct ? ct.company + ' — ' + em : em);
   });
 
@@ -1020,7 +1020,7 @@ function scanBounces() {
     setContactField(c.row, 'Статус', 'відмова');
     setContactField(c.row, 'Відмов', 1);
     setContactField(c.row, 'Примітка', 'Відмова ' +
-      Utilities.formatDate(new Date(), 'Europe/Kyiv', 'dd.MM.yyyy'));
+      Utilities.formatDate(new Date(), 'Europe/Kiev', 'dd.MM.yyyy'));
     logRow('—', c.email, c.company, 'відмова', 'знайдено в пошті');
     marked.push(c.email);
     names.push(c.company || c.email);

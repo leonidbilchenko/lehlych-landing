@@ -640,6 +640,7 @@ function checkCampaign() {
 
   info.push('Акаунт: ' + account + '  ✓ дозволений');
   info.push('Відправник: ' + P('SENDER_NAME') + ' <' + P('SENDER_EMAIL') + '>');
+  info.push('Відповіді прийдуть на: ' + (P('REPLY_TO') || P('SENDER_EMAIL')));
   info.push('Категорія: ' + (c.category || '— не задана, піде всім —'));
   info.push('У категорії: ' + people.length);
   info.push('Уже надіслано: ' + Object.keys(sentSet).length);
@@ -692,6 +693,7 @@ function startCampaign() {
   var answer = ui().alert('Запустити «' + c.name + '»?',
     'Акаунт: ' + account +
     '\nВідправник: ' + P('SENDER_NAME') + ' <' + P('SENDER_EMAIL') + '>' +
+    '\nВідповіді прийдуть на: ' + (P('REPLY_TO') || P('SENDER_EMAIL')) +
     '\n\nОдержувачів лишилось: ' + left.length +
     '\nКатегорія: ' + c.category +
     '\nЛіміт на добу: ' + c.cap +
@@ -959,7 +961,19 @@ function countReplies() {
 
   var total = Object.keys(sent).length;
   var n = Object.keys(repliers).length;
+
+  // Якщо Reply-To веде в іншу скриньку (у Lehlych — Gmail Елліни),
+  // основні відповіді лежать там, і звідси їх не видно. Кажемо прямо
+  var replyTo = String(P('REPLY_TO')).toLowerCase();
+  var elsewhere = replyTo && replyTo !== String(P('SENDER_EMAIL')).toLowerCase() &&
+                  replyTo !== String(Session.getEffectiveUser().getEmail()).toLowerCase();
+  var hint = elsewhere
+    ? '\n\n⚠ Тут лише відповіді, що прийшли в цю скриньку. Основні йдуть на ' + replyTo +
+      '. Там шукати:\nsubject:"' + subj + '"'
+    : '';
+
   ui().alert('Відповіді на «' + c.name + '»',
+    hint.replace(/^\n\n/, '') + (hint ? '\n\n' : '') +
     'Надіслано: ' + total +
     '\nВідповіли: ' + n + (total ? ' (' + (100 * n / total).toFixed(1) + '%)' : '') +
     (otherAddr.length ? '\n  з них з іншої адреси, ніж ми писали: ' + otherAddr.length +

@@ -248,9 +248,16 @@ function setContactField(row, header, value) {
 //  КАМПАНІЇ
 // ─────────────────────────────────────────────────────────
 function currentCampaign() {
-  var s = sh(SHEETS.campaigns);
-  var row = s.getActiveCell().getRow();
-  if (row < 2) throw new Error('Стань курсором на рядок кампанії в аркуші «Кампанії»');
+  // Курсор має стояти саме на вкладці «Кампанії». Інакше номер рядка
+  // береться з іншої вкладки, і сервіс читає не ту кампанію (18.11.2026
+  // так вийшло «не заповнена Назва» при запуску з вкладки «Контакти»)
+  var active = ss().getActiveSheet();
+  if (active.getName() !== SHEETS.campaigns) {
+    throw new Error('Відкрий вкладку «' + SHEETS.campaigns + '» і стань курсором на рядок кампанії. ' +
+                    'Зараз відкрита «' + active.getName() + '»');
+  }
+  var row = active.getActiveCell().getRow();
+  if (row < 2) throw new Error('Стань курсором на рядок кампанії (з 2-го), а не на заголовок');
   return readCampaign(row);
 }
 

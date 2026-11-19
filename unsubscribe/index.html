@@ -79,6 +79,21 @@
     overflow-wrap: anywhere;
   }
   p a { color: var(--gold); }
+  .btn {
+    display: inline-block;
+    margin-top: 28px;
+    padding: 15px 36px;
+    border: 0;
+    border-radius: 2px;
+    background: var(--gold);
+    color: var(--bg);
+    font: 600 15px/1 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+  }
+  .btn:hover { opacity: 0.88; }
+  .btn[disabled] { opacity: 0.5; cursor: default; }
+  .btn[hidden] { display: none; }
   .back {
     display: inline-block;
     margin-top: 32px;
@@ -100,9 +115,10 @@
 
 <main>
   <div class="card" role="status" aria-live="polite">
-    <div class="mark wait" id="mark" aria-hidden="true"></div>
-    <h1 id="title">Відписуємо…</h1>
-    <p id="text">Зачекайте кілька секунд</p>
+    <div class="mark" id="mark" aria-hidden="true">?</div>
+    <h1 id="title">Відписатися від листів Lehlych Winery?</h1>
+    <p id="text">Перевіряємо посилання…</p>
+    <button class="btn" id="btn" type="button" hidden>Відписатися</button>
     <noscript>
       <p>Для відписки потрібен JavaScript. Або просто напишіть нам на
         <a href="mailto:info@lehlych.com?subject=%D0%92%D1%96%D0%B4%D0%BF%D0%B8%D1%81%D0%BA%D0%B0">info@lehlych.com</a> — відпишемо вручну</p>
@@ -119,23 +135,25 @@
   var API = 'https://script.google.com/macros/s/AKfycbz5RHHojWs5kE5J7CcgpsU3LaBr7w-T5_6V2EGrU_jq7K8hBmzPVt7dptOtb8rL1JCt/exec';
   var CONTACT = 'info@lehlych.com';
 
+  // Відписуємо ЛИШЕ після натискання кнопки. Корпоративні антивіруси
+  // самі відкривають посилання з листів, інколи з JavaScript, але на
+  // кнопки не тиснуть. Сторінка, що відписувала при відкритті, 19.11.2026
+  // дала 3 «відписки» з 15 листів за годину — це були боти
   var q = new URLSearchParams(location.search);
   var u = q.get('u') || '';
   var s = q.get('s') || '';
   var campaign = q.get('campaign') || '';
 
-  // Адреса людини більше не потрібна в рядку браузера й історії
-  try { history.replaceState(null, '', location.pathname); } catch (e) {}
-
   var mark = document.getElementById('mark');
   var title = document.getElementById('title');
   var text = document.getElementById('text');
+  var btn = document.getElementById('btn');
 
-  function show(t, msg, ok, withMail) {
+  function show(t, msg, state, withMail) {
     title.textContent = t;
     text.textContent = msg;
-    mark.className = 'mark' + (ok ? ' ok' : '');
-    mark.textContent = ok ? '✓' : '!';
+    mark.className = 'mark' + (state === 'ok' ? ' ok' : state === 'wait' ? ' wait' : '');
+    mark.textContent = state === 'ok' ? '✓' : state === 'wait' ? '' : state === 'ask' ? '?' : '!';
     if (withMail) {
       text.appendChild(document.createTextNode('. Напишіть нам на '));
       var a = document.createElement('a');
@@ -146,43 +164,58 @@
     }
   }
 
+  // credentials: 'omit' — без кук Google, інакше при кількох акаунтах
+  // script.google.com відповідає «не вдається відкрити файл».
+  // Параметр кампанії — campaign, НЕ «c»: на «c» Google відповідає 400
+  function call(extra) {
+    var ctrl = ('AbortController' in window) ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 20000);
+    var params = new URLSearchParams({ u: u, s: s, campaign: campaign, format: 'json' });
+    Object.keys(extra || {}).forEach(function (k) { params.set(k, extra[k]); });
+    return fetch(API + '?' + params.toString(), {
+      method: 'GET', credentials: 'omit', cache: 'no-store', signal: ctrl ? ctrl.signal : undefined
+    }).then(function (r) {
+      clearTimeout(timer);
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    }, function (e) { clearTimeout(timer); throw e; });
+  }
+
   if (!u || !s) {
-    show('Посилання неповне', 'Схоже, його скопійовано не до кінця', false, true);
+    show('Посилання неповне', 'Схоже, його скопійовано не до кінця', 'err', true);
     return;
   }
 
-  // credentials: 'omit' — браузер не передає кук Google. Саме через куки
-  // при кількох акаунтах script.google.com відповідає «не вдається відкрити файл».
-  // Параметр кампанії — campaign, НЕ «c»: на «c» Google відповідає 400
-  var params = new URLSearchParams({ u: u, s: s, campaign: campaign, format: 'json' });
-  var ctrl = ('AbortController' in window) ? new AbortController() : null;
-  var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 20000);
+  // Спершу лише перевіряємо посилання — це нічого не змінює
+  call().then(function (d) {
+    if (d && d.ok) {
+      show(d.title, d.text, 'ask', false);
+      btn.hidden = false;
+    } else {
+      show((d && d.title) || 'Посилання не підходить', (d && d.text) || 'Щось пішло не так', 'err', true);
+    }
+  }).catch(function () {
+    show('Не вдалося перевірити посилання', 'Сервіс зараз не відповідає', 'err', true);
+  });
 
-  fetch(API + '?' + params.toString(), {
-    method: 'GET',
-    credentials: 'omit',
-    cache: 'no-store',
-    signal: ctrl ? ctrl.signal : undefined
-  })
-    .then(function (r) {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.json();
-    })
-    .then(function (d) {
-      clearTimeout(timer);
+  btn.addEventListener('click', function () {
+    btn.disabled = true;
+    show('Відписуємо…', 'Зачекайте кілька секунд', 'wait', false);
+    call({ confirm: '1' }).then(function (d) {
+      btn.hidden = true;
       if (d && d.ok) {
-        show(d.title, d.text, true, false);
-      } else if (d && d.code === 'bad_sig') {
-        show(d.title, d.text, false, true);
+        show(d.title, d.text, 'ok', false);
+        // Адреса людини більше не потрібна в рядку браузера й історії
+        try { history.replaceState(null, '', location.pathname); } catch (e) {}
       } else {
-        show((d && d.title) || 'Не вдалося відписати',
-             (d && d.text) || 'Щось пішло не так', false, !(d && d.code === 'save_failed'));
+        show((d && d.title) || 'Не вдалося відписати', (d && d.text) || 'Щось пішло не так',
+             'err', !(d && d.code === 'save_failed'));
       }
-    })
-    .catch(function () {
-      clearTimeout(timer);
-      show('Не вдалося відписати', 'Сервіс зараз не відповідає', false, true);
+    }).catch(function () {
+      btn.hidden = true;
+      show('Не вдалося відписати', 'Сервіс зараз не відповідає', 'err', true);
     });
+  });
 })();
 </script>
 

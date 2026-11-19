@@ -530,47 +530,83 @@ function unsubQuery(email, campaignName) {
          '&campaign=' + encodeURIComponent(slug(campaignName || ''));
 }
 
-// Gmail на кнопку «Відписатись» шле POST, а не GET — через
-// List-Unsubscribe-Post. Обидва методи ведуть в один обробник,
-// інакше рідна кнопка Gmail відвалювалась би з помилкою.
-function doGet(e)  { return handleUnsub(e); }
-function doPost(e) { return handleUnsub(e); }
-
-// format=json — для сторінки lehlych.com/unsubscribe/, інакше — HTML
-function handleUnsub(e) {
+// ─────────────────────────────────────────────────────────
+//  ХТО ВІДПИСУЄ І КОЛИ
+//
+//  Корпоративні антивіруси (Microsoft Defender, Mimecast, Proofpoint)
+//  самі відкривають усі посилання у вхідних листах — інколи в повному
+//  браузері з JavaScript. 19.11.2026 сторінка, що відписувала одразу при
+//  відкритті, дала 3 відписки з 15 листів за першу годину — це боти.
+//  Тому за RFC 8058:
+//    POST          — кнопка Gmail «Скасувати підписку» → відписує одразу.
+//                    Антивіруси POST не шлють
+//    GET + confirm — сторінка сайту ПІСЛЯ натискання кнопки «Відписатися»
+//    будь-який інший GET нічого не змінює, лише показує кнопку
+// ─────────────────────────────────────────────────────────
+function doPost(e) {
   var p = (e && e.parameter) || {};
-  var r = unsubscribe(String(p.u || ''), String(p.s || ''), String(p.campaign || ''));
-  if (String(p.format || '') === 'json') {
-    return ContentService.createTextOutput(JSON.stringify(r))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
+  var r = unsubscribe(p.u, p.s, p.campaign, 'кнопка Gmail');
   return page(r.title, escapeHtml(r.text));
 }
 
-// Тексти тут бачить одержувач, тому звертання на «ви»
-function unsubscribe(emailRaw, sigRaw, campaign) {
-  var email = String(emailRaw).trim().toLowerCase();
-  var sig = String(sigRaw).trim();
+function doGet(e) {
+  var p = (e && e.parameter) || {};
+  var isJson = String(p.format || '') === 'json';
 
+  if (isJson && String(p.confirm || '') === '1') {
+    return jsonOut(unsubscribe(p.u, p.s, p.campaign, 'сторінка сайту'));
+  }
+
+  var chk = checkUnsubLink(p.u, p.s);
+  if (isJson) return jsonOut(chk);
+  if (!chk.ok) return page(chk.title, escapeHtml(chk.text));
+
+  // Пряме посилання (так відкривають заголовок відписки деякі поштові
+  // програми, і так само — боти): лише кнопка, що веде на сторінку сайту
+  var email = String(p.u).trim().toLowerCase();
+  return page('Відписатися від листів Lehlych Winery?',
+    'Більше не надсилатимемо листів на ' + escapeHtml(email),
+    '<a href="' + escapeHtml(unsubPageUrl(email, String(p.campaign || ''))) + '" target="_top" ' +
+    'style="display:inline-block;margin-top:24px;padding:14px 32px;background:#9A6F28;color:#FFF7F2;' +
+    'font-size:15px;font-weight:600;letter-spacing:0.04em;text-decoration:none;border-radius:2px;">' +
+    'Відписатися</a>');
+}
+
+function jsonOut(r) {
+  return ContentService.createTextOutput(JSON.stringify(r))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+// Тексти тут бачить одержувач, тому звертання на «ви»
+function checkUnsubLink(emailRaw, sigRaw) {
+  var email = String(emailRaw || '').trim().toLowerCase();
+  var sig = String(sigRaw || '').trim();
   if (!email || !sig) {
     return { ok: false, code: 'incomplete', title: 'Сторінка не знайдена', text: 'Посилання неповне' };
   }
-
   var ok = false;
   try { ok = (sig === unsubSig(email)); } catch (err) { ok = false; }
   if (!ok) {
     return { ok: false, code: 'bad_sig', title: 'Посилання не підходить',
              text: 'Перевірте, чи воно скопійоване повністю' };
   }
+  return { ok: true, code: 'need_confirm', title: 'Відписатися від листів Lehlych Winery?',
+           text: 'Більше не надсилатимемо листів на ' + email, email: email };
+}
+
+function unsubscribe(emailRaw, sigRaw, campaign, source) {
+  var chk = checkUnsubLink(emailRaw, sigRaw);
+  if (!chk.ok) return chk;
+  var email = chk.email;
 
   try {
     if (!unsubSet()[email]) {
-      sh(SHEETS.unsub).appendRow([email, new Date(), String(campaign || ''), 'лист']);
+      sh(SHEETS.unsub).appendRow([email, new Date(), String(campaign || ''), String(source || '')]);
       contactsAll().forEach(function (c) {
         if (c.email === email) {
           setContactField(c.row, 'Статус', 'відписався');
           setContactField(c.row, 'Примітка', 'Відписався ' +
-            Utilities.formatDate(new Date(), TZ, 'dd.MM.yyyy'));
+            Utilities.formatDate(new Date(), TZ, 'dd.MM.yyyy') + ' (' + (source || '?') + ')');
         }
       });
     }
@@ -583,7 +619,7 @@ function unsubscribe(emailRaw, sigRaw, campaign) {
            text: 'Більше листів від Lehlych Winery на ' + email + ' не надійде' };
 }
 
-function page(title, text) {
+function page(title, text, actionHtml) {
   var site = P('SITE_URL') || 'https://lehlych.com';
   var html =
     '<!DOCTYPE html><html lang="uk"><head><meta charset="utf-8">' +
@@ -594,6 +630,7 @@ function page(title, text) {
     '<div style="max-width:420px;padding:40px 24px;text-align:center;">' +
     '<div style="font-size:22px;font-weight:600;margin:0 0 12px;">' + escapeHtml(title) + '</div>' +
     '<div style="font-size:15px;line-height:1.6;color:#5A4038;">' + text + '</div>' +
+    (actionHtml || '') +
     '<div style="margin-top:28px;"><a href="' + site + '" style="color:#9A6F28;font-size:14px;' +
     'text-decoration:none;">lehlych.com</a></div>' +
     '</div></body></html>';

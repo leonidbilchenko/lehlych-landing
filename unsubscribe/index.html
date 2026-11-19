@@ -80,8 +80,8 @@
   }
   p a { color: var(--gold); }
   .btn {
-    display: inline-block;
-    margin-top: 28px;
+    display: block;
+    margin: 28px auto 0;
     padding: 15px 36px;
     border: 0;
     border-radius: 2px;
@@ -95,8 +95,9 @@
   .btn[disabled] { opacity: 0.5; cursor: default; }
   .btn[hidden] { display: none; }
   .back {
-    display: inline-block;
-    margin-top: 32px;
+    display: block;
+    width: fit-content;
+    margin: 32px auto 0;
     color: var(--gold);
     font-size: 14px; font-weight: 600;
     letter-spacing: 0.04em;
